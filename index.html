@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MosDate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Основные настройки */
+        body { 
+            font-family: 'Manrope', sans-serif; 
+            background-color: #000; /* Черный фон для "киношности" */
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Чтобы не скроллилась вся страница */
+        }
+        
+        /* Контейнер приложения - ограничивает ширину на ПК, но на весь экран на мобилке */
+        #app-container {
+            width: 100%;
+            height: 100vh;
+            margin: 0 auto;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* На десктопе ограничиваем ширину */
+        @media (min-width: 640px) {
+            #app-container {
+                max-width: 420px; /* Ширина как у большого iPhone */
+                border-left: 1px solid #333;
+                border-right: 1px solid #333;
+            }
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-enter { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .active-scale:active { transform: scale(0.95); transition: transform 0.1s; }
+    </style>
+</head>
+<body>
+
+    <!-- Главный контейнер приложения MosDate -->
+    <div id="app-container">
+        
+        <!-- Контент (меняется в зависимости от вкладки) -->
+        <main id="app-content" class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative pb-20">
+            <!-- Сюда будет рендериться активный экран -->
+        </main>
+
+        <!-- Нижняя навигация (Таббар) - прибита к низу -->
+        <nav class="absolute bottom-0 left-0 w-full h-[80px] bg-white/90 backdrop-blur-md border-t border-slate-100 flex items-center justify-around px-4 pb-4 z-50">
+            <button onclick="switchTab('moments')" class="nav-btn flex-1 h-full flex flex-col items-center justify-center text-slate-400 hover:text-slate-900 transition-colors gap-1 active-scale" data-tab="moments">
+                <span class="text-2xl mb-1">📸</span>
+                <span class="text-[11px] font-bold tracking-wide">Моменты</span>
+            </button>
+            <button onclick="switchTab('roulette')" class="nav-btn flex-1 h-full flex flex-col items-center justify-center text-slate-400 hover:text-slate-900 transition-colors gap-1 active-scale" data-tab="roulette">
+                <span class="text-2xl mb-1">🎲</span>
+                <span class="text-[11px] font-bold tracking-wide">Рулетка</span>
+            </button>
+            <button onclick="switchTab('sos')" class="nav-btn flex-1 h-full flex flex-col items-center justify-center text-red-400 hover:text-red-600 transition-colors gap-1 active-scale" data-tab="sos">
+                <span class="text-2xl mb-1">🚨</span>
+                <span class="text-[11px] font-bold tracking-wide">SOS</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script>
+        // --- ДАННЫЕ ---
+        const ALBUMS = [
+            { title: "Начало", count: "5 фото", color: "bg-blue-50", icon_bg: "bg-blue-200", emoji: "👶" },
+            { title: "Сонное царство", count: "12 фото", color: "bg-purple-50", icon_bg: "bg-purple-200", emoji: "💤" },
+            { title: "Преступления", count: "8 фото", color: "bg-orange-50", icon_bg: "bg-orange-200", emoji: "🐾" },
+            { title: "Любовь", count: "∞ фото", color: "bg-pink-50", icon_bg: "bg-pink-200", emoji: "❤️" },
+        ];
+
+        const ROULETTE_OPTIONS = ["🍕 Пицца", "🎬 Кино", "💆‍♂️ Массаж", "🍺 Бар", "🚶‍♂️ Прогулка", "🛌 Сон"];
+        const SOS_MESSAGES = ["Ты лучший! ❤️", "Мы с тобой! 🐶", "Всё будет супер! 🌟"];
+
+        // --- РЕНДЕР ---
+        const content = document.getElementById('app-content');
+
+        function renderMoments() {
+            return `
+                <div class="p-6 pt-10 fade-enter">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate</h1>
+                            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
+                            👤
+                        </div>
+                    </div>
+                    
+                    <!-- Сториз (круглые) -->
+                    <div class="flex gap-4 overflow-x-auto pb-6 no-scrollbar mb-4">
+                        <div class="flex flex-col items-center gap-2 min-w-[70px]">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 to-red-500 p-[2px]">
+                                <div class="w-full h-full rounded-full bg-white p-[2px]">
+                                    <div class="w-full h-full rounded-full bg-slate-200 flex items-center justify-center text-xl">🐶</div>
+                                </div>
+                            </div>
+                            <span class="text-xs font-medium">Новое</span>
+                        </div>
+                         <div class="flex flex-col items-center gap-2 min-w-[70px]">
+                            <div class="w-16 h-16 rounded-full bg-slate-200 flex items-center justify-center text-xl opacity-60">
+                                ❤️
+                            </div>
+                            <span class="text-xs font-medium text-slate-400">Важное</span>
+                        </div>
+                    </div>
+
+                    <h2 class="text-lg font-bold text-slate-800 mb-4">Альбомы</h2>
+                    <div class="grid grid-cols-2 gap-4 mb-24">
+                        ${ALBUMS.map(album => `
+                            <div class="aspect-[4/5] ${album.color} rounded-3xl p-4 flex flex-col justify-between active-scale cursor-pointer relative overflow-hidden group">
+                                <div class="w-10 h-10 rounded-full ${album.icon_bg} flex items-center justify-center text-xl z-10">
+                                    ${album.emoji}
+                                </div>
+                                <div class="z-10">
+                                    <h3 class="font-bold text-slate-800 text-lg leading-tight mb-1">${album.title}</h3>
+                                    <p class="text-xs text-slate-500 font-semibold">${album.count}</p>
+                                </div>
+                                <!-- Декор -->
+                                <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white opacity-20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRoulette() {
+            return `
+                <div class="h-full flex flex-col p-6 pt-12 fade-enter items-center text-center">
+                    <h1 class="text-2xl font-extrabold text-slate-900 mb-2">Рулетка</h1>
+                    <div class="flex-1 flex flex-col items-center justify-center w-full">
+                        <div class="w-64 h-64 bg-slate-900 rounded-full flex items-center justify-center relative mb-8 shadow-2xl shadow-slate-300">
+                            <span id="roulette-result" class="text-6xl filter transition-all duration-300">🎲</span>
+                        </div>
+                        <p id="roulette-text" class="text-2xl font-bold text-slate-800 mb-8 h-8">Жми кнопку!</p>
+                        <button onclick="spinRoulette()" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-lg active-scale">Крутить</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSos() {
+            return `
+                <div class="h-full flex flex-col items-center justify-center p-8 bg-red-50 text-center fade-enter">
+                    <div class="w-48 h-48 bg-red-500 rounded-full shadow-xl shadow-red-200 flex items-center justify-center text-white mb-8 active-scale cursor-pointer animate-pulse" onclick="activateSos()">
+                        <span class="text-6xl">🆘</span>
+                    </div>
+                    <h1 class="text-3xl font-bold text-slate-900 mb-2">Плохой день?</h1>
+                    <p class="text-slate-500">Нажми на кнопку выше</p>
+                    <div id="sos-content" class="mt-8 hidden">
+                        <p id="sos-text" class="text-xl font-bold text-slate-800"></p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- ЛОГИКА ---
+        function switchTab(tabName) {
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => {
+                const isActive = btn.dataset.tab === tabName;
+                btn.classList.toggle('text-slate-900', isActive);
+                btn.classList.toggle('text-slate-400', !isActive && btn.dataset.tab !== 'sos');
+                
+                if(btn.dataset.tab === 'sos') {
+                    btn.classList.toggle('text-red-600', isActive);
+                    btn.classList.toggle('text-red-400', !isActive);
+                }
+            });
+
+            if(tabName === 'moments') content.innerHTML = renderMoments();
+            if(tabName === 'roulette') content.innerHTML = renderRoulette();
+            if(tabName === 'sos') content.innerHTML = renderSos();
+        }
+
+        function spinRoulette() {
+            const icon = document.getElementById('roulette-result');
+            const text = document.getElementById('roulette-text');
+            
+            let counter = 0;
+            const interval = setInterval(() => {
+                icon.innerText = ["🍒","🍋","🍇","🍉"][counter % 4];
+                counter++;
+            }, 100);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                const res = ROULETTE_OPTIONS[Math.floor(Math.random() * ROULETTE_OPTIONS.length)];
+                icon.innerText = "🎁";
+                text.innerText = res;
+                confetti({ origin: { y: 0.5 } });
+            }, 1500);
+        }
+
+        function activateSos() {
+            document.getElementById('sos-content').classList.remove('hidden');
+            document.getElementById('sos-text').innerText = SOS_MESSAGES[Math.floor(Math.random() * SOS_MESSAGES.length)];
+            confetti({ colors: ['#ef4444'] });
+        }
+
+        switchTab('moments');
+    </script>
+</body>
+</html>
