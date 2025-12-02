@@ -33,6 +33,11 @@
             padding: 0;
             overflow: hidden; /* Чтобы не скроллилась вся страница */
         }
+
+        /* Анимация Лифта */
+        .lift-door { transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .lift-open .left-door { transform: translateX(-100%); }
+        .lift-open .right-door { transform: translateX(100%); }
         
         /* Контейнер приложения - ограничивает ширину на ПК, но на весь экран на мобилке */
         #app-container {
@@ -68,6 +73,11 @@
     <!-- Главный контейнер приложения MosDate -->
     <div id="app-container">
         
+        <!-- СЛОЙ ЛОНГРИДА (Скрыт по умолчанию) -->
+        <div id="story-viewer" class="absolute top-0 left-0 w-full h-full bg-white z-[100] hidden overflow-y-auto no-scrollbar pb-20">
+            <!-- Сюда рендерится история -->
+        </div>
+
         <!-- Контент (меняется в зависимости от вкладки) -->
         <main id="app-content" class="flex-1 overflow-y-auto no-scrollbar bg-slate-50 relative pb-20">
             <!-- Сюда будет рендериться активный экран -->
@@ -94,7 +104,6 @@
     <script>
         // --- ДАННЫЕ ---
         const ALBUMS = [
-            { title: "Начало", count: "5 фото", color: "bg-blue-50", icon_bg: "bg-blue-200", emoji: "👶" },
             { title: "Сонное царство", count: "12 фото", color: "bg-purple-50", icon_bg: "bg-purple-200", emoji: "💤" },
             { title: "Преступления", count: "8 фото", color: "bg-orange-50", icon_bg: "bg-orange-200", emoji: "🐾" },
             { title: "Любовь", count: "∞ фото", color: "bg-pink-50", icon_bg: "bg-pink-200", emoji: "❤️" },
@@ -105,13 +114,147 @@
 
         // --- РЕНДЕР ---
         const content = document.getElementById('app-content');
+        const storyViewer = document.getElementById('story-viewer');
+
+        // Рендер конкретного Лонгрида (Вайрфрейм "Год в Москве")
+        function renderStoryMoscow() {
+            return `
+                <!-- Кнопка Назад -->
+                <button onclick="closeStory()" class="fixed top-4 right-4 z-50 w-10 h-10 bg-white/80 backdrop-blur rounded-full shadow-lg flex items-center justify-center text-slate-800 font-bold active:scale-90 transition-transform">
+                    ✕
+                </button>
+
+                <!-- 1. HERO: Коробки -->
+                <div class="h-[80vh] bg-slate-200 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/50 z-10"></div>
+                    <!-- Заглушка фото -->
+                    <div class="absolute inset-0 bg-cover bg-center opacity-50" style="background-image: url('https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1000&auto=format&fit=crop');"></div>
+                    
+                    <div class="relative z-20 text-white">
+                        <h1 class="text-5xl font-extrabold mb-4 leading-tight drop-shadow-lg">Год в<br>Большом<br>Городе</h1>
+                        <p class="text-lg font-medium opacity-90 drop-shadow">Ноябрь. Мы, вещи и одна маленькая собака.</p>
+                    </div>
+                </div>
+
+                <!-- 2. MAP: Карта -->
+                <div class="py-12 px-6 bg-white relative">
+                    <div class="w-full aspect-square bg-blue-50 rounded-3xl overflow-hidden relative mb-6 shadow-inner border border-blue-100">
+                        <!-- Имитация карты -->
+                        <div class="absolute inset-0 opacity-30" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'); background-size: cover;"></div>
+                        <!-- Маршрут -->
+                        <div class="absolute top-1/2 left-1/2 w-32 h-1 bg-red-500 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full"></div>
+                        <div class="absolute top-[30%] left-[30%] text-4xl animate-bounce">📍</div>
+                        <div class="absolute bottom-[30%] right-[30%] text-4xl">🏁</div>
+                    </div>
+                    <p class="text-xl font-bold text-slate-800">Поездка в неизвестность.</p>
+                    <p class="text-slate-500 mt-2">Мы думали, что не поместимся. Кайли думала, что мы строим ей форт.</p>
+                </div>
+
+                <!-- 3. ELEVATOR: Лифт (Анимация) -->
+                <div id="elevator-block" class="h-[60vh] relative bg-slate-800 flex items-center justify-center overflow-hidden">
+                    <!-- Внутри лифта (Фото Кайли) -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="text-9xl">🐶</span>
+                        <p class="absolute bottom-10 text-white font-bold text-center w-full">Мне на 15-й!</p>
+                    </div>
+
+                    <!-- Двери -->
+                    <div class="lift-door left-door absolute top-0 left-0 w-1/2 h-full bg-slate-300 border-r border-slate-400 shadow-2xl z-10 flex items-center justify-end pr-4">
+                        <div class="w-2 h-20 bg-slate-400 rounded-full"></div>
+                    </div>
+                    <div class="lift-door right-door absolute top-0 right-0 w-1/2 h-full bg-slate-300 border-l border-slate-400 shadow-2xl z-10 flex items-center justify-start pl-4">
+                        <div class="w-2 h-20 bg-slate-400 rounded-full"></div>
+                    </div>
+                </div>
+                <div class="p-4 bg-slate-100 text-center text-slate-400 text-xs font-bold uppercase tracking-widest mb-8">
+                    ▲ Листай, чтобы открыть двери ▲
+                </div>
+
+                <!-- 4. STICKERS: Комфорт -->
+                <div class="py-12 px-4 bg-orange-50 overflow-hidden">
+                    <h2 class="text-3xl font-extrabold text-orange-900 mb-12 text-center">Level Up Комфорта</h2>
+                    <div class="relative h-[400px]">
+                        <div class="absolute top-0 left-4 w-48 h-64 bg-white p-3 shadow-xl rotate-[-6deg] rounded-xl z-10 transform transition-transform hover:scale-105">
+                            <div class="w-full h-4/5 bg-slate-200 rounded-lg mb-2"></div>
+                            <p class="text-xs font-bold text-center text-slate-500">Новая лежанка</p>
+                        </div>
+                        <div class="absolute top-20 right-4 w-40 h-52 bg-white p-3 shadow-xl rotate-[12deg] rounded-xl z-20 transform transition-transform hover:scale-105">
+                            <div class="w-full h-4/5 bg-slate-200 rounded-lg mb-2"></div>
+                            <p class="text-xs font-bold text-center text-slate-500">Длинный диван</p>
+                        </div>
+                        <div class="absolute bottom-10 left-10 w-32 h-32 bg-white p-2 shadow-xl rotate-[-10deg] rounded-full flex items-center justify-center z-30 border-4 border-white">
+                            <span class="text-5xl">❤️</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. HORIZONTAL: Социализация -->
+                <div class="py-12 bg-white">
+                    <div class="px-6 mb-6">
+                        <h2 class="text-3xl font-bold text-slate-900">Банда Района 😎</h2>
+                        <p class="text-slate-500 mt-2">Теперь нас знает каждая собака.</p>
+                    </div>
+                    
+                    <!-- Карусель -->
+                    <div class="flex overflow-x-auto gap-4 px-6 pb-8 no-scrollbar snap-x snap-mandatory">
+                        <!-- Карточка 1 -->
+                        <div class="snap-center shrink-0 w-[85vw] aspect-[4/5] bg-slate-900 rounded-[32px] relative overflow-hidden shadow-xl">
+                            <div class="absolute inset-0 flex items-center justify-center text-white text-2xl font-bold">Площадка 1</div>
+                        </div>
+                        <!-- Карточка 2 -->
+                        <div class="snap-center shrink-0 w-[85vw] aspect-[4/5] bg-slate-700 rounded-[32px] relative overflow-hidden shadow-xl">
+                            <div class="absolute inset-0 flex items-center justify-center text-white text-2xl font-bold">Друг Бобик</div>
+                        </div>
+                        <!-- Карточка 3 -->
+                        <div class="snap-center shrink-0 w-[85vw] aspect-[4/5] bg-slate-500 rounded-[32px] relative overflow-hidden shadow-xl">
+                            <div class="absolute inset-0 flex items-center justify-center text-white text-2xl font-bold">Вся банда</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. FINAL -->
+                <div class="h-[60vh] bg-red-50 flex flex-col items-center justify-center p-8 text-center">
+                    <h2 class="text-4xl font-extrabold text-red-500 mb-6">Мы Дома.</h2>
+                    <p class="text-slate-600 mb-12 leading-relaxed text-lg">Главное не город. Главное, что мы перевезли атмосферу с собой.</p>
+                    <button onclick="closeStory()" class="bg-red-500 text-white px-10 py-5 rounded-2xl font-bold shadow-xl shadow-red-200 active:scale-95 transition-transform text-lg">
+                        Люблю вас ❤️
+                    </button>
+                </div>
+            `;
+        }
+
+        function openStory(id) {
+            storyViewer.innerHTML = renderStoryMoscow();
+            storyViewer.classList.remove('hidden');
+            
+            // Запускаем "наблюдателя" за лифтом
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        document.getElementById('elevator-block').classList.add('lift-open');
+                    } else {
+                        document.getElementById('elevator-block').classList.remove('lift-open');
+                    }
+                });
+            }, { threshold: 0.5 }); // Сработает, когда лифт виден на 50%
+            
+            setTimeout(() => {
+                const el = document.getElementById('elevator-block');
+                if(el) observer.observe(el);
+            }, 100);
+        }
+
+        function closeStory() {
+            storyViewer.classList.add('hidden');
+            storyViewer.innerHTML = ''; // Очищаем память
+        }
 
         function renderMoments() {
             return `
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v2.0</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
@@ -139,6 +282,18 @@
 
                     <h2 class="text-lg font-bold text-slate-800 mb-4">Альбомы</h2>
                     <div class="grid grid-cols-2 gap-4 mb-24">
+                        <!-- АЛЬБОМ 1 - КЛИКАБЕЛЬНЫЙ -->
+                        <div onclick="openStory('moscow')" class="aspect-[4/5] bg-blue-50 rounded-3xl p-4 flex flex-col justify-between active-scale cursor-pointer relative overflow-hidden group border-2 border-blue-100 hover:border-blue-300 transition-all shadow-sm hover:shadow-md">
+                            <div class="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-xl z-10">
+                                🏙️
+                            </div>
+                            <div class="z-10">
+                                <h3 class="font-bold text-slate-800 text-lg leading-tight mb-1">Год в Москве</h3>
+                                <p class="text-xs text-slate-500 font-semibold">Интерактивная история</p>
+                            </div>
+                            <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white opacity-20 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                        </div>
+
                         ${ALBUMS.map(album => `
                             <div class="aspect-[4/5] ${album.color} rounded-3xl p-4 flex flex-col justify-between active-scale cursor-pointer relative overflow-hidden group">
                                 <div class="w-10 h-10 rounded-full ${album.icon_bg} flex items-center justify-center text-xl z-10">
@@ -188,7 +343,18 @@
         }
 
         // --- ЛОГИКА ---
+        
+        // Функция открытия лонгрида (скрывает табы)
+        function openLongread() {
+            content.innerHTML = renderLongread();
+            // Скрываем нижнее меню, чтобы не мешало читать
+            document.querySelector('nav').style.display = 'none';
+        }
+
         function switchTab(tabName) {
+            // Возвращаем меню, если оно было скрыто
+            document.querySelector('nav').style.display = 'flex';
+            
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => {
                 const isActive = btn.dataset.tab === tabName;
