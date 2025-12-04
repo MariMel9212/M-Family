@@ -21,7 +21,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Amatic+SC:wght@400;700&family=Shantell+Sans:wght@600&display=swap" rel="stylesheet">
     
     <style>
         /* Основные настройки */
@@ -127,8 +127,24 @@
                     ✕
                 </button>
 
-                <!-- 1. MAP: Карта (Теперь первый блок, добавил отступ сверху) -->
-                <div class="py-12 px-6 bg-white relative pt-24">
+                <!-- 1. HERO: Большой Переезд (Step 1) -->
+                <div id="hero-block" class="relative" style="height: 300vh;"> <!-- Высота для скролла -->
+                    <div class="sticky top-0 h-[100dvh] w-full overflow-hidden flex items-center justify-center bg-white">
+                        
+                        <!-- Фон: Текстура -->
+                        <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
+                        
+                        <!-- Заголовок: Большой Переезд -->
+                        <h1 id="hero-title" class="relative z-50 text-center leading-tight text-slate-900" 
+                            style="font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 3.5rem;">
+                            Большой<br>переезд
+                        </h1>
+
+                    </div>
+                </div>
+
+                <!-- 2. MAP: Карта (Теперь второй блок) -->
+                <div class="py-12 px-6 bg-white relative">
                     <div class="w-full aspect-square bg-blue-50 rounded-3xl overflow-hidden relative mb-6 shadow-inner border border-blue-100">
                         <!-- Имитация карты -->
                         <div class="absolute inset-0 opacity-30" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'); background-size: cover;"></div>
