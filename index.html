@@ -132,16 +132,20 @@
 
                 <!-- 1. HERO: Большой Переезд -->
                 <div id="hero-block" class="relative" style="height: 300vh;"> 
-                    <div class="sticky top-0 h-[100dvh] w-full overflow-hidden flex items-center justify-center bg-white">
+                    <div class="sticky top-0 h-[100dvh] w-full overflow-hidden bg-white relative">
                         
                         <!-- Фон: Текстура -->
                         <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
                         
                         <!-- Заголовок: Большой Переезд -->
-                        <h1 id="hero-title" class="relative z-50 text-center text-slate-900 origin-center will-change-transform" 
-                            style="font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 75px; line-height: 85%; letter-spacing: -0.02em;">
+                        <!-- Стартовая позиция: По центру (top: 50%, left: 50%, translate(-50%, -50%)) -->
+                        <h1 id="hero-title" class="absolute z-50 text-center text-slate-900 origin-top-left will-change-transform whitespace-nowrap" 
+                            style="top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 75px; line-height: 85%; letter-spacing: -0.02em;">
                             Большой<br>переезд
                         </h1>
+
+                        <!-- Коробки Нижние -->
+                        <img id="boxes-bottom" src="./images/boxes_bottom.png" class="absolute bottom-0 left-0 w-full z-20 will-change-transform" style="transform: translateY(100%);" alt="Boxes">
 
                     </div>
                 </div>
@@ -237,9 +241,10 @@
             storyViewer.innerHTML = renderStoryMoscow();
             storyViewer.classList.remove('hidden');
             
-            // --- АНИМАЦИЯ (НОВАЯ, ПО ШАГАМ) ---
+            // --- АНИМАЦИЯ ---
             const heroBlock = document.getElementById('hero-block');
             const title = document.getElementById('hero-title');
+            const boxesBottom = document.getElementById('boxes-bottom');
             
             if (heroBlock && title) {
                 let ticking = false;
@@ -252,34 +257,59 @@
                             const blockHeight = heroBlock.offsetHeight;
                             
                             // Прогресс прокрутки Hero блока (от 0 до 1)
-                            // Вычитаем высоту вьюпорта, чтобы знать, сколько мы реально прокрутили ВНУТРИ блока
                             const scrollableDistance = blockHeight - viewportHeight;
                             let progress = 0;
                             if (scrollableDistance > 0) {
                                 progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
                             }
 
-                            // --- ШАГ 1: ЗАГОЛОВОК УЕЗЖАЕТ И УМЕНЬШАЕТСЯ ---
-                            // Работает с 0% до 30% скролла (0.0 - 0.3)
+                            // --- ШАГ 1: ЗАГОЛОВОК К ЛЕВОМУ ВЕРХНЕМУ УГЛУ, КОРОБКИ ВВЕРХ ---
+                            // Работает с 0% до 30% скролла
+                            const step1Start = 0.0;
                             const step1End = 0.3;
                             
-                            if (progress <= step1End) {
-                                const p = progress / step1End; // Нормализуем от 0 до 1 внутри этого шага
+                            if (progress >= step1Start && progress <= step1End) {
+                                const p = (progress - step1Start) / (step1End - step1Start);
                                 
-                                // Масштаб: от 1 до 0.6
-                                const scale = 1 - (p * 0.4);
+                                // 1. Заголовок
+                                // Start: top: 50%, left: 50%, translate(-50%, -50%), scale(1)
+                                // End: top: 8%, left: 8%, translate(0, 0), scale(0.5)
                                 
-                                // Сдвиг вверх: от 0% (центр) до -XXX% (ближе к верху)
-                                // Изначально он по центру. translate(0, 0)
-                                // Хотим поднять его выше.
-                                // translateY: от 0px до -30vh (примерно)
-                                const moveY = p * -35; // -35vh
+                                const startTop = 50; const endTop = 8;
+                                const startLeft = 50; const endLeft = 8;
+                                const startTrans = -50; const endTrans = 0;
+                                const startScale = 1; const endScale = 0.5;
                                 
-                                title.style.transform = `translateY(${moveY}vh) scale(${scale})`;
-                                title.style.opacity = 1;
+                                const curTop = startTop - (p * (startTop - endTop));
+                                const curLeft = startLeft - (p * (startLeft - endLeft));
+                                const curTrans = startTrans - (p * (startTrans - endTrans));
+                                const curScale = startScale - (p * (startScale - endScale));
+                                
+                                title.style.top = `${curTop}%`;
+                                title.style.left = `${curLeft}%`;
+                                title.style.transform = `translate(${curTrans}%, ${curTrans}%) scale(${curScale})`;
+                                title.style.textAlign = p > 0.5 ? 'left' : 'center'; // Переключаем выравнивание
+                                
+                                // 2. Коробки Нижние
+                                // Start: translateY(100%)
+                                // End: translateY(0%)
+                                const boxesY = 100 - (p * 100);
+                                if (boxesBottom) boxesBottom.style.transform = `translateY(${boxesY}%)`;
+                                
+                            } else if (progress > step1End) {
+                                // Фиксация конечного состояния Шага 1
+                                title.style.top = `8%`;
+                                title.style.left = `8%`;
+                                title.style.transform = `translate(0%, 0%) scale(0.5)`;
+                                title.style.textAlign = 'left';
+                                if (boxesBottom) boxesBottom.style.transform = `translateY(0%)`;
                             } else {
-                                // Фиксируем состояние после завершения шага
-                                title.style.transform = `translateY(-35vh) scale(0.6)`;
+                                // Фиксация начального состояния (если отскроллили вверх)
+                                title.style.top = `50%`;
+                                title.style.left = `50%`;
+                                title.style.transform = `translate(-50%, -50%) scale(1)`;
+                                title.style.textAlign = 'center';
+                                if (boxesBottom) boxesBottom.style.transform = `translateY(100%)`;
                             }
                             
                             ticking = false;
