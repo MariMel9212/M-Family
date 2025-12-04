@@ -196,37 +196,32 @@
                         <!-- Фон: Текстура (самый низ) -->
                         <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('./images/texture.jpg');"></div>
                         
-                        <!-- Заголовок (Z-60) -->
-                        <h1 id="hero-title" class="font-hand font-bold text-slate-800 leading-none drop-shadow-sm text-center absolute w-full z-[60] origin-center will-change-transform">
+                        <!-- Заголовок (Z-60) - ВИДЕН СРАЗУ -->
+                        <h1 id="hero-title" class="font-hand font-bold text-slate-800 leading-none drop-shadow-sm text-center absolute w-full z-[60] origin-center top-1/2 -translate-y-1/2 scale-[3.5]">
                             Большой<br>переезд
                         </h1>
 
                         <!-- Облачко с текстом (Z-55) -->
-                        <div id="hero-bubble" class="absolute top-[28%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-[55] text-[11px] leading-tight font-bold text-slate-600 border border-white opacity-0 will-change-transform">
+                        <div id="hero-bubble" class="absolute top-[28%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-[55] text-[11px] leading-tight font-bold text-slate-600 border border-white opacity-0">
                             Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу
                         </div>
 
                         <!-- СЛОИ КОЛЛАЖА (по списку из Figma) -->
                         
                         <!-- 1. Коробки3 (Самый низ, Z-10) -->
-                        <!-- Финальная позиция на макете: Снизу слева/центр -->
-                        <img id="layer-box3" src="./images/box3.png" alt="Коробки3" class="absolute bottom-[-5%] left-[-10%] w-[60%] z-[10] object-contain will-change-transform">
+                        <img id="layer-box3" src="./images/box3.png" alt="Коробки3" class="absolute bottom-[-5%] left-[-10%] w-[60%] z-[10] object-contain opacity-0">
 
                         <!-- 2. МЫ (Z-20) -->
-                        <!-- Финальная позиция: Слева, частично перекрыты коробками -->
-                        <img id="layer-we" src="./images/we.png" alt="Мы" class="absolute bottom-[10%] left-[-15%] w-[75%] z-[20] object-contain drop-shadow-xl will-change-transform">
+                        <img id="layer-we" src="./images/we.png" alt="Мы" class="absolute bottom-[10%] left-[-15%] w-[75%] z-[20] object-contain drop-shadow-xl opacity-0">
 
                         <!-- 3. Коробки2 (Z-30) -->
-                        <!-- Финальная позиция: Справа, создают массу -->
-                        <img id="layer-box2" src="./images/box2.png" alt="Коробки2" class="absolute bottom-[-5%] right-[-25%] w-[90%] z-[30] object-contain will-change-transform">
+                        <img id="layer-box2" src="./images/box2.png" alt="Коробки2" class="absolute bottom-[-5%] right-[-25%] w-[90%] z-[30] object-contain opacity-0">
 
                         <!-- 4. Кайли (Z-40) -->
-                        <!-- Финальная позиция: По центру, выглядывает -->
-                        <img id="layer-kylie" src="./images/kylie.png" alt="Кайли" class="absolute bottom-[12%] left-[30%] w-[45%] z-[40] object-contain drop-shadow-lg will-change-transform">
+                        <img id="layer-kylie" src="./images/kylie.png" alt="Кайли" class="absolute bottom-[12%] left-[30%] w-[45%] z-[40] object-contain drop-shadow-lg opacity-0">
 
                         <!-- 5. Коробки1 (Верх, Z-50) -->
-                        <!-- Финальная позиция: Самый низ, перекрывают низ фоток -->
-                        <img id="layer-box1" src="./images/box1.png" alt="Коробки1" class="absolute bottom-[-8%] left-[-5%] w-[110%] z-[50] object-cover will-change-transform">
+                        <img id="layer-box1" src="./images/box1.png" alt="Коробки1" class="absolute bottom-[-8%] left-[-5%] w-[110%] z-[50] object-cover opacity-0">
 
                     </div>
                 </div>
@@ -324,17 +319,23 @@
             
             // Анимация Hero блока при скролле (Scrollytelling)
             const heroBlock = document.getElementById('hero-block');
-            const title = document.getElementById('hero-title');
             
-            // Элементы
-            const layerBox3 = document.getElementById('layer-box3');
-            const layerWe = document.getElementById('layer-we');
-            const layerBox2 = document.getElementById('layer-box2');
-            const layerKylie = document.getElementById('layer-kylie');
-            const layerBox1 = document.getElementById('layer-box1');
-            const bubble = document.getElementById('hero-bubble');
-
+            // Проверка существования блока
             if (heroBlock) {
+                const title = document.getElementById('hero-title');
+                const layerBox3 = document.getElementById('layer-box3');
+                const layerWe = document.getElementById('layer-we');
+                const layerBox2 = document.getElementById('layer-box2');
+                const layerKylie = document.getElementById('layer-kylie');
+                const layerBox1 = document.getElementById('layer-box1');
+                const bubble = document.getElementById('hero-bubble');
+                
+                // Принудительный вызов при загрузке
+                setTimeout(() => {
+                   // Сброс позиций в начальное состояние вручную, чтобы не мерцало
+                   if (title) title.style.transform = 'translate(0, -50%) scale(3.5)';
+                }, 10);
+
                 let ticking = false;
                 
                 const animateHero = () => {
@@ -344,114 +345,88 @@
                             const viewportHeight = window.innerHeight;
                             const blockHeight = heroBlock.offsetHeight;
                             
-                            // Сколько пикселей мы проскроллили ВНУТРИ блока
-                            // (пока скролл меньше высоты блока, мы "внутри" анимации)
-                            
-                            // Прогресс от 0 до 1 на протяжении всего блока
-                            // Мы вычитаем один экран, чтобы анимация закончилась ровно когда блок перестанет быть sticky
+                            // Прогресс от 0 до 1
                             const scrollableDistance = blockHeight - viewportHeight;
-                            const progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+                            let progress = 0;
+                            if (scrollableDistance > 0) {
+                                progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+                            }
                             
                             // --- 1. ЗАГОЛОВОК ---
-                            // Сначала он по центру и большой (scale 3), потом уезжает наверх (top 15%) и становится нормальным (scale 1)
                             if (title) {
-                                // Кривая движения: быстро начинает, плавно заканчивает
-                                const titleProgress = Math.min(1, progress * 1.5); // Закончит движение на 66% скролла
-                                
+                                const titleProgress = Math.min(1, progress * 1.5);
                                 const startScale = 3.5; 
                                 const endScale = 1;
                                 const currentScale = startScale - (titleProgress * (startScale - endScale));
-                                
-                                const startTop = 50; // %
-                                const endTop = 15; // %
+                                const startTop = 50; 
+                                const endTop = 15; 
                                 const currentTop = startTop - (titleProgress * (startTop - endTop));
                                 
                                 title.style.top = `${currentTop}%`;
                                 title.style.transform = `translate(0, -50%) scale(${currentScale})`;
-                                title.style.opacity = 1; // Всегда виден
                             }
 
-                            // --- 2. СЛОИ (ВЫЕЗЖАЮТ) ---
-                            // Функция движения: 
-                            // startAt: когда начинает (0-1)
-                            // duration: как долго едет (0-1)
-                            // startOffset: откуда едет (x, y) в пикселях. (0,0) - это финальная точка.
-                            
+                            // --- 2. СЛОИ ---
                             const moveLayer = (el, startAt, duration, startX, startY) => {
                                 if (!el) return;
                                 
-                                if (progress < startAt) {
-                                    // Еще не началось - спрятан за краем
+                                if (progress <= startAt) {
+                                    // Спрятано (но с opacity 0, чтобы не мешало, если вдруг вылезет)
                                     el.style.transform = `translate(${startX}px, ${startY}px)`;
                                     el.style.opacity = 0; 
-                                } else if (progress > startAt + duration) {
-                                    // Уже приехало - стоит на месте
+                                } else if (progress >= startAt + duration) {
+                                    // Финал
                                     el.style.transform = `translate(0px, 0px)`;
                                     el.style.opacity = 1;
                                 } else {
-                                    // Едет сейчас
+                                    // В процессе
                                     const p = (progress - startAt) / duration;
-                                    // Easing: easeOutCubic
                                     const ease = 1 - Math.pow(1 - p, 3);
-                                    
                                     const currentX = startX * (1 - ease);
                                     const currentY = startY * (1 - ease);
                                     
                                     el.style.transform = `translate(${currentX}px, ${currentY}px)`;
-                                    el.style.opacity = p; // Плавное появление
+                                    el.style.opacity = p;
                                 }
                             };
 
-                            // Порядок появления (Сценарий):
-                            
-                            // 1. Коробки3 (Справа снизу)
+                            // Порядок появления:
                             moveLayer(layerBox3, 0.1, 0.3, 100, 300);
-
-                            // 2. МЫ (Слева) + Коробки2 (Справа) - Заполняют пространство
                             moveLayer(layerWe, 0.2, 0.4, -300, 200);
                             moveLayer(layerBox2, 0.25, 0.4, 300, 200);
-
-                            // 3. Коробки1 (Передний план, снизу) - Закрывают низ
                             moveLayer(layerBox1, 0.4, 0.4, 0, 400);
 
-                            // 4. Кайли (Выпрыгивает снизу) - Сюрприз!
-                            // Для Кайли добавим отскок
+                            // Кайли
                             if (layerKylie) {
                                 const startAt = 0.5;
                                 const duration = 0.3;
                                 
-                                if (progress < startAt) {
+                                if (progress <= startAt) {
                                     layerKylie.style.transform = `translate(0px, 200px)`;
                                     layerKylie.style.opacity = 0;
-                                } else if (progress > startAt + duration) {
-                                    // Пружинка в конце, если мы уже все проскроллили
-                                    // Можно добавить легкое дыхание или покачивание, но пока просто стоит
+                                } else if (progress >= startAt + duration) {
                                     layerKylie.style.transform = `translate(0px, 0px)`;
                                     layerKylie.style.opacity = 1;
                                 } else {
                                     const p = (progress - startAt) / duration;
-                                    // BackOut easing для прыжка (вылетает чуть выше и встает на место)
+                                    // Пружинка
                                     const c1 = 1.70158;
                                     const c3 = c1 + 1;
                                     const ease = 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2);
-                                    
-                                    const startY = 200;
-                                    const currentY = startY * (1 - ease);
-                                    
+                                    const currentY = 200 * (1 - ease);
                                     layerKylie.style.transform = `translate(0px, ${currentY}px)`;
                                     layerKylie.style.opacity = p;
                                 }
                             }
                             
-                            // 5. Облачко (Появляется в конце)
+                            // Облачко
                             if (bubble) {
                                 const startAt = 0.8;
                                 const duration = 0.15;
-                                
-                                if (progress < startAt) {
+                                if (progress <= startAt) {
                                     bubble.style.transform = `scale(0) rotate(10deg)`;
                                     bubble.style.opacity = 0;
-                                } else if (progress > startAt + duration) {
+                                } else if (progress >= startAt + duration) {
                                     bubble.style.transform = `scale(1) rotate(2deg)`;
                                     bubble.style.opacity = 1;
                                 } else {
@@ -467,10 +442,14 @@
                     }
                 };
                 
-                // Вызываем сразу, чтобы установить начальные позиции
-                animateHero();
-                
+                // Запуск слушателя скролла
                 storyViewer.addEventListener('scroll', animateHero, { passive: true });
+                
+                // ПРИНУДИТЕЛЬНЫЙ ПЕРВЫЙ ЗАПУСК
+                // Вызываем несколько раз, чтобы убедиться, что при загрузке картинки встали на места
+                animateHero();
+                setTimeout(animateHero, 100);
+                setTimeout(animateHero, 500);
             }
             
             // Запускаем "наблюдателя" за лифтом
