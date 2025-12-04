@@ -10,27 +10,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MosDate</title>
     
-    <!-- Сразу подключаем Telegram -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        // БЕЗОПАСНОЕ расширение
+        // БЕЗОПАСНОЕ расширение (v4.0)
         const tg = window.Telegram.WebApp;
         if (tg) {
             tg.ready();
-            tg.expand(); // Старый добрый expand, который точно работает
+            tg.expand();
+            // Повторяем expand для надежности, но без фанатизма
+            setTimeout(() => tg.expand(), 100);
             
             tg.enableClosingConfirmation(); 
             tg.setHeaderColor('#ffffff');
             tg.setBackgroundColor('#ffffff');
-            
-            // Пробуем фуллскрин только когда все готово, и очень аккуратно
-            setTimeout(() => {
-                try {
-                    if (tg.requestFullscreen) tg.requestFullscreen();
-                } catch (e) {
-                    console.log("FS failed", e);
-                }
-            }, 500);
         }
     </script>
 
@@ -160,8 +151,16 @@
                         </h1>
 
                         <!-- Коробки Нижние -->
-                        <!-- Используем высоту (vh) для масштабирования, а не ширину -->
-                        <img id="boxes-bottom" src="./images/boxes_bottom.png" class="absolute bottom-0 left-1/2 h-[35vh] w-auto min-w-[120%] object-cover z-20 will-change-transform" style="transform: translate(-50%, 100%);" alt="Boxes">
+                        <img id="boxes-bottom" src="./images/boxes_bottom.png" class="absolute -bottom-[10%] -left-[35%] w-[170%] max-w-none z-20 will-change-transform" style="transform: translateY(100%);" alt="Boxes">
+
+                        <!-- Слой: Мы (слева) -->
+                        <img id="layer-we" src="./images/we.png" class="absolute bottom-[20%] left-[5%] w-[45%] z-10 will-change-transform" style="transform: translateX(-150%);" alt="We">
+
+                        <!-- Слой: Коробка 2 (справа) -->
+                        <img id="layer-box2" src="./images/box2.png" class="absolute bottom-[25%] right-[5%] w-[35%] z-15 will-change-transform" style="transform: translateX(150%);" alt="Box 2">
+
+                    </div>
+                </div>
 
                     </div>
                 </div>
@@ -261,6 +260,8 @@
             const heroBlock = document.getElementById('hero-block');
             const title = document.getElementById('hero-title');
             const boxesBottom = document.getElementById('boxes-bottom');
+            const layerWe = document.getElementById('layer-we');
+            const layerBox2 = document.getElementById('layer-box2');
             
             if (heroBlock && title) {
                 let ticking = false;
@@ -279,18 +280,14 @@
                                 progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
                             }
 
-                            // --- ШАГ 1: ЗАГОЛОВОК К ЛЕВОМУ ВЕРХНЕМУ УГЛУ, КОРОБКИ ВВЕРХ ---
-                            // Работает с 0% до 30% скролла
+                            // --- ШАГ 1: ЗАГОЛОВОК + НИЖНИЕ КОРОБКИ (0% - 30%) ---
                             const step1Start = 0.0;
                             const step1End = 0.3;
                             
-                            if (progress >= step1Start && progress <= step1End) {
-                                const p = (progress - step1Start) / (step1End - step1Start);
+                            if (progress <= step1End) {
+                                const p = progress / step1End; // 0..1
                                 
-                                // 1. Заголовок
-                                // Start: top: 50%, left: 50%, translate(-50%, -50%), scale(1)
-                                // End: top: 15%, left: 8%, translate(0, 0), scale(0.8)
-                                
+                                // Заголовок
                                 const startTop = 50; const endTop = 15;
                                 const startLeft = 50; const endLeft = 8;
                                 const startTrans = -50; const endTrans = 0;
@@ -305,28 +302,57 @@
                                 title.style.left = `${curLeft}%`;
                                 title.style.transform = `translate(${curTrans}%, ${curTrans}%) scale(${curScale})`;
                                 title.style.textAlign = p > 0.5 ? 'left' : 'center';
-                                
-                                // 2. Коробки Нижние
-                                // Start: translate(-50%, 100%)
-                                // End: translate(-50%, 0%)
+
+                                // Коробки нижние (выезжают снизу)
+                                // Start: translateY(100%) -> End: translateY(0%)
                                 const boxesY = 100 - (p * 100);
-                                if (boxesBottom) boxesBottom.style.transform = `translate(-50%, ${boxesY}%)`;
-                                
-                            } else if (progress > step1End) {
-                                // Фиксация конечного состояния Шага 1
+                                if (boxesBottom) boxesBottom.style.transform = `translateY(${boxesY}%)`;
+
+                                // Остальные слои скрыты
+                                if (layerWe) layerWe.style.transform = `translateX(-150%)`;
+                                if (layerBox2) layerBox2.style.transform = `translateX(150%)`;
+
+                            } 
+                            // --- ШАГ 2: МЫ + КОРОБКА 2 (30% - 60%) ---
+                            else if (progress > step1End && progress <= 0.6) {
+                                // Фиксируем Шаг 1
                                 title.style.top = `15%`;
                                 title.style.left = `8%`;
                                 title.style.transform = `translate(0%, 0%) scale(0.8)`;
                                 title.style.textAlign = 'left';
-                                if (boxesBottom) boxesBottom.style.transform = `translate(-50%, 0%)`;
-                            } else {
-                                // Фиксация начального состояния
-                                title.style.top = `50%`;
-                                title.style.left = `50%`;
-                                title.style.transform = `translate(-50%, -50%) scale(1)`;
-                                title.style.textAlign = 'center';
-                                if (boxesBottom) boxesBottom.style.transform = `translate(-50%, 100%)`;
+                                if (boxesBottom) boxesBottom.style.transform = `translateY(0%)`;
+
+                                // Анимируем Шаг 2
+                                const step2Start = 0.3;
+                                const step2End = 0.6;
+                                const p = (progress - step2Start) / (step2End - step2Start); // 0..1
+                                
+                                // Мы: слева направо ( -150% -> 0% )
+                                const weX = -150 + (p * 150);
+                                if (layerWe) layerWe.style.transform = `translateX(${weX}%)`;
+                                
+                                // Коробка 2: справа налево ( 150% -> 0% )
+                                const box2X = 150 - (p * 150);
+                                if (layerBox2) layerBox2.style.transform = `translateX(${box2X}%)`;
+                                
+                            } 
+                            // --- ФИНАЛ ( > 60% ) ---
+                            else {
+                                // Фиксируем все
+                                title.style.top = `15%`;
+                                title.style.left = `8%`;
+                                title.style.transform = `translate(0%, 0%) scale(0.8)`;
+                                title.style.textAlign = 'left';
+                                if (boxesBottom) boxesBottom.style.transform = `translateY(0%)`;
+                                if (layerWe) layerWe.style.transform = `translateX(0%)`;
+                                if (layerBox2) layerBox2.style.transform = `translateX(0%)`;
                             }
+                            
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                };
                             } else {
                                 // Фиксация начального состояния (если отскроллили вверх)
                                 title.style.top = `50%`;
@@ -375,7 +401,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v3.7 (FIX)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v4.0 (STABLE)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
