@@ -140,12 +140,12 @@
                         <!-- Заголовок: Большой Переезд -->
                         <!-- Стартовая позиция: По центру -->
                         <h1 id="hero-title" class="absolute z-50 text-center text-slate-900 origin-top-left will-change-transform whitespace-nowrap" 
-                            style="top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 90px; line-height: 85%; letter-spacing: -0.02em;">
+                            style="top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 85px; line-height: 90%; letter-spacing: -0.02em;">
                             Большой<br>переезд
                         </h1>
 
                         <!-- Коробки Нижние -->
-                        <img id="boxes-bottom" src="./images/boxes_bottom.png" class="absolute bottom-0 -left-[25%] w-[150%] max-w-none z-20 will-change-transform" style="transform: translateY(100%);" alt="Boxes">
+                        <img id="boxes-bottom" src="./images/boxes_bottom.png" class="absolute bottom-0 -left-[10%] w-[120%] max-w-none z-20 will-change-transform" style="transform: translateY(100%);" alt="Boxes">
 
                     </div>
                 </div>
@@ -273,12 +273,12 @@
                                 
                                 // 1. Заголовок
                                 // Start: top: 50%, left: 50%, translate(-50%, -50%), scale(1)
-                                // End: top: 8%, left: 8%, translate(0, 0), scale(0.5)
+                                // End: top: 15%, left: 6%, translate(0, 0), scale(0.7)
                                 
-                                const startTop = 50; const endTop = 8;
-                                const startLeft = 50; const endLeft = 8;
+                                const startTop = 50; const endTop = 15;
+                                const startLeft = 50; const endLeft = 6;
                                 const startTrans = -50; const endTrans = 0;
-                                const startScale = 1; const endScale = 0.65;
+                                const startScale = 1; const endScale = 0.7;
                                 
                                 const curTop = startTop - (p * (startTop - endTop));
                                 const curLeft = startLeft - (p * (startLeft - endLeft));
@@ -298,9 +298,9 @@
                                 
                             } else if (progress > step1End) {
                                 // Фиксация конечного состояния Шага 1
-                                title.style.top = `8%`;
-                                title.style.left = `8%`;
-                                title.style.transform = `translate(0%, 0%) scale(0.65)`;
+                                title.style.top = `15%`;
+                                title.style.left = `6%`;
+                                title.style.transform = `translate(0%, 0%) scale(0.7)`;
                                 title.style.textAlign = 'left';
                                 if (boxesBottom) boxesBottom.style.transform = `translateY(0%)`;
                             } else {
@@ -351,7 +351,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v2.0</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v3.0</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
