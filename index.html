@@ -42,67 +42,6 @@
         .lift-open .left-door { transform: translateX(-100%); }
         .lift-open .right-door { transform: translateX(100%); }
 
-        /* Анимация Кайли (мягкий bounce) */
-        @keyframes gentleBounce {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(2deg); }
-        }
-        #kylie-bounce {
-            animation: gentleBounce 3s ease-in-out infinite;
-        }
-
-        /* Parallax эффект для слоев */
-        .parallax-slow { transition: transform 0.3s ease-out; }
-        .parallax-fast { transition: transform 0.1s ease-out; }
-
-        /* Hero блок - начальное состояние */
-        #hero-block {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .hero-title-big {
-            font-size: 8rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .hero-title-small {
-            font-size: 4.5rem;
-            position: absolute;
-            top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        /* Элементы скрыты по умолчанию */
-        .hero-element {
-            opacity: 0;
-            transition: opacity 0.6s ease-out, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        /* Начальные позиции для выезда */
-        .hero-box3 {
-            transform: translateY(200px);
-        }
-        .hero-box2 {
-            transform: translateX(-150px);
-        }
-        .hero-people {
-            transform: translateX(-200px) rotate(-5deg);
-        }
-        .hero-box1 {
-            transform: translateY(150px);
-        }
-        .hero-dog {
-            transform: translateY(100px) scale(0.8);
-        }
-        .hero-bubble {
-            transform: translateX(150px) scale(0.8);
-        }
-        
         /* Контейнер приложения - ограничивает ширину на ПК, но на весь экран на мобилке */
         #app-container {
             width: 100%;
@@ -188,33 +127,8 @@
                     ✕
                 </button>
 
-                <!-- 1. HERO: Видео-скролл (Video Scrollytelling) -->
-                <div id="hero-block" class="relative" style="height: 400vh;">
-                    <!-- Sticky контейнер -->
-                    <div class="sticky top-0 h-[100dvh] w-full overflow-hidden flex flex-col items-center justify-center bg-white">
-                        
-                        <!-- Видео, управляемое скроллом -->
-                        <!-- playsinline - обязательно для iOS, muted - обязательно для автоплея -->
-                        <video 
-                            id="hero-video" 
-                            src="./images/intro.mov" 
-                            class="absolute top-0 left-0 w-full h-full object-cover z-10"
-                            playsinline 
-                            webkit-playsinline 
-                            muted 
-                            preload="auto">
-                        </video>
-
-                        <!-- Текстовое облачко (появится в конце видео) -->
-                        <div id="hero-bubble" class="absolute top-[28%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-20 text-[11px] leading-tight font-bold text-slate-600 border border-white opacity-0 transition-opacity duration-500">
-                            Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- 2. MAP: Карта -->
-                <div class="py-12 px-6 bg-white relative">
+                <!-- 1. MAP: Карта (Теперь первый блок, добавил отступ сверху) -->
+                <div class="py-12 px-6 bg-white relative pt-24">
                     <div class="w-full aspect-square bg-blue-50 rounded-3xl overflow-hidden relative mb-6 shadow-inner border border-blue-100">
                         <!-- Имитация карты -->
                         <div class="absolute inset-0 opacity-30" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'); background-size: cover;"></div>
@@ -227,7 +141,7 @@
                     <p class="text-slate-500 mt-2">Мы думали, что не поместимся. Кайли думала, что мы строим ей форт.</p>
                 </div>
 
-                <!-- 3. ELEVATOR: Лифт (Анимация) -->
+                <!-- 2. ELEVATOR: Лифт (Анимация) -->
                 <div id="elevator-block" class="h-[60vh] relative bg-slate-800 flex items-center justify-center overflow-hidden">
                     <!-- Внутри лифта (Фото Кайли) -->
                     <div class="absolute inset-0 flex items-center justify-center">
@@ -247,7 +161,7 @@
                     ▲ Листай, чтобы открыть двери ▲
                 </div>
 
-                <!-- 4. STICKERS: Комфорт -->
+                <!-- 3. STICKERS: Комфорт -->
                 <div class="py-12 px-4 bg-orange-50 overflow-hidden">
                     <h2 class="text-3xl font-extrabold text-orange-900 mb-12 text-center">Level Up Комфорта</h2>
                     <div class="relative h-[400px]">
@@ -265,7 +179,7 @@
                     </div>
                 </div>
 
-                <!-- 5. HORIZONTAL: Социализация -->
+                <!-- 4. HORIZONTAL: Социализация -->
                 <div class="py-12 bg-white">
                     <div class="px-6 mb-6">
                         <h2 class="text-3xl font-bold text-slate-900">Банда Района 😎</h2>
@@ -289,7 +203,7 @@
                     </div>
                 </div>
 
-                <!-- 6. FINAL -->
+                <!-- 5. FINAL -->
                 <div class="h-[60vh] bg-red-50 flex flex-col items-center justify-center p-8 text-center">
                     <h2 class="text-4xl font-extrabold text-red-500 mb-6">Мы Дома.</h2>
                     <p class="text-slate-600 mb-12 leading-relaxed text-lg">Главное не город. Главное, что мы перевезли атмосферу с собой.</p>
@@ -304,142 +218,7 @@
             storyViewer.innerHTML = renderStoryMoscow();
             storyViewer.classList.remove('hidden');
             
-            // Анимация Hero блока при скролле (Scrollytelling)
-            const heroBlock = document.getElementById('hero-block');
-            
-            // Проверка существования блока
-            if (heroBlock) {
-                const title = document.getElementById('hero-title');
-                const layerBox3 = document.getElementById('layer-box3');
-                const layerWe = document.getElementById('layer-we');
-                const layerBox2 = document.getElementById('layer-box2');
-                const layerKylie = document.getElementById('layer-kylie');
-                const layerBox1 = document.getElementById('layer-box1');
-                const bubble = document.getElementById('hero-bubble');
-                
-                // Принудительный вызов при загрузке
-                setTimeout(() => {
-                   // Сброс позиций в начальное состояние вручную, чтобы не мерцало
-                   if (title) title.style.transform = 'translate(0, -50%) scale(3.5)';
-                }, 10);
-
-                let ticking = false;
-                
-                const animateHero = () => {
-                    if (!ticking) {
-                        window.requestAnimationFrame(() => {
-                            const scrolled = storyViewer.scrollTop;
-                            const viewportHeight = window.innerHeight;
-                            const blockHeight = heroBlock.offsetHeight;
-                            
-                            // Прогресс от 0 до 1
-                            const scrollableDistance = blockHeight - viewportHeight;
-                            let progress = 0;
-                            if (scrollableDistance > 0) {
-                                progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
-                            }
-                            
-                            // --- 1. ЗАГОЛОВОК ---
-                            if (title) {
-                                const titleProgress = Math.min(1, progress * 1.5);
-                                const startScale = 3.5; 
-                                const endScale = 1;
-                                const currentScale = startScale - (titleProgress * (startScale - endScale));
-                                const startTop = 50; 
-                                const endTop = 15; 
-                                const currentTop = startTop - (titleProgress * (startTop - endTop));
-                                
-                                title.style.top = `${currentTop}%`;
-                                title.style.transform = `translate(0, -50%) scale(${currentScale})`;
-                            }
-
-                            // --- 2. СЛОИ ---
-                            const moveLayer = (el, startAt, duration, startX, startY) => {
-                                if (!el) return;
-                                
-                                if (progress <= startAt) {
-                                    // Спрятано (но с opacity 0, чтобы не мешало, если вдруг вылезет)
-                                    el.style.transform = `translate(${startX}px, ${startY}px)`;
-                                    el.style.opacity = 0; 
-                                } else if (progress >= startAt + duration) {
-                                    // Финал
-                                    el.style.transform = `translate(0px, 0px)`;
-                                    el.style.opacity = 1;
-                                } else {
-                                    // В процессе
-                                    const p = (progress - startAt) / duration;
-                                    const ease = 1 - Math.pow(1 - p, 3);
-                                    const currentX = startX * (1 - ease);
-                                    const currentY = startY * (1 - ease);
-                                    
-                                    el.style.transform = `translate(${currentX}px, ${currentY}px)`;
-                                    el.style.opacity = p;
-                                }
-                            };
-
-                            // Порядок появления:
-                            moveLayer(layerBox3, 0.1, 0.3, 0, 300); // Просто снизу
-                            moveLayer(layerWe, 0.2, 0.4, -100, 200); // Чуть левее
-                            moveLayer(layerBox2, 0.25, 0.4, 100, 200); // Чуть правее
-                            moveLayer(layerBox1, 0.4, 0.4, 0, 400); // Снизу
-
-                            // Кайли
-                            if (layerKylie) {
-                                const startAt = 0.5;
-                                const duration = 0.3;
-                                
-                                if (progress <= startAt) {
-                                    layerKylie.style.transform = `translate(0px, 300px)`; // Глубже снизу
-                                    layerKylie.style.opacity = 0;
-                                } else if (progress >= startAt + duration) {
-                                    layerKylie.style.transform = `translate(0px, 0px)`;
-                                    layerKylie.style.opacity = 1;
-                                } else {
-                                    const p = (progress - startAt) / duration;
-                                    // Пружинка
-                                    const c1 = 1.70158;
-                                    const c3 = c1 + 1;
-                                    const ease = 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2);
-                                    const currentY = 300 * (1 - ease);
-                                    layerKylie.style.transform = `translate(0px, ${currentY}px)`;
-                                    layerKylie.style.opacity = p;
-                                }
-                            }
-                            
-                            // Облачко
-                            if (bubble) {
-                                const startAt = 0.8;
-                                const duration = 0.15;
-                                if (progress <= startAt) {
-                                    bubble.style.transform = `scale(0) rotate(10deg)`;
-                                    bubble.style.opacity = 0;
-                                } else if (progress >= startAt + duration) {
-                                    bubble.style.transform = `scale(1) rotate(2deg)`;
-                                    bubble.style.opacity = 1;
-                                } else {
-                                    const p = (progress - startAt) / duration;
-                                    bubble.style.transform = `scale(${p}) rotate(${10 - p*8}deg)`;
-                                    bubble.style.opacity = 1;
-                                }
-                            }
-
-                            ticking = false;
-                        });
-                        ticking = true;
-                    }
-                };
-                
-                // Запуск слушателя скролла
-                storyViewer.addEventListener('scroll', animateHero, { passive: true });
-                
-                // ПРИНУДИТЕЛЬНЫЙ ПЕРВЫЙ ЗАПУСК
-                // Вызываем несколько раз, чтобы убедиться, что при загрузке картинки встали на места
-                animateHero();
-                setTimeout(animateHero, 100);
-                setTimeout(animateHero, 500);
-            }
-            
-            // Запускаем "наблюдателя" за лифтом
+            // Запускаем "наблюдателя" за лифтом (единственная оставшаяся анимация)
             setTimeout(() => {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
@@ -614,4 +393,4 @@
         switchTab('moments');
     </script>
 </body>
-</html> 
+</html>
