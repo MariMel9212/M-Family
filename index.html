@@ -41,6 +41,19 @@
         .lift-door { transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .lift-open .left-door { transform: translateX(-100%); }
         .lift-open .right-door { transform: translateX(100%); }
+
+        /* Анимация Кайли (мягкий bounce) */
+        @keyframes gentleBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        #kylie-bounce {
+            animation: gentleBounce 3s ease-in-out infinite;
+        }
+
+        /* Parallax эффект для слоев */
+        .parallax-slow { transition: transform 0.3s ease-out; }
+        .parallax-fast { transition: transform 0.1s ease-out; }
         
         /* Контейнер приложения - ограничивает ширину на ПК, но на весь экран на мобилке */
         #app-container {
@@ -131,7 +144,7 @@
                 <div class="h-[90vh] relative overflow-hidden flex flex-col items-center pt-12">
                     
                     <!-- Фон: Текстура -->
-                    <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('/images/текстура.jpg');"></div>
+                    <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('./images/texture.jpg');"></div>
                     
                     <!-- Заголовок -->
                     <h1 class="relative z-10 font-hand font-bold text-7xl text-slate-800 leading-none mb-4 drop-shadow-sm text-center rotate-[-2deg]">
@@ -146,15 +159,15 @@
                     <!-- СЛОИ КОЛЛАЖА (z-index важен!) -->
                     
                     <!-- Слой 1: Вы (Дальний план) -->
-                    <img src="/images/мы.png" class="absolute bottom-[10%] left-[-10%] w-[70%] z-10 object-contain drop-shadow-xl" style="transform: rotate(-3deg);">
+                    <img src="./images/we.png" alt="Мы" class="absolute bottom-[10%] left-[-10%] w-[70%] z-10 object-contain drop-shadow-xl" style="transform: rotate(-3deg);">
 
                     <!-- Слой 2: Кайли (Средний план) -->
-                    <img src="/images/КайлиБП.png" class="absolute bottom-[15%] left-[35%] w-[40%] z-20 object-contain drop-shadow-lg animate-bounce" style="animation-duration: 3s;">
+                    <img src="./images/kylie.png" alt="Кайли" class="absolute bottom-[15%] left-[35%] w-[40%] z-20 object-contain drop-shadow-lg" id="kylie-bounce">
 
                     <!-- Слой 3: Коробки (Передний план - перекрывают всё) -->
-                    <img src="/images/Коробки1.png" class="absolute bottom-[-5%] left-0 w-full z-30 object-cover">
-                    <img src="/images/Коробки2.png" class="absolute bottom-[-10%] right-[-20%] w-[80%] z-40 object-contain">
-                    <img src="/images/Коробки3.png" class="absolute bottom-[-15%] left-[-10%] w-[60%] z-50 object-contain blur-[1px]">
+                    <img src="./images/box1.png" alt="Коробки" class="absolute bottom-[-5%] left-0 w-full z-30 object-cover">
+                    <img src="./images/box2.png" alt="Коробки" class="absolute bottom-[-10%] right-[-20%] w-[80%] z-40 object-contain">
+                    <img src="./images/box3.png" alt="Коробки" class="absolute bottom-[-15%] left-[-10%] w-[60%] z-50 object-contain blur-[1px]">
 
                 </div>
 
@@ -249,21 +262,43 @@
             storyViewer.innerHTML = renderStoryMoscow();
             storyViewer.classList.remove('hidden');
             
-            // Запускаем "наблюдателя" за лифтом
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        document.getElementById('elevator-block').classList.add('lift-open');
-                    } else {
-                        document.getElementById('elevator-block').classList.remove('lift-open');
-                    }
-                });
-            }, { threshold: 0.5 }); // Сработает, когда лифт виден на 50%
+            // Parallax эффект при скролле
+            let ticking = false;
+            storyViewer.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const scrolled = storyViewer.scrollTop;
+                        const hero = storyViewer.querySelector('.h-\\[90vh\\]');
+                        if (hero) {
+                            const boxes = hero.querySelectorAll('img[src*="box"]');
+                            boxes.forEach((box, index) => {
+                                const speed = 0.3 + (index * 0.1);
+                                box.style.transform = `translateY(${scrolled * speed}px)`;
+                            });
+                        }
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
             
+            // Запускаем "наблюдателя" за лифтом
             setTimeout(() => {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const elevator = document.getElementById('elevator-block');
+                            if(elevator) elevator.classList.add('lift-open');
+                        } else {
+                            const elevator = document.getElementById('elevator-block');
+                            if(elevator) elevator.classList.remove('lift-open');
+                        }
+                    });
+                }, { threshold: 0.3 });
+                
                 const el = document.getElementById('elevator-block');
                 if(el) observer.observe(el);
-            }, 100);
+            }, 500);
         }
 
         function closeStory() {
