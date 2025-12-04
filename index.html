@@ -10,20 +10,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MosDate</title>
     
-    <!-- Сразу подключаем Telegram и расширяем -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Сразу подключаем Telegram (последнюю версию SDK) -->
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
     <script>
         // МГНОВЕННОЕ расширение
         const tg = window.Telegram.WebApp;
         if (tg) {
             tg.ready();
             
-            // Агрессивное расширение (долбим несколько раз, чтобы наверняка)
+            // Пытаемся запросить полный экран (скрывает шапку "Закрыть")
+            try {
+                tg.requestFullscreen();
+            } catch (e) {
+                console.log("Fullscreen not supported:", e);
+            }
+
+            // Агрессивное расширение (на всякий случай)
             tg.expand();
-            setTimeout(() => tg.expand(), 50);
-            setTimeout(() => tg.expand(), 100);
-            setTimeout(() => tg.expand(), 300);
-            setTimeout(() => tg.expand(), 1000);
+            setTimeout(() => {
+                 tg.expand();
+                 try { tg.requestFullscreen(); } catch(e){}
+            }, 100);
 
             tg.enableClosingConfirmation(); // Чтобы случайно не закрыл свайпом
             tg.setHeaderColor('#ffffff');   // Красим шапку в белый (сливаем с фоном)
@@ -372,7 +379,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v3.5 (FULL)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v3.6 (FULLSCREEN)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
