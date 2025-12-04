@@ -17,7 +17,14 @@
         const tg = window.Telegram.WebApp;
         if (tg) {
             tg.ready();
-            tg.expand(); 
+            
+            // Агрессивное расширение (долбим несколько раз, чтобы наверняка)
+            tg.expand();
+            setTimeout(() => tg.expand(), 50);
+            setTimeout(() => tg.expand(), 100);
+            setTimeout(() => tg.expand(), 300);
+            setTimeout(() => tg.expand(), 1000);
+
             tg.enableClosingConfirmation(); // Чтобы случайно не закрыл свайпом
             tg.setHeaderColor('#ffffff');   // Красим шапку в белый (сливаем с фоном)
             tg.setBackgroundColor('#ffffff');
@@ -365,7 +372,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v3.4 (FIXED)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v3.5 (FULL)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">
