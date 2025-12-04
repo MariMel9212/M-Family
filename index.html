@@ -21,7 +21,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Amatic+SC:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         /* Основные настройки */
@@ -33,6 +33,9 @@
             padding: 0;
             overflow: hidden; /* Чтобы не скроллилась вся страница */
         }
+
+        /* Класс для рукописного шрифта */
+        .font-hand { font-family: 'Amatic SC', cursive; }
 
         /* Анимация Лифта */
         .lift-door { transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -124,16 +127,35 @@
                     ✕
                 </button>
 
-                <!-- 1. HERO: Коробки -->
-                <div class="h-[80vh] bg-slate-200 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/50 z-10"></div>
-                    <!-- Заглушка фото -->
-                    <div class="absolute inset-0 bg-cover bg-center opacity-50" style="background-image: url('https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1000&auto=format&fit=crop');"></div>
+                <!-- 1. HERO: Коробки (Parallax Collage) -->
+                <div class="h-[90vh] relative overflow-hidden flex flex-col items-center pt-12">
                     
-                    <div class="relative z-20 text-white">
-                        <h1 class="text-5xl font-extrabold mb-4 leading-tight drop-shadow-lg">Год в<br>Большом<br>Городе</h1>
-                        <p class="text-lg font-medium opacity-90 drop-shadow">Ноябрь. Мы, вещи и одна маленькая собака.</p>
+                    <!-- Фон: Текстура -->
+                    <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('./images/текстура.jpg');"></div>
+                    
+                    <!-- Заголовок -->
+                    <h1 class="relative z-10 font-hand font-bold text-7xl text-slate-800 leading-none mb-4 drop-shadow-sm text-center rotate-[-2deg]">
+                        Большой<br>переезд
+                    </h1>
+
+                    <!-- Облачко с текстом -->
+                    <div class="absolute top-[25%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-20 text-[11px] leading-tight font-bold text-slate-600 transform rotate-2 border border-white">
+                        Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу
                     </div>
+
+                    <!-- СЛОИ КОЛЛАЖА (z-index важен!) -->
+                    
+                    <!-- Слой 1: Вы (Дальний план) -->
+                    <img src="./images/мы.png" class="absolute bottom-[10%] left-[-10%] w-[70%] z-10 object-contain drop-shadow-xl" style="transform: rotate(-3deg);">
+
+                    <!-- Слой 2: Кайли (Средний план) -->
+                    <img src="./images/КайлиБП.png" class="absolute bottom-[15%] left-[35%] w-[40%] z-20 object-contain drop-shadow-lg animate-bounce" style="animation-duration: 3s;">
+
+                    <!-- Слой 3: Коробки (Передний план - перекрывают всё) -->
+                    <img src="./images/Коробки1.png" class="absolute bottom-[-5%] left-0 w-full z-30 object-cover">
+                    <img src="./images/Коробки2.png" class="absolute bottom-[-10%] right-[-20%] w-[80%] z-40 object-contain">
+                    <img src="./images/Коробки3.png" class="absolute bottom-[-15%] left-[-10%] w-[60%] z-50 object-contain blur-[1px]">
+
                 </div>
 
                 <!-- 2. MAP: Карта -->
