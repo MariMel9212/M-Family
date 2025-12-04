@@ -351,70 +351,152 @@
                                 titleSmall.style.transform = 'translateX(-50%) scale(1)';
                             }
                             
-                            // 2. Элементы появляются постепенно с выездом
+                            // 2. Элементы появляются постепенно (по кадрам)
                             const elements = [
                                 { 
-                                    selector: '.hero-box3', 
-                                    start: 0.2, 
-                                    end: 0.4,
-                                    from: 'translateY(200px)',
-                                    to: 'translateY(0)'
-                                },
-                                { 
-                                    selector: '.hero-box2', 
-                                    start: 0.3, 
-                                    end: 0.5,
-                                    from: 'translateX(-150px)',
-                                    to: 'translateX(0)'
-                                },
-                                { 
-                                    selector: '.hero-people', 
-                                    start: 0.4, 
-                                    end: 0.6,
-                                    from: 'translateX(-200px) rotate(-5deg)',
-                                    to: 'translateX(0) rotate(-3deg)'
-                                },
-                                { 
                                     selector: '.hero-box1', 
-                                    start: 0.5, 
-                                    end: 0.7,
-                                    from: 'translateY(150px)',
-                                    to: 'translateY(0)'
+                                    start: 0.15, 
+                                    end: 0.35,
+                                    from: 'translateY(200px) opacity(0)',
+                                    to: 'translateY(0) opacity(1)'
                                 },
                                 { 
                                     selector: '.hero-dog', 
-                                    start: 0.6, 
-                                    end: 0.8,
-                                    from: 'translateY(100px) scale(0.8)',
-                                    to: 'translateY(0) scale(1)'
+                                    start: 0.3, 
+                                    end: 0.5,
+                                    from: 'translateY(150px) scale(0.7) opacity(0)',
+                                    to: 'translateY(0) scale(1) opacity(1)'
+                                },
+                                { 
+                                    selector: '.hero-box2', 
+                                    start: 0.45, 
+                                    end: 0.65,
+                                    from: 'translateX(-100px) opacity(0)',
+                                    to: 'translateX(0) opacity(1)'
+                                },
+                                { 
+                                    selector: '.hero-people', 
+                                    start: 0.55, 
+                                    end: 0.75,
+                                    from: 'translateX(-150px) rotate(-5deg) opacity(0)',
+                                    to: 'translateX(0) rotate(-3deg) opacity(1)'
+                                },
+                                { 
+                                    selector: '.hero-box3', 
+                                    start: 0.7, 
+                                    end: 0.9,
+                                    from: 'translateY(100px) opacity(0)',
+                                    to: 'translateY(0) opacity(1)'
                                 },
                                 { 
                                     selector: '.hero-bubble', 
-                                    start: 0.7, 
-                                    end: 0.9,
-                                    from: 'translateX(150px) scale(0.8)',
-                                    to: 'translateX(0) scale(1)'
+                                    start: 0.8, 
+                                    end: 1.0,
+                                    from: 'translateX(100px) scale(0.8) opacity(0)',
+                                    to: 'translateX(0) scale(1) opacity(1)'
                                 },
                             ];
                             
-                            elements.forEach(({ selector, start, end, from, to }) => {
-                                const element = heroBlock.querySelector(selector);
-                                if (element) {
-                                    if (progress < start) {
-                                        element.style.opacity = 0;
-                                        element.style.transform = from;
-                                    } else if (progress >= start && progress <= end) {
-                                        const elementProgress = (progress - start) / (end - start);
-                                        element.style.opacity = elementProgress;
-                                        // Интерполяция между from и to
-                                        const easeProgress = elementProgress * elementProgress * (3 - 2 * elementProgress); // Smooth step
-                                        element.style.transform = to;
-                                    } else if (progress > end) {
-                                        element.style.opacity = 1;
-                                        element.style.transform = to;
+                            // Упрощенная анимация элементов
+                            const animateElement = (element, start, end, fromY, toY, fromX, toX, fromScale, toScale, fromRot, toRot) => {
+                                if (!element) return;
+                                
+                                if (progress < start) {
+                                    element.style.opacity = '0';
+                                    let transform = '';
+                                    if (fromY !== undefined) transform += `translateY(${fromY}px) `;
+                                    if (fromX !== undefined) transform += `translateX(${fromX}px) `;
+                                    if (fromScale !== undefined) transform += `scale(${fromScale}) `;
+                                    if (fromRot !== undefined) transform += `rotate(${fromRot}deg) `;
+                                    element.style.transform = transform.trim();
+                                } else if (progress >= start && progress <= end) {
+                                    const t = (progress - start) / (end - start);
+                                    const eased = t * t * (3 - 2 * t); // Smooth step
+                                    element.style.opacity = eased;
+                                    
+                                    let transform = '';
+                                    if (fromY !== undefined && toY !== undefined) {
+                                        const y = fromY + (toY - fromY) * eased;
+                                        transform += `translateY(${y}px) `;
                                     }
+                                    if (fromX !== undefined && toX !== undefined) {
+                                        const x = fromX + (toX - fromX) * eased;
+                                        transform += `translateX(${x}px) `;
+                                    }
+                                    if (fromScale !== undefined && toScale !== undefined) {
+                                        const scale = fromScale + (toScale - fromScale) * eased;
+                                        transform += `scale(${scale}) `;
+                                    }
+                                    if (fromRot !== undefined && toRot !== undefined) {
+                                        const rot = fromRot + (toRot - fromRot) * eased;
+                                        transform += `rotate(${rot}deg) `;
+                                    }
+                                    element.style.transform = transform.trim();
+                                } else {
+                                    element.style.opacity = '1';
+                                    let transform = '';
+                                    if (toY !== undefined) transform += `translateY(${toY}px) `;
+                                    if (toX !== undefined) transform += `translateX(${toX}px) `;
+                                    if (toScale !== undefined) transform += `scale(${toScale}) `;
+                                    if (toRot !== undefined) transform += `rotate(${toRot}deg) `;
+                                    element.style.transform = transform.trim();
                                 }
-                            });
+                            };
+                            
+                            // Анимация по порядку из кадров
+                            animateElement(
+                                heroBlock.querySelector('.hero-box1'),
+                                0.15, 0.35,
+                                200, 0, // translateY
+                                undefined, undefined, // translateX
+                                undefined, undefined, // scale
+                                undefined, undefined // rotate
+                            );
+                            
+                            animateElement(
+                                heroBlock.querySelector('.hero-dog'),
+                                0.3, 0.5,
+                                150, 0, // translateY
+                                undefined, undefined,
+                                0.7, 1, // scale
+                                undefined, undefined
+                            );
+                            
+                            animateElement(
+                                heroBlock.querySelector('.hero-box2'),
+                                0.45, 0.65,
+                                undefined, undefined,
+                                -100, 0, // translateX
+                                undefined, undefined,
+                                undefined, undefined
+                            );
+                            
+                            animateElement(
+                                heroBlock.querySelector('.hero-people'),
+                                0.55, 0.75,
+                                undefined, undefined,
+                                -150, 0,
+                                undefined, undefined,
+                                -5, -3 // rotate
+                            );
+                            
+                            animateElement(
+                                heroBlock.querySelector('.hero-box3'),
+                                0.7, 0.9,
+                                100, 0,
+                                undefined, undefined,
+                                undefined, undefined,
+                                undefined, undefined
+                            );
+                            
+                            animateElement(
+                                heroBlock.querySelector('.hero-bubble'),
+                                0.8, 1.0,
+                                undefined, undefined,
+                                100, 0,
+                                0.8, 1,
+                                undefined, undefined
+                            );
                             
                             // 3. Parallax для коробок при дальнейшем скролле
                             if (progress > 0.7) {
