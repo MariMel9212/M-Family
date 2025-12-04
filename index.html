@@ -188,45 +188,27 @@
                     ✕
                 </button>
 
-                <!-- 1. HERO: Коробки (Sticky Scrollytelling) -->
-                <div id="hero-block" class="relative" style="height: 350vh;">
-                    <!-- Sticky контейнер: прилипает к верху экрана на 100vh -->
+                <!-- 1. HERO: Видео-скролл (Video Scrollytelling) -->
+                <div id="hero-block" class="relative" style="height: 400vh;">
+                    <!-- Sticky контейнер -->
                     <div class="sticky top-0 h-[100dvh] w-full overflow-hidden flex flex-col items-center justify-center bg-white">
-                    
-                        <!-- Фон: Текстура (самый низ) -->
-                        <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('./images/texture.jpg');"></div>
                         
-                        <!-- Заголовок (Z-60) - ВИДЕН СРАЗУ -->
-                        <h1 id="hero-title" class="font-hand font-bold text-slate-800 leading-none drop-shadow-sm text-center absolute w-full z-[60] origin-center top-1/2 -translate-y-1/2 scale-[3.5]">
-                            Большой<br>переезд
-                        </h1>
+                        <!-- Видео, управляемое скроллом -->
+                        <!-- playsinline - обязательно для iOS, muted - обязательно для автоплея -->
+                        <video 
+                            id="hero-video" 
+                            src="./images/intro.mov" 
+                            class="absolute top-0 left-0 w-full h-full object-cover z-10"
+                            playsinline 
+                            webkit-playsinline 
+                            muted 
+                            preload="auto">
+                        </video>
 
-                        <!-- Облачко с текстом (Z-55) -->
-                        <div id="hero-bubble" class="absolute top-[28%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-[55] text-[11px] leading-tight font-bold text-slate-600 border border-white opacity-0">
+                        <!-- Текстовое облачко (появится в конце видео) -->
+                        <div id="hero-bubble" class="absolute top-[28%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-20 text-[11px] leading-tight font-bold text-slate-600 border border-white opacity-0 transition-opacity duration-500">
                             Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу
                         </div>
-
-                        <!-- СЛОИ КОЛЛАЖА (по списку из Figma) -->
-                        
-                        <!-- 1. Коробки3 (Самый низ, Z-10) -->
-                        <!-- Лежат в самом низу, фундамент -->
-                        <img id="layer-box3" src="./images/box3.png" alt="Коробки3" class="absolute bottom-0 left-0 w-[100%] z-[10] object-cover opacity-0">
-
-                        <!-- 2. МЫ (Z-20) -->
-                        <!-- Сдвинуты чуть правее и ниже, чтобы плечо мужа не резалось -->
-                        <img id="layer-we" src="./images/we.png" alt="Мы" class="absolute bottom-[10%] left-[-5%] w-[85%] z-[20] object-contain drop-shadow-xl opacity-0">
-
-                        <!-- 3. Коробки2 (Z-30) -->
-                        <!-- Правая часть стены -->
-                        <img id="layer-box2" src="./images/box2.png" alt="Коробки2" class="absolute bottom-[5%] right-[-10%] w-[90%] z-[30] object-contain opacity-0">
-
-                        <!-- 4. Кайли (Z-40) -->
-                        <!-- По центру, крупно, выглядывает из-за коробок -->
-                        <img id="layer-kylie" src="./images/kylie.png" alt="Кайли" class="absolute bottom-[-5%] left-[25%] w-[55%] z-[40] object-contain drop-shadow-lg opacity-0">
-
-                        <!-- 5. Коробки1 (Верх, Z-50) -->
-                        <!-- Самый передний план, закрывает низ фоток -->
-                        <img id="layer-box1" src="./images/box1.png" alt="Коробки1" class="absolute bottom-[-2%] left-0 w-[110%] z-[50] object-cover opacity-0">
 
                     </div>
                 </div>
