@@ -54,6 +54,54 @@
         /* Parallax эффект для слоев */
         .parallax-slow { transition: transform 0.3s ease-out; }
         .parallax-fast { transition: transform 0.1s ease-out; }
+
+        /* Hero блок - начальное состояние */
+        #hero-block {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-title-big {
+            font-size: 8rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hero-title-small {
+            font-size: 4.5rem;
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Элементы скрыты по умолчанию */
+        .hero-element {
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Начальные позиции для выезда */
+        .hero-box3 {
+            transform: translateY(200px);
+        }
+        .hero-box2 {
+            transform: translateX(-150px);
+        }
+        .hero-people {
+            transform: translateX(-200px) rotate(-5deg);
+        }
+        .hero-box1 {
+            transform: translateY(150px);
+        }
+        .hero-dog {
+            transform: translateY(100px) scale(0.8);
+        }
+        .hero-bubble {
+            transform: translateX(150px) scale(0.8);
+        }
         
         /* Контейнер приложения - ограничивает ширину на ПК, но на весь экран на мобилке */
         #app-container {
@@ -141,33 +189,38 @@
                 </button>
 
                 <!-- 1. HERO: Коробки (Parallax Collage) -->
-                <div class="h-[90vh] relative overflow-hidden flex flex-col items-center pt-12">
+                <div id="hero-block" class="min-h-[100vh] relative overflow-hidden">
                     
                     <!-- Фон: Текстура -->
                     <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('./images/texture.jpg');"></div>
                     
-                    <!-- Заголовок -->
-                    <h1 class="relative z-10 font-hand font-bold text-7xl text-slate-800 leading-none mb-4 drop-shadow-sm text-center rotate-[-2deg]">
+                    <!-- Заголовок БОЛЬШОЙ (начальное состояние) -->
+                    <h1 id="hero-title-big" class="hero-title-big font-hand font-bold text-slate-800 leading-none drop-shadow-sm text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+                        Большой<br>переезд
+                    </h1>
+                    
+                    <!-- Заголовок МАЛЕНЬКИЙ (после скролла) -->
+                    <h1 id="hero-title-small" class="hero-title-small font-hand font-bold text-slate-800 leading-none drop-shadow-sm text-center opacity-0 z-40">
                         Большой<br>переезд
                     </h1>
 
                     <!-- Облачко с текстом -->
-                    <div class="absolute top-[25%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-20 text-[11px] leading-tight font-bold text-slate-600 transform rotate-2 border border-white">
+                    <div class="hero-element hero-bubble absolute top-[25%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-20 text-[11px] leading-tight font-bold text-slate-600 border border-white">
                         Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу
                     </div>
 
                     <!-- СЛОИ КОЛЛАЖА (z-index важен!) -->
                     
                     <!-- Слой 1: Вы (Дальний план) -->
-                    <img src="./images/we.png" alt="Мы" class="absolute bottom-[10%] left-[-10%] w-[70%] z-10 object-contain drop-shadow-xl" style="transform: rotate(-3deg);">
+                    <img src="./images/we.png" alt="Мы" class="hero-element hero-people absolute bottom-[10%] left-[-10%] w-[70%] z-10 object-contain drop-shadow-xl">
 
                     <!-- Слой 2: Кайли (Средний план) -->
-                    <img src="./images/kylie.png" alt="Кайли" class="absolute bottom-[15%] left-[35%] w-[40%] z-20 object-contain drop-shadow-lg" id="kylie-bounce">
+                    <img src="./images/kylie.png" alt="Кайли" class="hero-element hero-dog absolute bottom-[15%] left-[35%] w-[40%] z-20 object-contain drop-shadow-lg">
 
                     <!-- Слой 3: Коробки (Передний план - перекрывают всё) -->
-                    <img src="./images/box1.png" alt="Коробки" class="absolute bottom-[-5%] left-0 w-full z-30 object-cover">
-                    <img src="./images/box2.png" alt="Коробки" class="absolute bottom-[-10%] right-[-20%] w-[80%] z-40 object-contain">
-                    <img src="./images/box3.png" alt="Коробки" class="absolute bottom-[-15%] left-[-10%] w-[60%] z-50 object-contain blur-[1px]">
+                    <img src="./images/box1.png" alt="Коробки" class="hero-element hero-box1 absolute bottom-[-5%] left-0 w-full z-30 object-cover">
+                    <img src="./images/box2.png" alt="Коробки" class="hero-element hero-box2 absolute bottom-[-10%] right-[-20%] w-[80%] z-40 object-contain">
+                    <img src="./images/box3.png" alt="Коробки" class="hero-element hero-box3 absolute bottom-[-15%] left-[-10%] w-[60%] z-50 object-contain blur-[1px]">
 
                 </div>
 
@@ -262,25 +315,137 @@
             storyViewer.innerHTML = renderStoryMoscow();
             storyViewer.classList.remove('hidden');
             
-            // Parallax эффект при скролле
-            let ticking = false;
-            storyViewer.addEventListener('scroll', () => {
-                if (!ticking) {
-                    window.requestAnimationFrame(() => {
-                        const scrolled = storyViewer.scrollTop;
-                        const hero = storyViewer.querySelector('.h-\\[90vh\\]');
-                        if (hero) {
-                            const boxes = hero.querySelectorAll('img[src*="box"]');
-                            boxes.forEach((box, index) => {
-                                const speed = 0.3 + (index * 0.1);
-                                box.style.transform = `translateY(${scrolled * speed}px)`;
+            // Анимация Hero блока при скролле
+            const heroBlock = document.getElementById('hero-block');
+            const titleBig = document.getElementById('hero-title-big');
+            const titleSmall = document.getElementById('hero-title-small');
+            
+            if (heroBlock && titleBig && titleSmall) {
+                let ticking = false;
+                
+                const animateHero = () => {
+                    if (!ticking) {
+                        window.requestAnimationFrame(() => {
+                            const scrolled = storyViewer.scrollTop;
+                            const heroHeight = heroBlock.offsetHeight;
+                            const viewportHeight = window.innerHeight;
+                            
+                            // Прогресс скролла внутри Hero блока (0 = начало, 1 = конец блока)
+                            const progress = Math.max(0, Math.min(1, scrolled / (heroHeight * 0.6)));
+                            
+                            // 1. Заголовок: большой -> маленький, центр -> верх
+                            if (progress < 0.3) {
+                                // Фаза 1: Заголовок уменьшается и уезжает наверх
+                                const phase1 = progress / 0.3;
+                                const scale = 1 - (phase1 * 0.4); // От 1 до 0.6
+                                const translateY = phase1 * -200; // Уезжает вверх
+                                
+                                titleBig.style.opacity = 1 - phase1;
+                                titleBig.style.transform = `translate(-50%, calc(-50% + ${translateY}px)) scale(${scale})`;
+                                
+                                titleSmall.style.opacity = phase1;
+                                titleSmall.style.transform = `translateX(-50%) translateY(${translateY * 0.5}px) scale(${0.6 + phase1 * 0.4})`;
+                            } else {
+                                titleBig.style.opacity = 0;
+                                titleSmall.style.opacity = 1;
+                                titleSmall.style.transform = 'translateX(-50%) scale(1)';
+                            }
+                            
+                            // 2. Элементы появляются постепенно с выездом
+                            const elements = [
+                                { 
+                                    selector: '.hero-box3', 
+                                    start: 0.2, 
+                                    end: 0.4,
+                                    from: 'translateY(200px)',
+                                    to: 'translateY(0)'
+                                },
+                                { 
+                                    selector: '.hero-box2', 
+                                    start: 0.3, 
+                                    end: 0.5,
+                                    from: 'translateX(-150px)',
+                                    to: 'translateX(0)'
+                                },
+                                { 
+                                    selector: '.hero-people', 
+                                    start: 0.4, 
+                                    end: 0.6,
+                                    from: 'translateX(-200px) rotate(-5deg)',
+                                    to: 'translateX(0) rotate(-3deg)'
+                                },
+                                { 
+                                    selector: '.hero-box1', 
+                                    start: 0.5, 
+                                    end: 0.7,
+                                    from: 'translateY(150px)',
+                                    to: 'translateY(0)'
+                                },
+                                { 
+                                    selector: '.hero-dog', 
+                                    start: 0.6, 
+                                    end: 0.8,
+                                    from: 'translateY(100px) scale(0.8)',
+                                    to: 'translateY(0) scale(1)'
+                                },
+                                { 
+                                    selector: '.hero-bubble', 
+                                    start: 0.7, 
+                                    end: 0.9,
+                                    from: 'translateX(150px) scale(0.8)',
+                                    to: 'translateX(0) scale(1)'
+                                },
+                            ];
+                            
+                            elements.forEach(({ selector, start, end, from, to }) => {
+                                const element = heroBlock.querySelector(selector);
+                                if (element) {
+                                    if (progress < start) {
+                                        element.style.opacity = 0;
+                                        element.style.transform = from;
+                                    } else if (progress >= start && progress <= end) {
+                                        const elementProgress = (progress - start) / (end - start);
+                                        element.style.opacity = elementProgress;
+                                        // Интерполяция между from и to
+                                        const easeProgress = elementProgress * elementProgress * (3 - 2 * elementProgress); // Smooth step
+                                        element.style.transform = to;
+                                    } else if (progress > end) {
+                                        element.style.opacity = 1;
+                                        element.style.transform = to;
+                                    }
+                                }
                             });
-                        }
-                        ticking = false;
-                    });
-                    ticking = true;
-                }
-            });
+                            
+                            // 3. Parallax для коробок при дальнейшем скролле
+                            if (progress > 0.7) {
+                                const parallaxProgress = (progress - 0.7) / 0.3;
+                                const box1 = heroBlock.querySelector('.hero-box1');
+                                const box2 = heroBlock.querySelector('.hero-box2');
+                                const box3 = heroBlock.querySelector('.hero-box3');
+                                
+                                if (box1) {
+                                    const current = box1.style.transform || 'translateY(0)';
+                                    box1.style.transform = current.replace(/translateY\([^)]+\)/, `translateY(${parallaxProgress * 30}px)`);
+                                }
+                                if (box2) {
+                                    const current = box2.style.transform || 'translateX(0)';
+                                    box2.style.transform = current.replace(/translateX\([^)]+\)/, `translateX(${parallaxProgress * 20}px)`);
+                                }
+                                if (box3) {
+                                    const current = box3.style.transform || 'translateY(0)';
+                                    box3.style.transform = current.replace(/translateY\([^)]+\)/, `translateY(${parallaxProgress * 25}px)`);
+                                }
+                            }
+                            
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                };
+                
+                storyViewer.addEventListener('scroll', animateHero, { passive: true });
+                animateHero(); // Первый вызов
+            }
             
             // Запускаем "наблюдателя" за лифтом
             setTimeout(() => {
