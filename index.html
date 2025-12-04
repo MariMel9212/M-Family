@@ -69,6 +69,9 @@
         .fade-enter { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .active-scale:active { transform: scale(0.95); transition: transform 0.1s; }
+        
+        /* Утилита для will-change */
+        .will-change-transform { will-change: transform; }
     </style>
 </head>
 <body>
@@ -127,23 +130,23 @@
                     ✕
                 </button>
 
-                <!-- 1. HERO: Большой Переезд (Step 1) -->
-                <div id="hero-block" class="relative" style="height: 300vh;"> <!-- Высота для скролла -->
+                <!-- 1. HERO: Большой Переезд -->
+                <div id="hero-block" class="relative" style="height: 300vh;"> 
                     <div class="sticky top-0 h-[100dvh] w-full overflow-hidden flex items-center justify-center bg-white">
                         
                         <!-- Фон: Текстура -->
                         <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
                         
                         <!-- Заголовок: Большой Переезд -->
-                        <h1 id="hero-title" class="relative z-50 text-center text-slate-900" 
-                            style="font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 75px; line-height: 1; letter-spacing: -0.02em;">
+                        <h1 id="hero-title" class="relative z-50 text-center text-slate-900 origin-center will-change-transform" 
+                            style="font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 75px; line-height: 85%; letter-spacing: -0.02em;">
                             Большой<br>переезд
                         </h1>
 
                     </div>
                 </div>
 
-                <!-- 2. MAP: Карта (Теперь второй блок) -->
+                <!-- 2. MAP: Карта -->
                 <div class="py-12 px-6 bg-white relative">
                     <div class="w-full aspect-square bg-blue-50 rounded-3xl overflow-hidden relative mb-6 shadow-inner border border-blue-100">
                         <!-- Имитация карты -->
@@ -157,7 +160,7 @@
                     <p class="text-slate-500 mt-2">Мы думали, что не поместимся. Кайли думала, что мы строим ей форт.</p>
                 </div>
 
-                <!-- 2. ELEVATOR: Лифт (Анимация) -->
+                <!-- 3. ELEVATOR: Лифт (Анимация) -->
                 <div id="elevator-block" class="h-[60vh] relative bg-slate-800 flex items-center justify-center overflow-hidden">
                     <!-- Внутри лифта (Фото Кайли) -->
                     <div class="absolute inset-0 flex items-center justify-center">
@@ -177,7 +180,7 @@
                     ▲ Листай, чтобы открыть двери ▲
                 </div>
 
-                <!-- 3. STICKERS: Комфорт -->
+                <!-- 4. STICKERS: Комфорт -->
                 <div class="py-12 px-4 bg-orange-50 overflow-hidden">
                     <h2 class="text-3xl font-extrabold text-orange-900 mb-12 text-center">Level Up Комфорта</h2>
                     <div class="relative h-[400px]">
@@ -195,7 +198,7 @@
                     </div>
                 </div>
 
-                <!-- 4. HORIZONTAL: Социализация -->
+                <!-- 5. HORIZONTAL: Социализация -->
                 <div class="py-12 bg-white">
                     <div class="px-6 mb-6">
                         <h2 class="text-3xl font-bold text-slate-900">Банда Района 😎</h2>
@@ -219,7 +222,7 @@
                     </div>
                 </div>
 
-                <!-- 5. FINAL -->
+                <!-- 6. FINAL -->
                 <div class="h-[60vh] bg-red-50 flex flex-col items-center justify-center p-8 text-center">
                     <h2 class="text-4xl font-extrabold text-red-500 mb-6">Мы Дома.</h2>
                     <p class="text-slate-600 mb-12 leading-relaxed text-lg">Главное не город. Главное, что мы перевезли атмосферу с собой.</p>
@@ -234,7 +237,62 @@
             storyViewer.innerHTML = renderStoryMoscow();
             storyViewer.classList.remove('hidden');
             
-            // Запускаем "наблюдателя" за лифтом (единственная оставшаяся анимация)
+            // --- АНИМАЦИЯ (НОВАЯ, ПО ШАГАМ) ---
+            const heroBlock = document.getElementById('hero-block');
+            const title = document.getElementById('hero-title');
+            
+            if (heroBlock && title) {
+                let ticking = false;
+                
+                const animateHero = () => {
+                    if (!ticking) {
+                        window.requestAnimationFrame(() => {
+                            const scrolled = storyViewer.scrollTop;
+                            const viewportHeight = window.innerHeight;
+                            const blockHeight = heroBlock.offsetHeight;
+                            
+                            // Прогресс прокрутки Hero блока (от 0 до 1)
+                            // Вычитаем высоту вьюпорта, чтобы знать, сколько мы реально прокрутили ВНУТРИ блока
+                            const scrollableDistance = blockHeight - viewportHeight;
+                            let progress = 0;
+                            if (scrollableDistance > 0) {
+                                progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+                            }
+
+                            // --- ШАГ 1: ЗАГОЛОВОК УЕЗЖАЕТ И УМЕНЬШАЕТСЯ ---
+                            // Работает с 0% до 30% скролла (0.0 - 0.3)
+                            const step1End = 0.3;
+                            
+                            if (progress <= step1End) {
+                                const p = progress / step1End; // Нормализуем от 0 до 1 внутри этого шага
+                                
+                                // Масштаб: от 1 до 0.6
+                                const scale = 1 - (p * 0.4);
+                                
+                                // Сдвиг вверх: от 0% (центр) до -XXX% (ближе к верху)
+                                // Изначально он по центру. translate(0, 0)
+                                // Хотим поднять его выше.
+                                // translateY: от 0px до -30vh (примерно)
+                                const moveY = p * -35; // -35vh
+                                
+                                title.style.transform = `translateY(${moveY}vh) scale(${scale})`;
+                                title.style.opacity = 1;
+                            } else {
+                                // Фиксируем состояние после завершения шага
+                                title.style.transform = `translateY(-35vh) scale(0.6)`;
+                            }
+                            
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                };
+                
+                storyViewer.addEventListener('scroll', animateHero, { passive: true });
+                animateHero(); // Первый вызов
+            }
+            
+            // Запускаем "наблюдателя" за лифтом
             setTimeout(() => {
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
