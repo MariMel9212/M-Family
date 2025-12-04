@@ -189,39 +189,41 @@
                 </button>
 
                 <!-- 1. HERO: Коробки (Parallax Collage) -->
-                <div id="hero-block" class="min-h-[100vh] relative overflow-hidden">
+                <div id="hero-block" class="h-[200vh] relative">
+                    <!-- Sticky контейнер: он "прилипает" к экрану, пока мы скроллим эти 200vh -->
+                    <div class="sticky top-0 h-[100vh] overflow-hidden flex flex-col items-center justify-center">
                     
-                    <!-- Фон: Текстура -->
-                    <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('./images/texture.jpg');"></div>
-                    
-                    <!-- Заголовок БОЛЬШОЙ (начальное состояние) -->
-                    <h1 id="hero-title-big" class="hero-title-big font-hand font-bold text-slate-800 leading-none drop-shadow-sm text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
-                        Большой<br>переезд
-                    </h1>
-                    
-                    <!-- Заголовок МАЛЕНЬКИЙ (после скролла) -->
-                    <h1 id="hero-title-small" class="hero-title-small font-hand font-bold text-slate-800 leading-none drop-shadow-sm text-center opacity-0 z-40">
-                        Большой<br>переезд
-                    </h1>
+                        <!-- Фон: Текстура (самый низ) -->
+                        <div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('./images/texture.jpg');"></div>
+                        
+                        <!-- Заголовок (Z-60) - ЕДИНЫЙ -->
+                        <h1 id="hero-title" class="font-hand font-bold text-slate-800 leading-none drop-shadow-sm text-center absolute z-[60] w-full transition-transform duration-75 ease-linear origin-center">
+                            Большой<br>переезд
+                        </h1>
 
-                    <!-- Облачко с текстом -->
-                    <div class="hero-element hero-bubble absolute top-[25%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-20 text-[11px] leading-tight font-bold text-slate-600 border border-white">
-                        Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу
+                        <!-- Облачко с текстом (Z-55) -->
+                        <div id="hero-bubble" class="absolute top-[28%] right-4 w-40 bg-blue-100/90 p-4 rounded-3xl rounded-bl-none shadow-md z-[55] text-[11px] leading-tight font-bold text-slate-600 border border-white opacity-0">
+                            Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу
+                        </div>
+
+                        <!-- СЛОИ КОЛЛАЖА (по списку из Figma) -->
+                        
+                        <!-- 1. Коробки3 (Самый низ, Z-10) -->
+                        <img id="layer-box3" src="./images/box3.png" alt="Коробки3" class="absolute bottom-[-15%] left-[-10%] w-[60%] z-[10] object-contain blur-[1px]">
+
+                        <!-- 2. МЫ (Z-20) -->
+                        <img id="layer-we" src="./images/we.png" alt="Мы" class="absolute bottom-[10%] left-[-10%] w-[70%] z-[20] object-contain drop-shadow-xl">
+
+                        <!-- 3. Коробки2 (Z-30) -->
+                        <img id="layer-box2" src="./images/box2.png" alt="Коробки2" class="absolute bottom-[-10%] right-[-20%] w-[80%] z-[30] object-contain">
+
+                        <!-- 4. Кайли (Z-40) -->
+                        <img id="layer-kylie" src="./images/kylie.png" alt="Кайли" class="absolute bottom-[15%] left-[35%] w-[40%] z-[40] object-contain drop-shadow-lg">
+
+                        <!-- 5. Коробки1 (Верх, Z-50) -->
+                        <img id="layer-box1" src="./images/box1.png" alt="Коробки1" class="absolute bottom-[-5%] left-0 w-full z-[50] object-cover">
+
                     </div>
-
-                    <!-- СЛОИ КОЛЛАЖА (z-index важен!) -->
-                    
-                    <!-- Слой 1: Вы (Дальний план) -->
-                    <img src="./images/we.png" alt="Мы" class="hero-element hero-people absolute bottom-[10%] left-[-10%] w-[70%] z-10 object-contain drop-shadow-xl">
-
-                    <!-- Слой 2: Кайли (Средний план) -->
-                    <img src="./images/kylie.png" alt="Кайли" class="hero-element hero-dog absolute bottom-[15%] left-[35%] w-[40%] z-20 object-contain drop-shadow-lg">
-
-                    <!-- Слой 3: Коробки (Передний план - перекрывают всё) -->
-                    <img src="./images/box1.png" alt="Коробки" class="hero-element hero-box1 absolute bottom-[-5%] left-0 w-full z-30 object-cover">
-                    <img src="./images/box2.png" alt="Коробки" class="hero-element hero-box2 absolute bottom-[-10%] right-[-20%] w-[80%] z-40 object-contain">
-                    <img src="./images/box3.png" alt="Коробки" class="hero-element hero-box3 absolute bottom-[-15%] left-[-10%] w-[60%] z-50 object-contain blur-[1px]">
-
                 </div>
 
                 <!-- 2. MAP: Карта -->
@@ -317,206 +319,110 @@
             
             // Анимация Hero блока при скролле
             const heroBlock = document.getElementById('hero-block');
-            const titleBig = document.getElementById('hero-title-big');
-            const titleSmall = document.getElementById('hero-title-small');
+            const title = document.getElementById('hero-title');
             
-            if (heroBlock && titleBig && titleSmall) {
+            // Элементы слоев
+            const layerBox3 = document.getElementById('layer-box3');
+            const layerWe = document.getElementById('layer-we');
+            const layerBox2 = document.getElementById('layer-box2');
+            const layerKylie = document.getElementById('layer-kylie');
+            const layerBox1 = document.getElementById('layer-box1');
+            const bubble = document.getElementById('hero-bubble');
+
+            if (heroBlock) {
                 let ticking = false;
                 
                 const animateHero = () => {
                     if (!ticking) {
                         window.requestAnimationFrame(() => {
                             const scrolled = storyViewer.scrollTop;
-                            const heroHeight = heroBlock.offsetHeight;
                             const viewportHeight = window.innerHeight;
                             
-                            // Прогресс скролла внутри Hero блока (0 = начало, 1 = конец блока)
-                            const progress = Math.max(0, Math.min(1, scrolled / (heroHeight * 0.6)));
+                            // Длина скролла для анимации (высота блока - высота экрана)
+                            const maxScroll = heroBlock.offsetHeight - viewportHeight;
+                            // Прогресс от 0 до 1
+                            const progress = Math.max(0, Math.min(1, scrolled / maxScroll));
                             
-                            // 1. Заголовок: большой -> маленький, центр -> верх
-                            if (progress < 0.3) {
-                                // Фаза 1: Заголовок уменьшается и уезжает наверх
-                                const phase1 = progress / 0.3;
-                                const scale = 1 - (phase1 * 0.4); // От 1 до 0.6
-                                const translateY = phase1 * -200; // Уезжает вверх
-                                
-                                titleBig.style.opacity = 1 - phase1;
-                                titleBig.style.transform = `translate(-50%, calc(-50% + ${translateY}px)) scale(${scale})`;
-                                
-                                titleSmall.style.opacity = phase1;
-                                titleSmall.style.transform = `translateX(-50%) translateY(${translateY * 0.5}px) scale(${0.6 + phase1 * 0.4})`;
-                            } else {
-                                titleBig.style.opacity = 0;
-                                titleSmall.style.opacity = 1;
-                                titleSmall.style.transform = 'translateX(-50%) scale(1)';
+                            // 1. АНИМАЦИЯ ЗАГОЛОВКА
+                            // От центра (scale 2.5) до верха (scale 1)
+                            // translate(-50%, -50%) - это центр.
+                            // Мы будем менять top в %
+                            
+                            const startScale = 2.5; // Огромный в начале
+                            const endScale = 1;
+                            const currentScale = startScale - (progress * (startScale - endScale));
+                            
+                            const startTop = 50; // %
+                            const endTop = 15; // % (куда он приедет)
+                            const currentTop = startTop - (progress * (startTop - endTop));
+                            
+                            if (title) {
+                                title.style.top = `${currentTop}%`;
+                                title.style.transform = `translate(0, -50%) scale(${currentScale})`;
+                                // Легкий поворот в конце для стиля
+                                if (progress > 0.8) {
+                                    title.style.transform += ` rotate(${(progress - 0.8) * -10}deg)`;
+                                }
+                            }
+
+                            // 2. ВЫЕЗД СЛОЕВ
+                            // progress 0 -> Все спрятано
+                            // progress 1 -> Все на местах (transform: translate(0,0))
+                            
+                            // Функция для расчета позиции (startAt - когда начинает ехать, duration - сколько едет)
+                            const getTranslate = (startAt, duration, xVal, yVal) => {
+                                if (progress < startAt) return { x: xVal, y: yVal, opacity: 0 };
+                                const p = Math.min(1, (progress - startAt) / duration);
+                                // Easing (плавность)
+                                const ease = 1 - Math.pow(1 - p, 3); 
+                                return { 
+                                    x: xVal * (1 - ease), 
+                                    y: yVal * (1 - ease),
+                                    opacity: p // Появление прозрачности для мягкости
+                                };
+                            };
+
+                            // Коробки3 (Справа снизу) - Начинают рано
+                            const pBox3 = getTranslate(0.1, 0.4, 100, 200); 
+                            if(layerBox3) {
+                                layerBox3.style.transform = `translate(${pBox3.x}px, ${pBox3.y}px)`;
+                                layerBox3.style.opacity = pBox3.opacity;
+                            }
+
+                            // МЫ (Слева) - Едем вместе с коробками2
+                            const pWe = getTranslate(0.2, 0.5, -200, 100);
+                            if(layerWe) {
+                                layerWe.style.transform = `translate(${pWe.x}px, ${pWe.y}px) rotate(${pWe.x * 0.05}deg)`; // Легкий наклон при выезде
+                                layerWe.style.opacity = pWe.opacity;
+                            }
+
+                            // Коробки2 (Слева)
+                            const pBox2 = getTranslate(0.25, 0.5, -150, 150);
+                            if(layerBox2) {
+                                layerBox2.style.transform = `translate(${pBox2.x}px, ${pBox2.y}px)`;
+                                layerBox2.style.opacity = pBox2.opacity;
+                            }
+
+                            // Кайли (Выпрыгивает снизу) - Позже всех
+                            const pKylie = getTranslate(0.4, 0.4, 0, 200);
+                            if(layerKylie) {
+                                const bounce = (progress > 0.8) ? Math.sin((progress - 0.8) * 10) * 10 : 0; // Пружинка в конце
+                                layerKylie.style.transform = `translate(0px, ${pKylie.y - bounce}px)`;
+                                layerKylie.style.opacity = pKylie.opacity;
+                            }
+
+                            // Коробки1 (Передний план, снизу)
+                            const pBox1 = getTranslate(0.3, 0.5, 0, 300);
+                            if(layerBox1) {
+                                layerBox1.style.transform = `translate(0px, ${pBox1.y}px)`;
+                                layerBox1.style.opacity = pBox1.opacity;
                             }
                             
-                            // 2. Элементы появляются постепенно (по кадрам)
-                            const elements = [
-                                { 
-                                    selector: '.hero-box1', 
-                                    start: 0.15, 
-                                    end: 0.35,
-                                    from: 'translateY(200px) opacity(0)',
-                                    to: 'translateY(0) opacity(1)'
-                                },
-                                { 
-                                    selector: '.hero-dog', 
-                                    start: 0.3, 
-                                    end: 0.5,
-                                    from: 'translateY(150px) scale(0.7) opacity(0)',
-                                    to: 'translateY(0) scale(1) opacity(1)'
-                                },
-                                { 
-                                    selector: '.hero-box2', 
-                                    start: 0.45, 
-                                    end: 0.65,
-                                    from: 'translateX(-100px) opacity(0)',
-                                    to: 'translateX(0) opacity(1)'
-                                },
-                                { 
-                                    selector: '.hero-people', 
-                                    start: 0.55, 
-                                    end: 0.75,
-                                    from: 'translateX(-150px) rotate(-5deg) opacity(0)',
-                                    to: 'translateX(0) rotate(-3deg) opacity(1)'
-                                },
-                                { 
-                                    selector: '.hero-box3', 
-                                    start: 0.7, 
-                                    end: 0.9,
-                                    from: 'translateY(100px) opacity(0)',
-                                    to: 'translateY(0) opacity(1)'
-                                },
-                                { 
-                                    selector: '.hero-bubble', 
-                                    start: 0.8, 
-                                    end: 1.0,
-                                    from: 'translateX(100px) scale(0.8) opacity(0)',
-                                    to: 'translateX(0) scale(1) opacity(1)'
-                                },
-                            ];
-                            
-                            // Упрощенная анимация элементов
-                            const animateElement = (element, start, end, fromY, toY, fromX, toX, fromScale, toScale, fromRot, toRot) => {
-                                if (!element) return;
-                                
-                                if (progress < start) {
-                                    element.style.opacity = '0';
-                                    let transform = '';
-                                    if (fromY !== undefined) transform += `translateY(${fromY}px) `;
-                                    if (fromX !== undefined) transform += `translateX(${fromX}px) `;
-                                    if (fromScale !== undefined) transform += `scale(${fromScale}) `;
-                                    if (fromRot !== undefined) transform += `rotate(${fromRot}deg) `;
-                                    element.style.transform = transform.trim();
-                                } else if (progress >= start && progress <= end) {
-                                    const t = (progress - start) / (end - start);
-                                    const eased = t * t * (3 - 2 * t); // Smooth step
-                                    element.style.opacity = eased;
-                                    
-                                    let transform = '';
-                                    if (fromY !== undefined && toY !== undefined) {
-                                        const y = fromY + (toY - fromY) * eased;
-                                        transform += `translateY(${y}px) `;
-                                    }
-                                    if (fromX !== undefined && toX !== undefined) {
-                                        const x = fromX + (toX - fromX) * eased;
-                                        transform += `translateX(${x}px) `;
-                                    }
-                                    if (fromScale !== undefined && toScale !== undefined) {
-                                        const scale = fromScale + (toScale - fromScale) * eased;
-                                        transform += `scale(${scale}) `;
-                                    }
-                                    if (fromRot !== undefined && toRot !== undefined) {
-                                        const rot = fromRot + (toRot - fromRot) * eased;
-                                        transform += `rotate(${rot}deg) `;
-                                    }
-                                    element.style.transform = transform.trim();
-                                } else {
-                                    element.style.opacity = '1';
-                                    let transform = '';
-                                    if (toY !== undefined) transform += `translateY(${toY}px) `;
-                                    if (toX !== undefined) transform += `translateX(${toX}px) `;
-                                    if (toScale !== undefined) transform += `scale(${toScale}) `;
-                                    if (toRot !== undefined) transform += `rotate(${toRot}deg) `;
-                                    element.style.transform = transform.trim();
-                                }
-                            };
-                            
-                            // Анимация по порядку из кадров
-                            animateElement(
-                                heroBlock.querySelector('.hero-box1'),
-                                0.15, 0.35,
-                                200, 0, // translateY
-                                undefined, undefined, // translateX
-                                undefined, undefined, // scale
-                                undefined, undefined // rotate
-                            );
-                            
-                            animateElement(
-                                heroBlock.querySelector('.hero-dog'),
-                                0.3, 0.5,
-                                150, 0, // translateY
-                                undefined, undefined,
-                                0.7, 1, // scale
-                                undefined, undefined
-                            );
-                            
-                            animateElement(
-                                heroBlock.querySelector('.hero-box2'),
-                                0.45, 0.65,
-                                undefined, undefined,
-                                -100, 0, // translateX
-                                undefined, undefined,
-                                undefined, undefined
-                            );
-                            
-                            animateElement(
-                                heroBlock.querySelector('.hero-people'),
-                                0.55, 0.75,
-                                undefined, undefined,
-                                -150, 0,
-                                undefined, undefined,
-                                -5, -3 // rotate
-                            );
-                            
-                            animateElement(
-                                heroBlock.querySelector('.hero-box3'),
-                                0.7, 0.9,
-                                100, 0,
-                                undefined, undefined,
-                                undefined, undefined,
-                                undefined, undefined
-                            );
-                            
-                            animateElement(
-                                heroBlock.querySelector('.hero-bubble'),
-                                0.8, 1.0,
-                                undefined, undefined,
-                                100, 0,
-                                0.8, 1,
-                                undefined, undefined
-                            );
-                            
-                            // 3. Parallax для коробок при дальнейшем скролле
-                            if (progress > 0.7) {
-                                const parallaxProgress = (progress - 0.7) / 0.3;
-                                const box1 = heroBlock.querySelector('.hero-box1');
-                                const box2 = heroBlock.querySelector('.hero-box2');
-                                const box3 = heroBlock.querySelector('.hero-box3');
-                                
-                                if (box1) {
-                                    const current = box1.style.transform || 'translateY(0)';
-                                    box1.style.transform = current.replace(/translateY\([^)]+\)/, `translateY(${parallaxProgress * 30}px)`);
-                                }
-                                if (box2) {
-                                    const current = box2.style.transform || 'translateX(0)';
-                                    box2.style.transform = current.replace(/translateX\([^)]+\)/, `translateX(${parallaxProgress * 20}px)`);
-                                }
-                                if (box3) {
-                                    const current = box3.style.transform || 'translateY(0)';
-                                    box3.style.transform = current.replace(/translateY\([^)]+\)/, `translateY(${parallaxProgress * 25}px)`);
-                                }
+                            // Облачко (В самом конце)
+                            const pBubble = getTranslate(0.7, 0.2, 50, 50);
+                            if(bubble) {
+                                bubble.style.transform = `translate(${pBubble.x}px, ${pBubble.y}px) scale(${pBubble.opacity})`;
+                                bubble.style.opacity = pBubble.opacity;
                             }
                             
                             ticking = false;
@@ -526,7 +432,7 @@
                 };
                 
                 storyViewer.addEventListener('scroll', animateHero, { passive: true });
-                animateHero(); // Первый вызов
+                animateHero(); // Первый вызов для установки начальных позиций
             }
             
             // Запускаем "наблюдателя" за лифтом
