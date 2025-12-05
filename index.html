@@ -139,35 +139,39 @@
                 <!-- 1. HERO: Большой Переезд -->
                 <div id="hero-block" class="relative" style="height: 600vh;"> 
                     
-                    <!-- Исправлено: Вернул overflow-x-hidden в inline-стиль, чтобы убрать скролл вправо -->
-                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30" style="overflow-x: hidden;">
+                    <!-- Исправлено: Убрал style="overflow-x: hidden" с самого sticky, чтобы не ломать скролл -->
+                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30">
                         
-                        <!-- Фон: Текстура (z-0) -->
-                        <div class="absolute inset-0 overflow-hidden"> 
-                             <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
+                        <!-- 1. МАСКА (CLIPPING CONTAINER) -->
+                        <!-- Этот контейнер обрезает всё, что вылезает по бокам (X), но не мешает вертикали, так как он внутри sticky -->
+                        <!-- Содержит: Текстуру, Фоновые коробки, Мы, Правую коробку -->
+                        <div class="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+                            
+                            <!-- Фон: Текстура (z-0) -->
+                            <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
+                            
+                            <!-- ФОНОВЫЕ КОРОБКИ (z-10) -->
+                            <img id="layer-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 w-full z-10 will-change-transform" style="bottom: 50px; transform: translate(-50%, 150%);" alt="Boxes BG">
+
+                            <!-- МЫ (z-20) -->
+                            <img id="layer-we" src="./images/we.png" class="absolute left-0 w-[70%] z-20 will-change-transform" style="bottom: 50px; transform: translateX(-100%);" alt="We">
+
+                            <!-- ПРАВАЯ КОРОБКА (z-30) -->
+                            <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-30 will-change-transform" style="bottom: 50px; transform: translateX(150%);" alt="Box Right">
+                        
+                        </div>
+
+                        <!-- 2. НИЖНИЕ КОРОБКИ (z-50) - ВНЕ МАСКИ -->
+                        <!-- Они должны "свисать" вниз, поэтому они не в overflow-hidden контейнере -->
+                        <div id="boxes-container" class="absolute bottom-0 left-0 w-full flex justify-center pointer-events-none z-[50] will-change-transform" style="transform: translateY(100%);">
+                             <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto" alt="Boxes">
                         </div>
                         
-                        <!-- Заголовок (z-60) -->
+                        <!-- 3. ЗАГОЛОВОК (z-60) - ВНЕ МАСКИ -->
                         <h1 id="hero-title" class="absolute z-[60] text-center text-slate-900 origin-top-left will-change-transform whitespace-nowrap" 
                             style="top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 70px; line-height: 90%; letter-spacing: -0.02em;">
                             Большой<br>переезд
                         </h1>
-
-                        <!-- 1. ФОНОВЫЕ КОРОБКИ (z-10) - Самый нижний слой -->
-                        <!-- Ширина 100% (как текстура), по центру -->
-                        <img id="layer-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 w-full z-10 will-change-transform" style="bottom: 50px; transform: translate(-50%, 150%);" alt="Boxes BG">
-
-                        <!-- 2. МЫ (z-20) -->
-                        <!-- Увеличил еще (w-[70%]), выезжает СЛЕВА (translateX) -->
-                        <img id="layer-we" src="./images/we.png" class="absolute left-0 w-[70%] z-20 will-change-transform" style="bottom: 50px; transform: translateX(-100%);" alt="We">
-
-                        <!-- 3. ПРАВАЯ КОРОБКА (z-30) -->
-                        <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-30 will-change-transform" style="bottom: 50px; transform: translateX(150%);" alt="Box Right">
-
-                        <!-- 4. НИЖНИЕ КОРОБКИ (z-50) - Самый верхний слой коробок -->
-                        <div id="boxes-container" class="absolute bottom-0 left-0 w-full flex justify-center pointer-events-none z-[50] will-change-transform" style="transform: translateY(100%);">
-                             <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto" alt="Boxes">
-                        </div>
 
                     </div>
                 </div>
@@ -312,7 +316,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.14 (Z-INDEX & WE LEFT)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.15 (STRUCTURE FIX)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
