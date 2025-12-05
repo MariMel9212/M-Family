@@ -150,8 +150,8 @@
                 </button>
 
                 <!-- 1. HERO: Большой Переезд -->
-                <!-- relative, h-400vh -->
-                <div id="hero-block" class="relative w-full" style="height: 400vh;"> 
+                <!-- relative, min-h-[400vh] -->
+                <div id="hero-block" class="relative w-full min-h-[400vh]"> 
                     
                     <!-- INNER CONTAINER: Will be FIXED then ABSOLUTE -->
                     <!-- id="hero-sticky" -->
@@ -194,8 +194,8 @@
                         </h1>
 
                     </div>
-                    
-                    <!-- No spacer needed, height is on container -->
+                    <!-- DEBUG: Red line at bottom -->
+                    <div class="absolute bottom-0 left-0 w-full h-2 bg-red-500 z-50"></div>
                 </div>
 
                 <!-- 2. MAP: Карта -->
@@ -317,7 +317,7 @@
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
                             // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
-                            const boxesY = getVal(progress, 0.25, 0.25, 100, 30); // Опустил ниже (30%), чтобы свисали на след. блок
+                            const boxesY = getVal(progress, 0.25, 0.25, 100, 10); // Поднял выше (10%), чтобы не обрезались
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
                             // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
@@ -382,7 +382,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.50 (HIDE MAIN UI IN STORY)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.51 (DEBUG RED LINE & MIN-H)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
