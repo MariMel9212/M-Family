@@ -22,7 +22,7 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            /* overflow-x: hidden; REMOVED to fix sticky */
             overflow-y: auto; /* GLOBAL SCROLL */
             position: relative;
             background-color: #f8fafc;
@@ -88,7 +88,8 @@
     <div id="app-container">
         
         <!-- СЛОЙ ЛОНГРИДА -->
-        <div id="story-viewer" class="hidden">
+        <!-- IMPORTANT: No overflow-y here! Window handles scroll. -->
+        <div id="story-viewer" class="relative w-full min-h-screen bg-white z-[100] hidden">
             <!-- Сюда рендерится история -->
         </div>
 
@@ -155,7 +156,7 @@
                     
                     <!-- INNER CONTAINER: STICKY (Back to CSS) -->
                     <!-- id="hero-sticky" -->
-                    <div id="hero-sticky" class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30 overflow-visible">
+                    <div id="hero-sticky" class="sticky top-0 h-[100vh] w-full flex flex-col items-center justify-center bg-white relative z-30 overflow-hidden">
                         
                         <!-- МАСКА ТОЛЬКО ДЛЯ ФОНА И БОКОВЫХ ЭЛЕМЕНТОВ (чтобы не было гор. скролла) -->
                         <!-- Но нижние коробки (z-50) ВНЕ этой маски -->
@@ -369,7 +370,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.54 (ADD MAP IMAGE & CSS STICKY)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.55 (GLOBAL SCROLL FIX)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
