@@ -22,7 +22,7 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            /* overflow-x: hidden; REMOVED to fix sticky */
+            overflow-x: hidden; /* FIXED HORIZONTAL SCROLL */
             overflow-y: auto; /* GLOBAL SCROLL */
             position: relative;
             background-color: #f8fafc;
@@ -151,12 +151,13 @@
                 </button>
 
                 <!-- 1. HERO: Большой Переезд -->
-                <!-- relative, min-h-[400vh] -->
-                <div id="hero-block" class="relative w-full" style="min-height: 400vh; height: 400vh;"> 
+                <!-- relative, 500vh spacer -->
+                <div id="hero-block" class="relative w-full" style="min-height: 500vh; height: 500vh;"> 
                     
-                    <!-- INNER CONTAINER: STICKY (Back to CSS) -->
+                    <!-- INNER CONTAINER: JS MANUAL PINNING (Fixed -> Absolute) -->
                     <!-- id="hero-sticky" -->
-                    <div id="hero-sticky" class="sticky top-0 h-[100vh] w-full flex flex-col items-center justify-center bg-white relative z-30 overflow-hidden">
+                    <!-- Start FIXED at top -->
+                    <div id="hero-sticky" class="fixed top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white relative z-30 overflow-hidden">
                         
                         <!-- МАСКА ТОЛЬКО ДЛЯ ФОНА И БОКОВЫХ ЭЛЕМЕНТОВ (чтобы не было гор. скролла) -->
                         <!-- Но нижние коробки (z-50) ВНЕ этой маски -->
@@ -280,22 +281,41 @@
                         window.requestAnimationFrame(() => {
                             const scrolled = window.scrollY;
                             const viewportHeight = window.innerHeight;
-                            const blockHeight = heroBlock.offsetHeight; // 400vh
+                            const blockHeight = heroBlock.offsetHeight; // 500vh
                             
-                            // --- JS PINNING REMOVED, BACK TO CSS STICKY ---
-                            // Мы просто используем CSS sticky, так как hero-block имеет высоту.
-                            // heroSticky.style.position... не трогаем
+                            // --- MANUAL JS PINNING ---
+                            // Logic:
+                            // 1. While inside hero block (scrollY < blockHeight - viewportHeight): FIXED
+                            // 2. When reached end (scrollY >= blockHeight - viewportHeight): ABSOLUTE at BOTTOM
+                            
+                            const pinDuration = blockHeight - viewportHeight; // Distance we scroll while pinned
+                            
+                            if (scrolled < pinDuration) {
+                                // PINNED
+                                heroSticky.style.position = 'fixed';
+                                heroSticky.style.top = '0';
+                                heroSticky.style.bottom = 'auto';
+                                heroSticky.style.left = '0';
+                                heroSticky.style.width = '100%';
+                            } else {
+                                // UNPINNED (Scrolls away with the page)
+                                heroSticky.style.position = 'absolute';
+                                heroSticky.style.top = 'auto';
+                                heroSticky.style.bottom = '0';
+                                heroSticky.style.left = '0';
+                                heroSticky.style.width = '100%';
+                            }
 
                             // --- ANIMATION PROGRESS ---
-                            // Progress goes from 0 to 1 over the pin distance
-                            const scrollableDistance = blockHeight - viewportHeight;
+                            // Progress goes from 0 to 1 over the pin duration
                             let progress = 0;
-                            if (scrollableDistance > 0) progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+                            if (pinDuration > 0) progress = Math.max(0, Math.min(1, scrolled / pinDuration));
 
                             // ... animations ...
-
-                            // 1. ТЕКСТ (0.0 -> 0.25) - FADE OUT + SLIDE UP
-                            const titleOpacity = getVal(progress, 0.0, 0.25, 1, 0);
+                            // Ensure animation finishes slightly BEFORE unpinning (e.g., at 0.95)
+                            
+                            // 1. ТЕКСТ (0.0 -> 0.2)
+                            const titleOpacity = getVal(progress, 0.0, 0.2, 1, 0);
                             const titleTransY = getVal(progress, 0.0, 0.25, -50, -100); // Slide up from center (-50%) to higher (-100%)
                             
                             title.style.top = '50%';
@@ -304,29 +324,28 @@
                             title.style.opacity = titleOpacity;
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
-                            // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
-                            const boxesY = getVal(progress, 0.25, 0.25, 100, 10); // Поднял выше (10%), чтобы не обрезались
+                            // 2. НИЖНИЕ КОРОБКИ (0.2 -> 0.4)
+                            const boxesY = getVal(progress, 0.2, 0.2, 100, 10); 
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
-                            // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
-                            const boxRightX = getVal(progress, 0.5, 0.25, 150, 0); 
+                            // 3. КОРОБКА СПРАВА (0.4 -> 0.6)
+                            const boxRightX = getVal(progress, 0.4, 0.2, 150, 0); 
                             if (layerBoxRight) layerBoxRight.style.transform = `translateX(${boxRightX}%)`;
 
-                            // 4. МЫ (0.7 -> 0.85)
-                            const weX = getVal(progress, 0.7, 0.15, -100, 0);
+                            // 4. МЫ (0.6 -> 0.75)
+                            const weX = getVal(progress, 0.6, 0.15, -100, 0);
                             if (layerWe) layerWe.style.transform = `translateX(${weX}%)`;
 
-                            // 5. ФОНОВЫЕ КОРОБКИ (0.75 -> 0.9)
-                            const bgY = getVal(progress, 0.75, 0.15, 150, 0);
+                            // 5. ФОНОВЫЕ КОРОБКИ (0.65 -> 0.8)
+                            const bgY = getVal(progress, 0.65, 0.15, 150, 0);
                             if (layerBoxesBg) layerBoxesBg.style.transform = `translate(-50%, ${bgY}%)`;
 
-                            // 6. КАЙЛИ (0.7 -> 0.9) - РАНЬШЕ (вместе с нами)
-                            // Выезжает СПРАВА (150%) -> ЦЕНТР (-50%)
-                            const kylieX = getVal(progress, 0.7, 0.2, 150, -50);
-                            if (layerKylie) layerKylie.style.transform = `translate(${kylieX}%, 0)`; // Используем translate(x, y)
+                            // 6. КАЙЛИ (0.6 -> 0.8)
+                            const kylieX = getVal(progress, 0.6, 0.2, 150, -50);
+                            if (layerKylie) layerKylie.style.transform = `translate(${kylieX}%, 0)`; 
 
-                            // 7. СТИКЕР (0.8 -> 0.9) - РАНЬШЕ
-                            const stickerScale = getVal(progress, 0.8, 0.1, 0, 1);
+                            // 7. СТИКЕР (0.7 -> 0.85)
+                            const stickerScale = getVal(progress, 0.7, 0.15, 0, 1);
                             if (layerSticker) layerSticker.style.transform = `scale(${stickerScale}) rotate(0deg)`;
 
                             // УБРАЛ JS OPACITY ДЛЯ КАРТЫ (TEST)
@@ -370,7 +389,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.55 (GLOBAL SCROLL FIX)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.56 (MANUAL PINNING FIX)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
