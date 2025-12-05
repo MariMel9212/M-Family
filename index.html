@@ -182,8 +182,8 @@
                 </div>
 
                 <!-- 2. MAP: Карта -->
-                <!-- z-10: ПРЯЧЕМ ПОД HERO (z-30), пока тот не уедет -->
-                <div class="py-12 px-6 relative z-10 pt-32 -mt-64 overflow-visible">
+                <!-- z-40: под коробками, но JS управляет прозрачностью -->
+                <div id="map-block" class="py-12 px-6 relative z-[40] pt-32 -mt-64 overflow-visible opacity-0 will-change-opacity transition-opacity duration-500">
                     <!-- Текстура фона -->
                     <div class="absolute inset-0 z-0">
                         <img src="./images/texture.jpg" class="w-full h-full object-cover opacity-100" alt="Texture bg">
@@ -240,6 +240,7 @@
             const layerBoxesBg = document.getElementById('layer-boxes-bg');
             const layerKylie = document.getElementById('layer-kylie');
             const layerSticker = document.getElementById('layer-sticker');
+            const mapBlock = document.getElementById('map-block');
             
             if (heroBlock && title) {
                 // Функция интерполяции
@@ -296,6 +297,11 @@
                             const stickerScale = getVal(progress, 0.8, 0.1, 0, 1);
                             if (layerSticker) layerSticker.style.transform = `scale(${stickerScale}) rotate(0deg)`;
 
+                            // 8. КАРТА (0.9 -> 1.0) - ПОЯВЛЕНИЕ
+                            // Чтобы не просвечивала раньше времени
+                            const mapOpacity = getVal(progress, 0.9, 0.1, 0, 1);
+                            if (mapBlock) mapBlock.style.opacity = mapOpacity;
+
                             ticking = false;
                         });
                         ticking = true;
@@ -328,7 +334,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.40 (HIDE MAP UNDER HERO)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.41 (MAP OPACITY FADE)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
