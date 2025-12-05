@@ -213,7 +213,7 @@
             storyViewer.innerHTML = renderStoryMoscow();
             storyViewer.classList.remove('hidden');
             
-            // --- АНИМАЦИЯ ---
+            // --- АНИМАЦИЯ (ПОСЛЕДОВАТЕЛЬНАЯ) ---
             const heroBlock = document.getElementById('hero-block');
             const title = document.getElementById('hero-title');
             const boxesContainer = document.getElementById('boxes-container');
@@ -231,12 +231,12 @@
                             let progress = 0;
                             if (scrollableDistance > 0) progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
 
-                            // ШАГ 1: 0% -> 30% (Заголовок + Нижние Коробки)
-                            const step1End = 0.3;
-                            
-                            if (progress <= step1End) {
-                                const p = progress / step1End;
-                                const startTop = 50; const endTop = 10; // Чуть выше (10%)
+                            // --- ЭТАП 1: ТЕКСТ (0% - 25%) ---
+                            // Текст улетает, коробки стоят внизу
+                            if (progress <= 0.25) {
+                                const p = progress / 0.25; // 0..1
+                                
+                                const startTop = 50; const endTop = 10;
                                 const startLeft = 50; const endLeft = 8;
                                 const startScale = 1; const endScale = 0.8;
                                 
@@ -245,28 +245,43 @@
                                 title.style.transform = `translate(${-50 + (p * 50)}%, ${-50 + (p * 50)}%) scale(${startScale - (p * (startScale - endScale))})`;
                                 title.style.textAlign = p > 0.5 ? 'left' : 'center';
 
-                                // Двигаем контейнер (финиш на 20%, глубоко внизу)
-                                if (boxesContainer) boxesContainer.style.transform = `translateY(${100 - (p * 80)}%)`;
-
-                                // Скрываем Коробку Справа
+                                // Нижние коробки СПРЯТАНЫ (translateY 100%)
+                                if (boxesContainer) boxesContainer.style.transform = `translateY(100%)`;
                                 if (layerBoxRight) layerBoxRight.style.transform = `translateX(150%)`;
-
-                            } 
-                            // ШАГ 2: 30% -> 60% (Коробка Справа)
-                            else if (progress <= 0.6) {
-                                // Фиксация Шага 1
+                            }
+                            
+                            // --- ЭТАП 2: НИЖНИЕ КОРОБКИ (25% - 50%) ---
+                            // Текст стоит, коробки выезжают
+                            else if (progress <= 0.5) {
+                                // Фиксация текста
                                 title.style.top = `10%`; title.style.left = `8%`;
                                 title.style.transform = `translate(0%, 0%) scale(0.8)`;
                                 title.style.textAlign = 'left';
+
+                                const p = (progress - 0.25) / 0.25; // 0..1
+                                
+                                // Коробки: 100% -> 20%
+                                if (boxesContainer) boxesContainer.style.transform = `translateY(${100 - (p * 80)}%)`;
+                                
+                                // Правая коробка спрятана
+                                if (layerBoxRight) layerBoxRight.style.transform = `translateX(150%)`;
+                            }
+
+                            // --- ЭТАП 3: ПРАВАЯ КОРОБКА (50% - 75%) ---
+                            // Текст и низ стоят, правая выезжает
+                            else if (progress <= 0.75) {
+                                // Фиксация всего предыдущего
+                                title.style.top = `10%`; title.style.left = `8%`;
+                                title.style.transform = `translate(0%, 0%) scale(0.8)`;
                                 if (boxesContainer) boxesContainer.style.transform = `translateY(20%)`;
 
-                                const p = (progress - step1End) / (0.6 - step1End);
+                                const p = (progress - 0.5) / 0.25; // 0..1
                                 
-                                // Коробка Справа: выезжает справа (150% -> 0%)
+                                // Правая: 150% -> 0%
                                 if (layerBoxRight) layerBoxRight.style.transform = `translateX(${150 - (p * 150)}%)`;
-
                             }
-                            // ФИНАЛ
+
+                            // --- ФИНАЛ ( > 75%) ---
                             else {
                                 title.style.top = `10%`; title.style.left = `8%`;
                                 title.style.transform = `translate(0%, 0%) scale(0.8)`;
@@ -306,7 +321,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.6 (NO SCROLL)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.7 (SEQUENTIAL)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
