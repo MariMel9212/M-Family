@@ -262,16 +262,15 @@
                             let progress = 0;
                             if (scrollableDistance > 0) progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
 
-                            // 1. ТЕКСТ (0.0 -> 0.25)
-                            const titleTop = getVal(progress, 0.0, 0.25, 50, 10);
-                            const titleLeft = getVal(progress, 0.0, 0.25, 50, 8);
-                            const titleScale = getVal(progress, 0.0, 0.25, 1, 0.8);
-                            const titleTrans = getVal(progress, 0.0, 0.25, -50, 0); 
+                            // 1. ТЕКСТ (0.0 -> 0.25) - FADE OUT
+                            const titleOpacity = getVal(progress, 0.0, 0.25, 1, 0);
+                            const titleScale = getVal(progress, 0.0, 0.25, 1, 1.2);
                             
-                            title.style.top = `${titleTop}%`;
-                            title.style.left = `${titleLeft}%`;
-                            title.style.transform = `translate(${titleTrans}%, ${titleTrans}%) scale(${titleScale})`;
-                            title.style.textAlign = progress > 0.15 ? 'left' : 'center';
+                            title.style.top = '50%';
+                            title.style.left = '50%';
+                            title.style.transform = `translate(-50%, -50%) scale(${titleScale})`;
+                            title.style.opacity = titleOpacity;
+                            title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
                             // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
                             const boxesY = getVal(progress, 0.25, 0.25, 100, 20); 
@@ -296,7 +295,7 @@
 
                             // 7. СТИКЕР (0.8 -> 0.9) - РАНЬШЕ
                             const stickerScale = getVal(progress, 0.8, 0.1, 0, 1);
-                            if (layerSticker) layerSticker.style.transform = `scale(${stickerScale}) rotate(10deg)`;
+                            if (layerSticker) layerSticker.style.transform = `scale(${stickerScale}) rotate(-5deg)`;
 
                             ticking = false;
                         });
@@ -330,7 +329,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.30 (BIG KYLIE/WE & TEXT STICKER)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.31 (FADE TITLE)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
