@@ -147,6 +147,12 @@
                              <img src="./images/boxes_bottom.png" class="w-[140vw] max-w-none h-auto" alt="Boxes">
                         </div>
 
+                        <!-- Слой: Мы (слева) -->
+                        <img id="layer-we" src="./images/we.png" class="absolute bottom-[15%] left-[5%] w-[45%] z-10 will-change-transform" style="transform: translateX(-150%);" alt="We">
+
+                        <!-- Слой: Коробка 2 (справа) -->
+                        <img id="layer-box2" src="./images/box2.png" class="absolute bottom-[20%] right-[5%] w-[35%] z-15 will-change-transform" style="transform: translateX(150%);" alt="Box 2">
+
                     </div>
                 </div>
 
@@ -198,6 +204,8 @@
             const title = document.getElementById('hero-title');
             // Ищем теперь контейнер, а не картинку
             const boxesContainer = document.getElementById('boxes-container');
+            const layerWe = document.getElementById('layer-we');
+            const layerBox2 = document.getElementById('layer-box2');
             
             if (heroBlock && title) {
                 let ticking = false;
@@ -211,6 +219,7 @@
                             let progress = 0;
                             if (scrollableDistance > 0) progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
 
+                            // ШАГ 1: 0% -> 30%
                             const step1End = 0.3;
                             
                             if (progress <= step1End) {
@@ -224,19 +233,39 @@
                                 title.style.transform = `translate(${-50 + (p * 50)}%, ${-50 + (p * 50)}%) scale(${startScale - (p * (startScale - endScale))})`;
                                 title.style.textAlign = p > 0.5 ? 'left' : 'center';
 
-                                // Двигаем контейнер
-                                if (boxesContainer) boxesContainer.style.transform = `translateY(${100 - (p * 100)}%)`;
+                                // Двигаем контейнер (финиш на 15%, а не на 0%, чтобы было ниже)
+                                // Start: 100% -> End: 15%
+                                if (boxesContainer) boxesContainer.style.transform = `translateY(${100 - (p * 85)}%)`;
+
+                                // Скрываем остальные слои
+                                if (layerWe) layerWe.style.transform = `translateX(-150%)`;
+                                if (layerBox2) layerBox2.style.transform = `translateX(150%)`;
                                 
-                            } else if (progress <= 0.6) {
+                            } 
+                            // ШАГ 2: 30% -> 60% (Мы и Коробка 2)
+                            else if (progress <= 0.6) {
+                                // Фиксация Шага 1
                                 title.style.top = `15%`; title.style.left = `8%`;
                                 title.style.transform = `translate(0%, 0%) scale(0.8)`;
                                 title.style.textAlign = 'left';
-                                if (boxesContainer) boxesContainer.style.transform = `translateY(0%)`;
+                                if (boxesContainer) boxesContainer.style.transform = `translateY(15%)`; // Фиксируем внизу
 
-                            } else {
+                                const p = (progress - step1End) / (0.6 - step1End);
+                                
+                                // Мы: выезжаем слева (-150% -> 0%)
+                                if (layerWe) layerWe.style.transform = `translateX(${-150 + (p * 150)}%)`;
+                                
+                                // Коробка 2: выезжаем справа (150% -> 0%)
+                                if (layerBox2) layerBox2.style.transform = `translateX(${150 - (p * 150)}%)`;
+
+                            } 
+                            // ФИНАЛ
+                            else {
                                 title.style.top = `15%`; title.style.left = `8%`;
                                 title.style.transform = `translate(0%, 0%) scale(0.8)`;
-                                if (boxesContainer) boxesContainer.style.transform = `translateY(0%)`;
+                                if (boxesContainer) boxesContainer.style.transform = `translateY(15%)`;
+                                if (layerWe) layerWe.style.transform = `translateX(0%)`;
+                                if (layerBox2) layerBox2.style.transform = `translateX(0%)`;
                             }
                             ticking = false;
                         });
@@ -270,7 +299,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v4.5 (FLEX)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v4.6 (PEOPLE)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
