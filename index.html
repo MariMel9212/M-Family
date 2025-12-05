@@ -182,8 +182,8 @@
                 </div>
 
                 <!-- 2. MAP: Карта -->
-                <!-- DEBUG: bg-green-500, min-h-screen, removed negative margin -->
-                <div class="py-12 px-6 relative z-20 overflow-visible bg-green-500 min-h-[50vh]">
+                <!-- Добавил фон-текстуру -->
+                <div class="py-12 px-6 relative z-20 pt-64 -mt-48 overflow-visible">
                     <!-- Текстура фона -->
                     <div class="absolute inset-0 z-0">
                         <img src="./images/texture.jpg" class="w-full h-full object-cover opacity-100" alt="Texture bg">
@@ -272,7 +272,7 @@
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
                             // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
-                            const boxesY = getVal(progress, 0.25, 0.25, 100, 15); 
+                            const boxesY = getVal(progress, 0.25, 0.25, 100, 35); 
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
                             // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
@@ -328,7 +328,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.35 (DEBUG MAP VISIBILITY)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.36 (LOWER BOXES & SMOOTH OVERLAP)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
