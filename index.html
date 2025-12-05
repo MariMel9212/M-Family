@@ -158,26 +158,23 @@
                             <!-- 3. ПРАВАЯ КОРОБКА (z-30) -->
                             <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-30 will-change-transform" style="bottom: 50px; transform: translateX(150%);" alt="Box Right">
 
-                            <!-- 4. КАЙЛИ (z-40) -->
-                            <!-- Поднял до 150px, чтобы точно выглянула из-за коробок -->
-                            <img id="layer-kylie" src="./images/kylie.png" class="absolute left-1/2 w-[40%] z-40 will-change-transform" style="bottom: 150px; transform: translate(150%, 0);" alt="Kylie">
-                            
-                        </div>
-                        
-                        <!-- 5. СТИКЕР (z-55) - ПОВЕРХ ВСЕГО (для теста) -->
-                        <!-- Вынес наружу, чтобы видеть -->
-                        <div id="layer-sticker" class="absolute z-[55] bg-white border-2 border-slate-900 text-slate-900 font-hand font-bold text-xl px-4 py-2 rounded-xl shadow-lg will-change-transform origin-bottom-left whitespace-nowrap"
-                                style="bottom: 400px; left: 60%; transform: scale(0) rotate(10deg);">
-                            А где мои игрушки? 🦴
-                        </div>
-
                         <!-- 6. НИЖНИЕ КОРОБКИ (z-50) - СВИСАЮТ -->
                         <div id="boxes-container" class="absolute bottom-0 left-0 w-full flex justify-center z-[50] will-change-transform pointer-events-none" style="transform: translateY(100%);">
                              <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto" alt="Boxes">
                         </div>
+
+                        <!-- 7. КАЙЛИ (z-60) - ПОВЕРХ КОРОБОК -->
+                        <!-- Увеличил в 2 раза (w-[80%]), bottom: 0, z-60 -->
+                        <img id="layer-kylie" src="./images/kylie.png" class="absolute left-1/2 w-[80%] z-[60] will-change-transform" style="bottom: 0; transform: translate(150%, 0);" alt="Kylie">
                         
-                        <!-- ЗАГОЛОВОК (z-60) -->
-                        <h1 id="hero-title" class="absolute z-[60] text-center text-slate-900 origin-top-left will-change-transform whitespace-nowrap" 
+                        <!-- 8. СТИКЕР (z-65) -->
+                        <div id="layer-sticker" class="absolute z-[65] bg-white border-2 border-slate-900 text-slate-900 font-hand font-bold text-xl px-4 py-2 rounded-xl shadow-lg will-change-transform origin-bottom-left whitespace-nowrap"
+                                style="bottom: 300px; left: 60%; transform: scale(0) rotate(10deg);">
+                            А где мои игрушки? 🦴
+                        </div>
+                        
+                        <!-- ЗАГОЛОВОК (z-70) -->
+                        <h1 id="hero-title" class="absolute z-[70] text-center text-slate-900 origin-top-left will-change-transform whitespace-nowrap" 
                             style="top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 70px; line-height: 90%; letter-spacing: -0.02em;">
                             Большой<br>переезд
                         </h1>
@@ -325,7 +322,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.22 (CSS HACK & HIGH KYLIE)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.23 (HUGE KYLIE FRONT)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
