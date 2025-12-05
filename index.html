@@ -139,54 +139,39 @@
                 <!-- 1. HERO: Большой Переезд -->
                 <div id="hero-block" class="relative" style="height: 600vh;"> 
                     
-                    <!-- ЖЕСТКАЯ ОБЕРТКА (v5.21) -->
-                    <!-- Обрезает горизонталь, но не мешает sticky (потому что sticky внутри или снаружи? Sticky должен быть снаружи) -->
-                    <!-- Нет, sticky должен быть САМЫМ ВНЕШНИМ. А внутри него overflow-x-hidden -->
-                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30 overflow-hidden">
+                    <!-- v5.22: Убрал overflow-hidden со sticky, чтобы коробки свисали -->
+                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30">
                         
-                        <!-- Фон: Текстура (z-0) -->
-                        <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
+                        <!-- МАСКА ТОЛЬКО ДЛЯ ФОНА И БОКОВЫХ ЭЛЕМЕНТОВ (чтобы не было гор. скролла) -->
+                        <!-- Но нижние коробки (z-50) ВНЕ этой маски -->
+                        <div class="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+                            
+                            <!-- Фон: Текстура (z-0) -->
+                            <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
 
-                        <!-- 1. ФОНОВЫЕ КОРОБКИ (z-10) -->
-                        <img id="layer-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 w-full z-10 will-change-transform" style="bottom: 50px; transform: translate(-50%, 150%);" alt="Boxes BG">
+                            <!-- 1. ФОНОВЫЕ КОРОБКИ (z-10) -->
+                            <img id="layer-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 w-full z-10 will-change-transform" style="bottom: 50px; transform: translate(-50%, 150%);" alt="Boxes BG">
 
-                        <!-- 2. МЫ (z-20) -->
-                        <img id="layer-we" src="./images/we.png" class="absolute left-0 w-[70%] z-20 will-change-transform" style="bottom: 50px; transform: translateX(-100%);" alt="We">
+                            <!-- 2. МЫ (z-20) -->
+                            <img id="layer-we" src="./images/we.png" class="absolute left-0 w-[70%] z-20 will-change-transform" style="bottom: 50px; transform: translateX(-100%);" alt="We">
 
-                        <!-- 3. ПРАВАЯ КОРОБКА (z-30) -->
-                        <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-30 will-change-transform" style="bottom: 50px; transform: translateX(150%);" alt="Box Right">
+                            <!-- 3. ПРАВАЯ КОРОБКА (z-30) -->
+                            <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-30 will-change-transform" style="bottom: 50px; transform: translateX(150%);" alt="Box Right">
 
-                        <!-- 4. КАЙЛИ (z-40) -->
-                        <!-- Теперь она ВНУТРИ overflow-hidden контейнера, поэтому не растянет экран -->
-                        <!-- Но она под z-50 коробками, как и просила (но над правой коробкой z-30) -->
-                        <img id="layer-kylie" src="./images/kylie.png" class="absolute left-1/2 w-[40%] z-40 will-change-transform" style="bottom: 30px; transform: translate(150%, 0);" alt="Kylie">
+                            <!-- 4. КАЙЛИ (z-40) -->
+                            <!-- Поднял до 150px, чтобы точно выглянула из-за коробок -->
+                            <img id="layer-kylie" src="./images/kylie.png" class="absolute left-1/2 w-[40%] z-40 will-change-transform" style="bottom: 150px; transform: translate(150%, 0);" alt="Kylie">
+                            
+                        </div>
                         
-                        <!-- 5. СТИКЕР (z-45) -->
-                        <div id="layer-sticker" class="absolute z-[45] bg-white border-2 border-slate-900 text-slate-900 font-hand font-bold text-xl px-4 py-2 rounded-xl shadow-lg will-change-transform origin-bottom-left whitespace-nowrap"
-                                style="bottom: 250px; left: 65%; transform: scale(0) rotate(10deg);">
+                        <!-- 5. СТИКЕР (z-55) - ПОВЕРХ ВСЕГО (для теста) -->
+                        <!-- Вынес наружу, чтобы видеть -->
+                        <div id="layer-sticker" class="absolute z-[55] bg-white border-2 border-slate-900 text-slate-900 font-hand font-bold text-xl px-4 py-2 rounded-xl shadow-lg will-change-transform origin-bottom-left whitespace-nowrap"
+                                style="bottom: 400px; left: 60%; transform: scale(0) rotate(10deg);">
                             А где мои игрушки? 🦴
                         </div>
 
-                        <!-- 6. НИЖНИЕ КОРОБКИ (z-50) -->
-                        <!-- Они тоже внутри overflow-hidden, значит их низ обрежется? ДА. -->
-                        <!-- Чтобы они СВИСАЛИ, нам нужно, чтобы контейнер был overflow-VISIBLE по Y. -->
-                        <!-- Но CSS не умеет overflow-x: hidden и overflow-y: visible одновременно. -->
-                        <!-- ХАК: Делаем контейнер ВЫСОКИМ (на всю высоту), а overflow-hidden только для ширины? -->
-                        <!-- Нет. Проще сделать коробки ЧУТЬ ВЫШЕ (bottom: 0), чтобы они не требовали свисания. -->
-                        <!-- ИЛИ: Пусть свисают, но тогда sticky контейнер не должен иметь overflow-hidden. -->
-                        
-                        <!-- РЕШЕНИЕ: -->
-                        <!-- Возвращаемся к v5.19 (без overflow на sticky), НО оборачиваем ВЕСЬ КОНТЕНТ (кроме sticky) в overflow-x-hidden body wrapper. -->
-                        <!-- Но у нас уже есть overflow-x: hidden на body. Почему оно не работало? -->
-                        <!-- Потому что на iOS position: sticky + overflow иногда глючит. -->
-                        
-                        <!-- ПОПЫТКА v5.21: -->
-                        <!-- Всё в одном контейнере. Overflow-hidden. -->
-                        <!-- Но коробки (z-50) будут обрезаны снизу. -->
-                        <!-- Чтобы это исправить, я добавлю паддинг снизу или сделаю этот блок выше? Нет. -->
-                        <!-- Давай просто прижмем коробки к низу (bottom: 0), и пусть обрезаются ровно по краю экрана. Это нормально для "липкого" блока. -->
-                        <!-- А следующий блок (карта) просто наедет сверху при скролле (z-index выше). -->
-                        
+                        <!-- 6. НИЖНИЕ КОРОБКИ (z-50) - СВИСАЮТ -->
                         <div id="boxes-container" class="absolute bottom-0 left-0 w-full flex justify-center z-[50] will-change-transform pointer-events-none" style="transform: translateY(100%);">
                              <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto" alt="Boxes">
                         </div>
@@ -340,7 +325,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.21 (FINAL LAYERS)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.22 (CSS HACK & HIGH KYLIE)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
