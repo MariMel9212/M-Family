@@ -150,10 +150,12 @@
                 </button>
 
                 <!-- 1. HERO: Большой Переезд -->
-                <div id="hero-block" class="relative w-full"> 
+                <!-- relative, h-400vh -->
+                <div id="hero-block" class="relative w-full" style="height: 400vh;"> 
                     
-                    <!-- v5.22: Убрал overflow-hidden со sticky, чтобы коробки свисали -->
-                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30 overflow-visible">
+                    <!-- INNER CONTAINER: Will be FIXED then ABSOLUTE -->
+                    <!-- id="hero-sticky" -->
+                    <div id="hero-sticky" class="fixed top-0 left-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30 overflow-visible">
                         
                         <!-- МАСКА ТОЛЬКО ДЛЯ ФОНА И БОКОВЫХ ЭЛЕМЕНТОВ (чтобы не было гор. скролла) -->
                         <!-- Но нижние коробки (z-50) ВНЕ этой маски -->
@@ -193,15 +195,12 @@
 
                     </div>
                     
-                    <!-- SPACER: 300vh с контентом -->
-                    <div class="w-full h-[300vh] flex items-end justify-center pb-10 opacity-0 pointer-events-none">
-                        Scroll down...
-                    </div>
+                    <!-- No spacer needed, height is on container -->
                 </div>
 
                 <!-- 2. MAP: Карта -->
-                <!-- z-20: под hero, без отрицательного марджина, без min-h-screen -->
-                <div id="map-block" class="py-12 px-6 relative z-20 pt-10 overflow-visible bg-blue-50">
+                <!-- z-20, flows naturally after 400vh -->
+                <div id="map-block" class="py-12 px-6 relative z-20 pt-10 overflow-visible bg-white">
                     <!-- Карта-картинка (фон) -->
                     <div class="absolute inset-0 z-0 opacity-100" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'); background-size: cover; background-position: center;">
                         <!-- Placeholder map -->
@@ -251,6 +250,7 @@
             
             // --- АНИМАЦИЯ (УМНАЯ И ПЛАВНАЯ) ---
             const heroBlock = document.getElementById('hero-block');
+            const heroSticky = document.getElementById('hero-sticky'); // NEW
             const title = document.getElementById('hero-title');
             const boxesContainer = document.getElementById('boxes-container');
             const layerBoxRight = document.getElementById('layer-box-right');
@@ -261,7 +261,7 @@
             const mapBlock = document.getElementById('map-block');
             
             if (heroBlock && title) {
-                // Функция интерполяции
+                // ... getVal ...
                 const getVal = (progress, startAt, duration, startVal, endVal) => {
                     if (progress <= startAt) return startVal;
                     if (progress >= startAt + duration) return endVal;
@@ -273,13 +273,34 @@
                 const animateHero = () => {
                     if (!ticking) {
                         window.requestAnimationFrame(() => {
-                            // Use window.scrollY instead of storyViewer.scrollTop
                             const scrolled = window.scrollY;
                             const viewportHeight = window.innerHeight;
-                            const blockHeight = heroBlock.offsetHeight;
-                            const scrollableDistance = blockHeight - viewportHeight;
+                            const blockHeight = heroBlock.offsetHeight; // 400vh
+                            
+                            // --- MANUAL PINNING LOGIC ---
+                            // Если скролл меньше высоты блока минус экран (т.е. мы внутри блока) -> FIXED TOP
+                            // Если скролл больше -> ABSOLUTE BOTTOM
+                            const pinPoint = blockHeight - viewportHeight;
+                            
+                            if (scrolled < pinPoint) {
+                                heroSticky.style.position = 'fixed';
+                                heroSticky.style.top = '0';
+                                heroSticky.style.bottom = 'auto';
+                                heroSticky.style.left = '0'; // Ensure left 0
+                            } else {
+                                heroSticky.style.position = 'absolute';
+                                heroSticky.style.top = 'auto';
+                                heroSticky.style.bottom = '0';
+                                heroSticky.style.left = '0';
+                            }
+
+                            // --- ANIMATION PROGRESS ---
+                            // Progress goes from 0 to 1 over the pin distance
+                            const scrollableDistance = pinPoint;
                             let progress = 0;
                             if (scrollableDistance > 0) progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
+
+                            // ... animations ...
 
                             // 1. ТЕКСТ (0.0 -> 0.25) - FADE OUT + SLIDE UP
                             const titleOpacity = getVal(progress, 0.0, 0.25, 1, 0);
@@ -292,7 +313,7 @@
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
                             // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
-                            const boxesY = getVal(progress, 0.25, 0.25, 100, 20); // Опустил немного (20%) чтобы сидели на краю
+                            const boxesY = getVal(progress, 0.25, 0.25, 100, 30); // Опустил ниже (30%), чтобы свисали на след. блок
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
                             // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
@@ -351,7 +372,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.48 (GLOBAL SCROLL & TEXTURE)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.49 (MANUAL PINNING & CURTAIN)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
