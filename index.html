@@ -163,6 +163,13 @@
                         <!-- Подняли еще на 20px (было 30, стало 50) -->
                         <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-10 will-change-transform" style="bottom: 50px; transform: translateX(150%);" alt="Box Right">
 
+                        <!-- МЫ (Step 3) -->
+                        <!-- Появляемся снизу из-за коробок -->
+                        <img id="layer-we" src="./images/we.png" class="absolute left-1/4 w-[30%] z-10 will-change-transform" style="bottom: 100px; transform: translateY(150%);" alt="We">
+
+                        <!-- КАЙЛИ (Step 3) -->
+                        <img id="layer-kylie" src="./images/kylie.png" class="absolute left-[10%] w-[20%] z-30 will-change-transform" style="bottom: 40px; transform: translateY(150%);" alt="Kylie">
+
                     </div>
                 </div>
 
@@ -222,6 +229,8 @@
             const title = document.getElementById('hero-title');
             const boxesContainer = document.getElementById('boxes-container');
             const layerBoxRight = document.getElementById('layer-box-right');
+            const layerWe = document.getElementById('layer-we');
+            const layerKylie = document.getElementById('layer-kylie');
             
             if (heroBlock && title) {
                 // Функция интерполяции
@@ -263,6 +272,11 @@
                             const boxRightX = getVal(progress, 0.5, 0.25, 150, 0); // 150% -> 0%
                             if (layerBoxRight) layerBoxRight.style.transform = `translateX(${boxRightX}%)`;
 
+                            // 4. МЫ и КАЙЛИ (0.75 -> 1.0)
+                            const finalY = getVal(progress, 0.75, 0.25, 150, 0); // 150% -> 0%
+                            if (layerWe) layerWe.style.transform = `translateY(${finalY}%)`;
+                            if (layerKylie) layerKylie.style.transform = `translateY(${finalY}%)`;
+
                             ticking = false;
                         });
                         ticking = true;
@@ -295,7 +309,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.11 (TEXTURE & OVERFLOW)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.12 (WE ARE HOME)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
