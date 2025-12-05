@@ -19,17 +19,34 @@
         /* Основные настройки */
         html, body {
             width: 100%;
-            height: 100%;
-            /* overflow: visible !important; */
-            position: relative;
-        }
-        
-        body { 
-            font-family: 'Manrope', sans-serif; 
-            background-color: #000; 
-            color: #1e293b;
+            min-height: 100vh;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
+            overflow-y: auto; /* GLOBAL SCROLL */
+            position: relative;
+            background-color: #f8fafc;
+        }
+        
+        /* Global texture background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('./images/texture.jpg');
+            background-size: cover;
+            opacity: 0.5;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        body { 
+            font-family: 'Manrope', sans-serif; 
+            /* background-color: #000; REMOVED */
+            color: #1e293b;
         }
 
         /* Класс для рукописного шрифта */
@@ -43,14 +60,11 @@
         /* Контейнер приложения */
         #app-container {
             width: 100%;
-            height: 100dvh; 
-            max-height: 100dvh;
+            min-height: 100vh; /* Allow growth */
             margin: 0 auto;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
+            /* background-color: #ffffff; REMOVED */
+            display: block; /* Was flex */
             position: relative;
-            /* overflow: visible !important; */
         }
 
         @media (min-width: 640px) {
@@ -74,7 +88,7 @@
     <div id="app-container">
         
         <!-- СЛОЙ ЛОНГРИДА -->
-        <div id="story-viewer" class="absolute top-0 left-0 w-full h-full bg-white z-[100] hidden overflow-y-auto no-scrollbar pb-20">
+        <div id="story-viewer" class="hidden">
             <!-- Сюда рендерится история -->
         </div>
 
@@ -259,7 +273,8 @@
                 const animateHero = () => {
                     if (!ticking) {
                         window.requestAnimationFrame(() => {
-                            const scrolled = storyViewer.scrollTop;
+                            // Use window.scrollY instead of storyViewer.scrollTop
+                            const scrolled = window.scrollY;
                             const viewportHeight = window.innerHeight;
                             const blockHeight = heroBlock.offsetHeight;
                             const scrollableDistance = blockHeight - viewportHeight;
@@ -277,7 +292,7 @@
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
                             // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
-                            const boxesY = getVal(progress, 0.25, 0.25, 100, 0); // 0% - чтобы не обрезались
+                            const boxesY = getVal(progress, 0.25, 0.25, 100, 20); // Опустил немного (20%) чтобы сидели на краю
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
                             // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
@@ -308,7 +323,8 @@
                         ticking = true;
                     }
                 };
-                storyViewer.addEventListener('scroll', animateHero, { passive: true });
+                // Listen to window scroll instead of storyViewer
+                window.addEventListener('scroll', animateHero, { passive: true });
                 animateHero();
             }
             
@@ -335,7 +351,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.47 (SPACER & OVERFLOW FIX)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.48 (GLOBAL SCROLL & TEXTURE)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
