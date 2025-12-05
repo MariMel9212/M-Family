@@ -157,7 +157,8 @@
                     <!-- INNER CONTAINER: JS MANUAL PINNING (Fixed -> Absolute) -->
                     <!-- id="hero-sticky" -->
                     <!-- Start FIXED at top -->
-                    <div id="hero-sticky" class="fixed top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white relative z-30 overflow-hidden">
+                    <!-- overflow-visible to allow boxes to overlap map -->
+                    <div id="hero-sticky" class="fixed top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white relative z-30 overflow-visible">
                         
                         <!-- МАСКА ТОЛЬКО ДЛЯ ФОНА И БОКОВЫХ ЭЛЕМЕНТОВ (чтобы не было гор. скролла) -->
                         <!-- Но нижние коробки (z-50) ВНЕ этой маски -->
@@ -344,8 +345,8 @@
                             const kylieX = getVal(progress, 0.6, 0.2, 150, -50);
                             if (layerKylie) layerKylie.style.transform = `translate(${kylieX}%, 0)`; 
 
-                            // 7. СТИКЕР (0.7 -> 0.85)
-                            const stickerScale = getVal(progress, 0.7, 0.15, 0, 1);
+                            // 7. СТИКЕР (0.7 -> 0.8) - MORE PAUSE
+                            const stickerScale = getVal(progress, 0.7, 0.1, 0, 1);
                             if (layerSticker) layerSticker.style.transform = `scale(${stickerScale}) rotate(0deg)`;
 
                             // УБРАЛ JS OPACITY ДЛЯ КАРТЫ (TEST)
@@ -389,7 +390,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.56 (MANUAL PINNING FIX)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.57 (VISIBLE OVERLAP)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
