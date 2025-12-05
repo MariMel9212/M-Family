@@ -163,11 +163,11 @@
                              <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto" alt="Boxes">
                         </div>
 
-                        <!-- 7. КАЙЛИ (z-60) - ПОВЕРХ КОРОБОК -->
-                        <!-- Увеличил в 2 раза (w-[80%]), bottom: 0, z-60 -->
-                        <img id="layer-kylie" src="./images/kylie.png" class="absolute left-1/2 w-[80%] z-[60] will-change-transform" style="bottom: 0; transform: translate(150%, 0);" alt="Kylie">
+                        <!-- 5. КАЙЛИ (z-60) - ПОВЕРХ КОРОБОК -->
+                        <!-- border-2 border-red-500 для отладки -->
+                        <img id="layer-kylie" src="./images/kylie.png" class="absolute left-1/2 w-[80%] z-[60] will-change-transform border-4 border-red-500" style="bottom: 0; transform: translate(150%, 0);" alt="Kylie">
                         
-                        <!-- 8. СТИКЕР (z-65) -->
+                        <!-- 6. СТИКЕР (z-65) -->
                         <div id="layer-sticker" class="absolute z-[65] bg-white border-2 border-slate-900 text-slate-900 font-hand font-bold text-xl px-4 py-2 rounded-xl shadow-lg will-change-transform origin-bottom-left whitespace-nowrap"
                                 style="bottom: 300px; left: 60%; transform: scale(0) rotate(10deg);">
                             А где мои игрушки? 🦴
@@ -280,15 +280,22 @@
                             const boxRightX = getVal(progress, 0.5, 0.25, 150, 0); 
                             if (layerBoxRight) layerBoxRight.style.transform = `translateX(${boxRightX}%)`;
 
-                            // 4. МЫ (0.75 -> 1.0)
-                            // Теперь выезжаем СЛЕВА (translateX -100% -> 0%)
-                            const weX = getVal(progress, 0.75, 0.25, -100, 0);
+                            // 4. МЫ (0.7 -> 0.85)
+                            const weX = getVal(progress, 0.7, 0.15, -100, 0);
                             if (layerWe) layerWe.style.transform = `translateX(${weX}%)`;
 
-                            // 5. ФОНОВЫЕ КОРОБКИ (0.8 -> 1.0) - С задержкой
-                            const bgY = getVal(progress, 0.8, 0.2, 150, 0);
-                            // Важно сохранить translateX(-50%) для центровки
+                            // 5. ФОНОВЫЕ КОРОБКИ (0.75 -> 0.9)
+                            const bgY = getVal(progress, 0.75, 0.15, 150, 0);
                             if (layerBoxesBg) layerBoxesBg.style.transform = `translate(-50%, ${bgY}%)`;
+
+                            // 6. КАЙЛИ (0.7 -> 0.9) - РАНЬШЕ (вместе с нами)
+                            // Выезжает СПРАВА (150%) -> ЦЕНТР (-50%)
+                            const kylieX = getVal(progress, 0.7, 0.2, 150, -50);
+                            if (layerKylie) layerKylie.style.transform = `translate(${kylieX}%, 0)`; // Используем translate(x, y)
+
+                            // 7. СТИКЕР (0.8 -> 0.9) - РАНЬШЕ
+                            const stickerScale = getVal(progress, 0.8, 0.1, 0, 1);
+                            if (layerSticker) layerSticker.style.transform = `scale(${stickerScale}) rotate(10deg)`;
 
                             ticking = false;
                         });
@@ -322,7 +329,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.24 (SIMPLE & SAFE)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.25 (RELOAD & CHECK)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
