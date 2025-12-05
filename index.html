@@ -182,12 +182,11 @@
                 </div>
 
                 <!-- 2. MAP: Карта -->
-                <!-- Добавил фон-текстуру -->
-                <div class="py-12 px-6 relative z-20 pt-48 -mt-32 overflow-visible">
+                <!-- DEBUG: bg-green-500, min-h-screen, removed negative margin -->
+                <div class="py-12 px-6 relative z-20 overflow-visible bg-green-500 min-h-[50vh]">
                     <!-- Текстура фона -->
                     <div class="absolute inset-0 z-0">
                         <img src="./images/texture.jpg" class="w-full h-full object-cover opacity-100" alt="Texture bg">
-                        <!-- Removed white overlay for better visibility -->
                     </div>
 
                     <!-- Контент карты (z-10 чтобы быть над текстурой) -->
@@ -329,7 +328,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.34 (FIX CLIPPED BOXES & MAP TEXTURE)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.35 (DEBUG MAP VISIBILITY)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
