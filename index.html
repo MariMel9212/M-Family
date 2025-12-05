@@ -233,9 +233,9 @@
                                 title.style.transform = `translate(${-50 + (p * 50)}%, ${-50 + (p * 50)}%) scale(${startScale - (p * (startScale - endScale))})`;
                                 title.style.textAlign = p > 0.5 ? 'left' : 'center';
 
-                                // Двигаем контейнер (финиш на 0%, то есть четко внизу)
-                                // Start: 100% -> End: 0%
-                                if (boxesContainer) boxesContainer.style.transform = `translateY(${100 - (p * 100)}%)`;
+                                // Двигаем контейнер (финиш на 10%, то есть чуть утоплены)
+                                // Start: 100% -> End: 10%
+                                if (boxesContainer) boxesContainer.style.transform = `translateY(${100 - (p * 90)}%)`;
 
                                 // Скрываем остальные слои
                                 if (layerWe) layerWe.style.transform = `translateX(-150%)`;
@@ -248,7 +248,7 @@
                                 title.style.top = `15%`; title.style.left = `8%`;
                                 title.style.transform = `translate(0%, 0%) scale(0.8)`;
                                 title.style.textAlign = 'left';
-                                if (boxesContainer) boxesContainer.style.transform = `translateY(0%)`; // Фиксируем внизу
+                                if (boxesContainer) boxesContainer.style.transform = `translateY(10%)`; // Фиксируем внизу + отступ
 
                                 const p = (progress - step1End) / (0.6 - step1End);
                                 
@@ -263,7 +263,7 @@
                             else {
                                 title.style.top = `15%`; title.style.left = `8%`;
                                 title.style.transform = `translate(0%, 0%) scale(0.8)`;
-                                if (boxesContainer) boxesContainer.style.transform = `translateY(0%)`;
+                                if (boxesContainer) boxesContainer.style.transform = `translateY(10%)`;
                                 if (layerWe) layerWe.style.transform = `translateX(0%)`;
                                 if (layerBox2) layerBox2.style.transform = `translateX(0%)`;
                             }
@@ -299,7 +299,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v4.7 (COMPOSITION)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v4.8 (LOWER)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
