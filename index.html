@@ -167,8 +167,8 @@
                         <img id="layer-kylie" src="./images/kylie.png" class="absolute left-1/2 w-[70%] z-[45] will-change-transform" style="bottom: 0; transform: translate(150%, 0);" alt="Kylie">
                         
                         <!-- 6. СТИКЕР (z-65) -->
-                        <div id="layer-sticker" class="absolute z-[65] text-slate-800 font-hand font-bold text-xl leading-none w-[200px] will-change-transform origin-bottom-left text-left"
-                                style="bottom: 350px; left: 10%; transform: scale(0) rotate(-5deg);">
+                        <div id="layer-sticker" class="absolute z-[65] text-slate-800 font-hand font-bold text-xl leading-none w-[200px] will-change-transform origin-top-right text-right"
+                                style="top: 15%; right: 5%; transform: scale(0) rotate(-5deg);">
                             Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу
                         </div>
                         
@@ -273,7 +273,7 @@
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
                             // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
-                            const boxesY = getVal(progress, 0.25, 0.25, 100, 20); 
+                            const boxesY = getVal(progress, 0.25, 0.25, 100, 30); 
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
                             // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
@@ -329,7 +329,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.31 (FADE TITLE)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.32 (STICKER TOP-RIGHT & BOXES LOWER)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
