@@ -150,8 +150,8 @@
                 </button>
 
                 <!-- 1. HERO: Большой Переезд -->
-                <!-- relative, min-h-[400vh] -->
-                <div id="hero-block" class="relative w-full min-h-[400vh]"> 
+                <!-- INLINE STYLE HEIGHT: 400vh -->
+                <div id="hero-block" class="relative w-full" style="min-height: 400vh; height: 400vh;"> 
                     
                     <!-- INNER CONTAINER: Will be FIXED then ABSOLUTE -->
                     <!-- id="hero-sticky" -->
@@ -195,12 +195,12 @@
 
                     </div>
                     <!-- DEBUG: Red line at bottom -->
-                    <div class="absolute bottom-0 left-0 w-full h-2 bg-red-500 z-50"></div>
+                    <!-- <div class="absolute bottom-0 left-0 w-full h-2 bg-red-500 z-50"></div> REMOVED -->
                 </div>
 
                 <!-- 2. MAP: Карта -->
                 <!-- z-20, flows naturally after 400vh -->
-                <div id="map-block" class="py-12 px-6 relative z-20 pt-10 overflow-visible bg-white">
+                <div id="map-block" class="py-12 px-6 relative z-20 pt-10 overflow-visible bg-white" style="min-height: 100vh;">
                     <!-- Карта-картинка (фон) -->
                     <div class="absolute inset-0 z-0 opacity-100" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'); background-size: cover; background-position: center;">
                         <!-- Placeholder map -->
@@ -382,7 +382,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.51 (DEBUG RED LINE & MIN-H)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.52 (INLINE HEIGHT FIX)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
