@@ -139,11 +139,11 @@
                 <!-- 1. HERO: Большой Переезд -->
                 <div id="hero-block" class="relative" style="height: 600vh;"> 
                     
-                    <!-- Исправлено: Убрал лишнюю обертку, вернул sticky и добавил overflow-hidden сюда -->
-                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30 overflow-hidden">
+                    <!-- Исправлено: Убрал overflow-hidden, чтобы коробки могли торчать снизу (наезжать на карту) -->
+                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30">
                         
                         <!-- Фон: Текстура -->
-                        <div class="absolute inset-0">
+                        <div class="absolute inset-0 overflow-hidden"> <!-- Тут оставляем overflow-hidden для текстуры, чтобы она не лезла -->
                              <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
                         </div>
                         
@@ -160,15 +160,23 @@
                         </div>
 
                         <!-- Коробка Справа (Step 2) -->
-                        <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-10 will-change-transform" style="bottom: 30px; transform: translateX(150%);" alt="Box Right">
+                        <!-- Подняли еще на 20px (было 30, стало 50) -->
+                        <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-10 will-change-transform" style="bottom: 50px; transform: translateX(150%);" alt="Box Right">
 
                     </div>
                 </div>
 
                 <!-- 2. MAP: Карта -->
-                <!-- Добавил pt-32 (отступ сверху), чтобы карта начиналась ниже коробок, и z-20 (ниже hero), чтобы коробки были поверх -->
-                <div class="py-12 px-6 bg-white relative z-20 pt-32 -mt-20">
-                    <div class="w-full aspect-square bg-blue-50 rounded-3xl overflow-hidden relative mb-6 shadow-inner border border-blue-100">
+                <!-- Добавил фон-текстуру -->
+                <div class="py-12 px-6 relative z-20 pt-32 -mt-20 overflow-hidden">
+                    <!-- Текстура фона -->
+                    <div class="absolute inset-0 z-0">
+                        <img src="./images/texture.jpg" class="w-full h-full object-cover opacity-50" alt="Texture bg">
+                        <div class="absolute inset-0 bg-white/10"></div> <!-- Легкое осветление, если нужно -->
+                    </div>
+
+                    <!-- Контент карты (z-10 чтобы быть над текстурой) -->
+                    <div class="w-full aspect-square bg-blue-50 rounded-3xl overflow-hidden relative mb-6 shadow-inner border border-blue-100 z-10">
                         <div class="absolute inset-0 opacity-30" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'); background-size: cover;"></div>
                         <div class="absolute top-1/2 left-1/2 w-32 h-1 bg-red-500 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full"></div>
                         <div class="absolute top-[30%] left-[30%] text-4xl animate-bounce">📍</div>
@@ -287,7 +295,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.10 (RIGHT BOX UP)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.11 (TEXTURE & OVERFLOW)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
