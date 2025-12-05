@@ -23,7 +23,7 @@
             color: #1e293b;
             margin: 0;
             padding: 0;
-            /* overflow: hidden; УБРАЛ, чтобы исключить проблемы с отрисовкой */
+            overflow-x: hidden; /* Запрет горизонтального скролла */
         }
 
         /* Класс для рукописного шрифта */
@@ -44,7 +44,8 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden; /* Тоже запрещаем здесь */
+            overflow-y: hidden; /* Вертикальный скролл только у контента */
         }
 
         @media (min-width: 640px) {
@@ -152,8 +153,9 @@
                         </div>
 
                         <!-- Коробка Справа (Step 2) -->
-                        <!-- z-10: Задний план (ниже нижних коробок) -->
-                        <img id="layer-box-right" src="./images/box_right.png" class="absolute bottom-[25%] right-0 w-[40%] z-10 will-change-transform" style="transform: translateX(150%);" alt="Box Right">
+                        <!-- z-10: Задний план -->
+                        <!-- Опустил еще ниже (bottom-[-5%]) -->
+                        <img id="layer-box-right" src="./images/box_right.png" class="absolute -bottom-[5%] right-0 w-[40%] z-10 will-change-transform" style="transform: translateX(150%);" alt="Box Right">
 
                     </div>
                 </div>
@@ -295,7 +297,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.2 (NO CUT)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.3 (FIX SCROLL)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
