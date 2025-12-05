@@ -139,37 +139,35 @@
                 <!-- 1. HERO: Большой Переезд -->
                 <div id="hero-block" class="relative" style="height: 600vh;"> 
                     
-                    <!-- Исправлено: Убрал overflow-hidden, чтобы коробки могли торчать снизу (наезжать на карту) -->
-                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30">
+                    <!-- Исправлено: Вернул overflow-x-hidden в inline-стиль, чтобы убрать скролл вправо -->
+                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30" style="overflow-x: hidden;">
                         
-                        <!-- Фон: Текстура -->
-                        <div class="absolute inset-0 overflow-hidden"> <!-- Тут оставляем overflow-hidden для текстуры, чтобы она не лезла -->
+                        <!-- Фон: Текстура (z-0) -->
+                        <div class="absolute inset-0 overflow-hidden"> 
                              <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
                         </div>
                         
-                        <!-- Заголовок: Большой Переезд -->
-                        <h1 id="hero-title" class="absolute z-50 text-center text-slate-900 origin-top-left will-change-transform whitespace-nowrap" 
+                        <!-- Заголовок (z-60) -->
+                        <h1 id="hero-title" class="absolute z-[60] text-center text-slate-900 origin-top-left will-change-transform whitespace-nowrap" 
                             style="top: 50%; left: 50%; transform: translate(-50%, -50%) scale(1); font-family: 'Shantell Sans', sans-serif; font-weight: 600; font-size: 70px; line-height: 90%; letter-spacing: -0.02em;">
                             Большой<br>переезд
                         </h1>
 
-                        <!-- Коробки Нижние (В контейнере для центровки) -->
-                        <!-- z-20: Передний план -->
-                        <div id="boxes-container" class="absolute bottom-0 left-0 w-full flex justify-center pointer-events-none z-20 will-change-transform" style="transform: translateY(100%);">
+                        <!-- 1. ФОНОВЫЕ КОРОБКИ (z-10) - Самый нижний слой -->
+                        <!-- Ширина 100% (как текстура), по центру -->
+                        <img id="layer-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 w-full z-10 will-change-transform" style="bottom: 50px; transform: translate(-50%, 150%);" alt="Boxes BG">
+
+                        <!-- 2. МЫ (z-20) -->
+                        <!-- Увеличил еще (w-[70%]), выезжает СЛЕВА (translateX) -->
+                        <img id="layer-we" src="./images/we.png" class="absolute left-0 w-[70%] z-20 will-change-transform" style="bottom: 50px; transform: translateX(-100%);" alt="We">
+
+                        <!-- 3. ПРАВАЯ КОРОБКА (z-30) -->
+                        <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-30 will-change-transform" style="bottom: 50px; transform: translateX(150%);" alt="Box Right">
+
+                        <!-- 4. НИЖНИЕ КОРОБКИ (z-50) - Самый верхний слой коробок -->
+                        <div id="boxes-container" class="absolute bottom-0 left-0 w-full flex justify-center pointer-events-none z-[50] will-change-transform" style="transform: translateY(100%);">
                              <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto" alt="Boxes">
                         </div>
-
-                        <!-- Коробка Справа (Step 2) -->
-                        <!-- Подняли еще на 20px (было 30, стало 50) -->
-                        <img id="layer-box-right" src="./images/box_right.png" class="absolute right-0 w-[40%] z-10 will-change-transform" style="bottom: 50px; transform: translateX(150%);" alt="Box Right">
-
-                        <!-- МЫ (Step 3) -->
-                        <!-- Увеличил в 1.5 раза (w-[45%]), чуть левее центра (left-[15%]) -->
-                        <img id="layer-we" src="./images/we.png" class="absolute left-[15%] w-[45%] z-30 will-change-transform" style="bottom: 100px; transform: translateY(150%);" alt="We">
-
-                        <!-- ФОНОВЫЕ КОРОБКИ (Step 3 Delayed) -->
-                        <!-- По центру, на уровне правой коробки (bottom: 50px) -->
-                        <img id="layer-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 w-[80%] z-0 will-change-transform" style="bottom: 50px; transform: translate(-50%, 150%);" alt="Boxes BG">
 
                     </div>
                 </div>
@@ -273,8 +271,9 @@
                             if (layerBoxRight) layerBoxRight.style.transform = `translateX(${boxRightX}%)`;
 
                             // 4. МЫ (0.75 -> 1.0)
-                            const weY = getVal(progress, 0.75, 0.25, 150, 0);
-                            if (layerWe) layerWe.style.transform = `translateY(${weY}%)`;
+                            // Теперь выезжаем СЛЕВА (translateX -100% -> 0%)
+                            const weX = getVal(progress, 0.75, 0.25, -100, 0);
+                            if (layerWe) layerWe.style.transform = `translateX(${weX}%)`;
 
                             // 5. ФОНОВЫЕ КОРОБКИ (0.8 -> 1.0) - С задержкой
                             const bgY = getVal(progress, 0.8, 0.2, 150, 0);
@@ -313,7 +312,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.13 (WE & BG BOXES)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.14 (Z-INDEX & WE LEFT)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
