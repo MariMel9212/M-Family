@@ -20,7 +20,7 @@
         html, body {
             width: 100%;
             height: 100%;
-            /* overflow-x: hidden;  <-- УБРАЛ ВРЕМЕННО */
+            /* overflow: visible !important; */
             position: relative;
         }
         
@@ -50,7 +50,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            /* overflow-x: hidden; <-- UBRAL TOZHE */
+            /* overflow: visible !important; */
         }
 
         @media (min-width: 640px) {
@@ -136,8 +136,7 @@
                 </button>
 
                 <!-- 1. HERO: Большой Переезд -->
-                <!-- Force height 4000px directly -->
-                <div id="hero-block" class="relative w-full" style="height: 4000px;"> 
+                <div id="hero-block" class="relative w-full"> 
                     
                     <!-- v5.22: Убрал overflow-hidden со sticky, чтобы коробки свисали -->
                     <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30 overflow-visible">
@@ -180,12 +179,15 @@
 
                     </div>
                     
-                    <!-- REMOVED SPACER -->
+                    <!-- SPACER: 300vh с контентом -->
+                    <div class="w-full h-[300vh] flex items-end justify-center pb-10 opacity-0 pointer-events-none">
+                        Scroll down...
+                    </div>
                 </div>
 
                 <!-- 2. MAP: Карта -->
-                <!-- z-10: HIDE UNDER HERO. No negative margin yet. -->
-                <div id="map-block" class="py-12 px-6 relative z-10 pt-32 overflow-visible bg-blue-50 min-h-screen">
+                <!-- z-20: под hero, без отрицательного марджина, без min-h-screen -->
+                <div id="map-block" class="py-12 px-6 relative z-20 pt-10 overflow-visible bg-blue-50">
                     <!-- Карта-картинка (фон) -->
                     <div class="absolute inset-0 z-0 opacity-100" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'); background-size: cover; background-position: center;">
                         <!-- Placeholder map -->
@@ -275,7 +277,7 @@
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
                             // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
-                            const boxesY = getVal(progress, 0.25, 0.25, 100, 35); 
+                            const boxesY = getVal(progress, 0.25, 0.25, 100, 0); // 0% - чтобы не обрезались
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
                             // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
@@ -333,7 +335,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.46 (BRUTE FORCE HEIGHT)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.47 (SPACER & OVERFLOW FIX)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
