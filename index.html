@@ -131,10 +131,13 @@
 
                 <!-- 1. HERO: Большой Переезд -->
                 <div id="hero-block" class="relative" style="height: 300vh;"> 
-                    <div class="sticky top-0 h-[100dvh] w-full overflow-hidden bg-white relative">
+                    <!-- Убрал overflow-hidden, чтобы коробки могли торчать снизу -->
+                    <div class="sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center bg-white relative z-30">
                         
-                        <!-- Фон: Текстура -->
-                        <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
+                        <!-- Фон: Текстура (с overflow-hidden, чтобы не вылезала) -->
+                        <div class="absolute inset-0 overflow-hidden">
+                             <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
+                        </div>
                         
                         <!-- Заголовок: Большой Переезд -->
                         <h1 id="hero-title" class="absolute z-50 text-center text-slate-900 origin-top-left will-change-transform whitespace-nowrap" 
@@ -143,17 +146,21 @@
                         </h1>
 
                         <!-- Коробки Нижние (В контейнере для центровки) -->
+                        <!-- z-20: Передний план -->
                         <div id="boxes-container" class="absolute bottom-0 left-0 w-full flex justify-center pointer-events-none z-20 will-change-transform" style="transform: translateY(100%);">
                              <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto" alt="Boxes">
                         </div>
 
-                        <!-- СЮДА БУДЕМ ДОБАВЛЯТЬ НОВЫЕ СЛОИ -->
+                        <!-- Коробка Справа (Step 2) -->
+                        <!-- z-10: Задний план (ниже нижних коробок) -->
+                        <img id="layer-box-right" src="./images/box_right.png" class="absolute bottom-[25%] right-0 w-[40%] z-10 will-change-transform" style="transform: translateX(150%);" alt="Box Right">
 
                     </div>
                 </div>
 
                 <!-- 2. MAP: Карта -->
-                <div class="py-12 px-6 bg-white relative">
+                <!-- Добавил pt-32 (отступ сверху), чтобы карта начиналась ниже коробок, и z-20 (ниже hero), чтобы коробки были поверх -->
+                <div class="py-12 px-6 bg-white relative z-20 pt-32 -mt-20">
                     <div class="w-full aspect-square bg-blue-50 rounded-3xl overflow-hidden relative mb-6 shadow-inner border border-blue-100">
                         <div class="absolute inset-0 opacity-30" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'); background-size: cover;"></div>
                         <div class="absolute top-1/2 left-1/2 w-32 h-1 bg-red-500 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full"></div>
@@ -199,6 +206,7 @@
             const heroBlock = document.getElementById('hero-block');
             const title = document.getElementById('hero-title');
             const boxesContainer = document.getElementById('boxes-container');
+            const layerBoxRight = document.getElementById('layer-box-right');
             
             if (heroBlock && title) {
                 let ticking = false;
@@ -212,12 +220,12 @@
                             let progress = 0;
                             if (scrollableDistance > 0) progress = Math.max(0, Math.min(1, scrolled / scrollableDistance));
 
-                            // ШАГ 1: 0% -> 30%
+                            // ШАГ 1: 0% -> 30% (Заголовок + Нижние Коробки)
                             const step1End = 0.3;
                             
                             if (progress <= step1End) {
                                 const p = progress / step1End;
-                                const startTop = 50; const endTop = 15;
+                                const startTop = 50; const endTop = 10; // Чуть выше (10%)
                                 const startLeft = 50; const endLeft = 8;
                                 const startScale = 1; const endScale = 0.8;
                                 
@@ -227,15 +235,32 @@
                                 title.style.textAlign = p > 0.5 ? 'left' : 'center';
 
                                 // Двигаем контейнер (финиш на 20%, глубоко внизу)
-                                // Start: 100% -> End: 20%
                                 if (boxesContainer) boxesContainer.style.transform = `translateY(${100 - (p * 80)}%)`;
 
-                            } else {
-                                // ФИНАЛ
-                                title.style.top = `15%`; title.style.left = `8%`;
+                                // Скрываем Коробку Справа
+                                if (layerBoxRight) layerBoxRight.style.transform = `translateX(150%)`;
+
+                            } 
+                            // ШАГ 2: 30% -> 60% (Коробка Справа)
+                            else if (progress <= 0.6) {
+                                // Фиксация Шага 1
+                                title.style.top = `10%`; title.style.left = `8%`;
                                 title.style.transform = `translate(0%, 0%) scale(0.8)`;
                                 title.style.textAlign = 'left';
                                 if (boxesContainer) boxesContainer.style.transform = `translateY(20%)`;
+
+                                const p = (progress - step1End) / (0.6 - step1End);
+                                
+                                // Коробка Справа: выезжает справа (150% -> 0%)
+                                if (layerBoxRight) layerBoxRight.style.transform = `translateX(${150 - (p * 150)}%)`;
+
+                            }
+                            // ФИНАЛ
+                            else {
+                                title.style.top = `10%`; title.style.left = `8%`;
+                                title.style.transform = `translate(0%, 0%) scale(0.8)`;
+                                if (boxesContainer) boxesContainer.style.transform = `translateY(20%)`;
+                                if (layerBoxRight) layerBoxRight.style.transform = `translateX(0%)`;
                             }
                             
                             ticking = false;
@@ -270,7 +295,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.0 (RESET)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.2 (NO CUT)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
