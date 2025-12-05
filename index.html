@@ -183,11 +183,11 @@
 
                 <!-- 2. MAP: Карта -->
                 <!-- Добавил фон-текстуру -->
-                <div class="py-12 px-6 relative z-20 pt-32 -mt-20 overflow-hidden">
+                <div class="py-12 px-6 relative z-20 pt-48 -mt-32 overflow-visible">
                     <!-- Текстура фона -->
                     <div class="absolute inset-0 z-0">
-                        <img src="./images/texture.jpg" class="w-full h-full object-cover opacity-50" alt="Texture bg">
-                        <div class="absolute inset-0 bg-white/10"></div> <!-- Легкое осветление, если нужно -->
+                        <img src="./images/texture.jpg" class="w-full h-full object-cover opacity-100" alt="Texture bg">
+                        <!-- Removed white overlay for better visibility -->
                     </div>
 
                     <!-- Контент карты (z-10 чтобы быть над текстурой) -->
@@ -273,7 +273,7 @@
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
                             // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
-                            const boxesY = getVal(progress, 0.25, 0.25, 100, 30); 
+                            const boxesY = getVal(progress, 0.25, 0.25, 100, 15); 
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
                             // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
@@ -329,7 +329,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.33 (TITLE FADE UP, BOLD STICKER)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.34 (FIX CLIPPED BOXES & MAP TEXTURE)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
