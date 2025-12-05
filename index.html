@@ -248,6 +248,10 @@
             storyViewer.innerHTML = renderStoryMoscow();
             storyViewer.classList.remove('hidden');
             
+            // Hide main content and nav
+            document.getElementById('app-content').style.display = 'none';
+            document.querySelector('nav').style.display = 'none';
+            
             // --- АНИМАЦИЯ (УМНАЯ И ПЛАВНАЯ) ---
             const heroBlock = document.getElementById('hero-block');
             const heroSticky = document.getElementById('hero-sticky'); // NEW
@@ -365,6 +369,12 @@
         function closeStory() {
             storyViewer.classList.add('hidden');
             storyViewer.innerHTML = '';
+            
+            // Restore main content and nav
+            document.getElementById('app-content').style.display = 'block';
+            document.querySelector('nav').style.display = 'flex';
+            
+            // Reset window scroll? Maybe not necessary if overflow logic is handled
         }
 
         function renderMoments() {
@@ -372,7 +382,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.49 (MANUAL PINNING & CURTAIN)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.50 (HIDE MAIN UI IN STORY)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
