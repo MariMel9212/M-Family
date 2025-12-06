@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.30 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.31 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -179,7 +179,7 @@
                             <!-- 4. WE (Layer 2, z-15) - INSIDE MASK -->
                             <!-- SWAPPED: Moved to RIGHT side -->
                             <!-- Raised to bottom-16 (~65px), Right margin right-2 -->
-                            <img id="hero-we" src="./images/we.png" class="absolute right-2 bottom-16 w-[75%] z-15 object-contain will-change-transform translate-x-full" style="transform: translateX(100%);" alt="We">
+                            <img id="hero-we" src="./images/we.png" class="absolute right-2 bottom-16 w-[75%] z-15 object-contain will-change-transform translate-x-full" style="transform: translateX(150%);" alt="We">
 
                             <!-- 3. RIGHT BOX (Layer 3, z-20) - INSIDE MASK -->
                             <!-- SWAPPED: Moved to LEFT side, strictly left-0 -->
@@ -209,8 +209,8 @@
                         </div>
 
                         <!-- 2. BOTTOM BOXES (Layer 4, z-30) - OUTSIDE MASK -->
-                        <!-- WRAPPER: Fixes width to 100vw and clips overflow, preventing page stretch -->
-                        <div id="hero-boxes-wrapper" class="absolute bottom-0 left-0 w-full h-auto overflow-hidden pointer-events-none z-30">
+                        <!-- WRAPPER: Fixes width to 100vw and clips X overflow only, allowing Y spill -->
+                        <div id="hero-boxes-wrapper" class="absolute bottom-0 left-0 w-full h-auto pointer-events-none z-30" style="overflow-x: clip; overflow-y: visible;">
                             <!-- IMAGE: 130% width, centered inside wrapper -->
                             <div id="hero-boxes-bottom" class="relative left-1/2 w-[130%] flex justify-center will-change-transform translate-y-full" style="transform: translate(-50%, 100%);">
                                 <img src="./images/boxes_bottom.png" class="w-full h-auto object-contain block" alt="Boxes Bottom">
@@ -314,9 +314,9 @@
                 
                 // 5. WE: Slide In From RIGHT (0.5 -> 0.8)
                 if (weLayer) {
-                    // From Right (100%) to 0 (Right edge)
-                    const weX = getVal(progress, 0.5, 0.3, 100, 0); 
-                    // Added scaleX(-1) to mirror image
+                    // From Right (150%) to 0 (Right edge) - Increased start to hide fully
+                    const weX = getVal(progress, 0.5, 0.3, 150, 0); 
+                    // Preserve scaleX(-1) mirroring
                     weLayer.style.transform = `translateX(${weX}%) scaleX(-1)`;
                 }
 
