@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.18 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.19 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -303,11 +303,24 @@
                     }
                 }
                 
-                // STICKER TEXT: Smooth Letter Reveal (0.45 -> 0.75)
+                // 5. WE: Slide In From Left (0.5 -> 0.8)
+                if (weLayer) {
+                    const weX = getVal(progress, 0.5, 0.3, -100, 0); 
+                    weLayer.style.transform = `translateX(${weX}%)`;
+                }
+
+                // 6. KYLIE: Slide Up (0.5 -> 0.8) - Shifted earlier
+                if (kylieLayer) {
+                    const kylieY = getVal(progress, 0.5, 0.3, 100, 0);
+                    // Preserve X centering
+                    kylieLayer.style.transform = `translate(-50%, ${kylieY}%)`;
+                }
+                
+                // STICKER TEXT: Smooth Letter Reveal (0.8 -> 1.0) - STARTS AFTER KYLIE
                 if (stickerSpans.length > 0) {
                      // Total duration for text reveal
-                     const start = 0.45;
-                     const end = 0.75;
+                     const start = 0.8;
+                     const end = 0.98; // Finish just before scroll ends
                      const totalDur = end - start;
                      
                      // We map global progress to local text progress (0 -> 1)
@@ -333,19 +346,6 @@
                          
                          span.style.opacity = opacity;
                      });
-                }
-
-                // 5. WE: Slide In From Left (0.5 -> 0.8)
-                if (weLayer) {
-                    const weX = getVal(progress, 0.5, 0.3, -100, 0); 
-                    weLayer.style.transform = `translateX(${weX}%)`;
-                }
-
-                // 6. KYLIE: Slide Up (0.6 -> 0.9)
-                if (kylieLayer) {
-                    const kylieY = getVal(progress, 0.6, 0.3, 100, 0);
-                    // Preserve X centering
-                    kylieLayer.style.transform = `translate(-50%, ${kylieY}%)`;
                 }
             };
 
