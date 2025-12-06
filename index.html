@@ -45,6 +45,7 @@
         .font-hand { font-family: 'Amatic SC', cursive; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .will-change-transform { will-change: transform, opacity, filter; }
     </style>
 </head>
 <body>
@@ -115,8 +116,8 @@
 
         function renderMoments() {
             content.innerHTML = `
-                <div class="p-6 pt-16"> <!-- Increased top padding for safe area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.4 ❤️</h1>
+                <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.5 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -140,7 +141,7 @@
             `;
         }
 
-        // --- STORY LOGIC (CLEAN START) ---
+        // --- STORY LOGIC (STICKY SCROLL ANIMATION) ---
         function openStory() {
             storyViewer.classList.remove('hidden');
             nav.style.display = 'none';
@@ -149,38 +150,93 @@
                 <!-- BACK BTN -->
                 <button onclick="closeStory()" class="fixed top-4 right-4 z-[60] w-10 h-10 bg-white/80 backdrop-blur rounded-full shadow-lg flex items-center justify-center text-slate-800 font-bold">✕</button>
 
-                <!-- BLOCK 1: HERO (Step 4: Typography & Animation) -->
-                <div id="hero-block" class="relative w-full h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-white">
+                <!-- WRAPPER: Provides scroll space (300vh) -->
+                <div id="hero-wrapper" class="relative w-full h-[300vh]">
                     
-                    <!-- 1. BACKGROUND TEXTURE -->
-                    <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
-                    
-                    <!-- TITLE (Shantell Sans) -->
-                    <!-- Settings: SemiBold (600), Size ~75px, LH 90% (Tailwind leading-none is close, custom style used), Spacing -2% -->
-                    <h1 id="hero-title" class="relative z-40 text-center text-slate-900 will-change-transform origin-center" 
-                        style="font-family: 'Shantell Sans', cursive; font-weight: 600; font-size: clamp(50px, 15vw, 75px); line-height: 90%; letter-spacing: -0.02em;">
-                        Большой<br>переезд
-                    </h1>
-                    
+                    <!-- STICKY CONTAINER: Stays visible while we scroll the wrapper -->
+                    <div id="hero-sticky" class="sticky top-0 w-full h-[100vh] flex flex-col items-center justify-center overflow-hidden bg-white">
+                        
+                        <!-- 1. BACKGROUND TEXTURE -->
+                        <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
+                        
+                        <!-- TITLE (Split for animation) -->
+                        <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight" 
+                            style="font-family: 'Shantell Sans', cursive; font-weight: 600; font-size: clamp(50px, 15vw, 75px);">
+                            <span id="word-1" class="block will-change-transform origin-bottom-right">Большой</span>
+                            <span id="word-2" class="block will-change-transform origin-top-left">переезд</span>
+                        </h1>
+                        
+                    </div>
                 </div>
 
-                <!-- BLOCK 2: MAP (Simple Flow) -->
-                <div class="relative w-full min-h-[100vh] bg-red-50 py-20 px-6 flex flex-col items-center">
+                <!-- BLOCK 2: MAP (Naturally follows the 300vh wrapper) -->
+                <div class="relative w-full min-h-[100vh] bg-white py-20 px-6 flex flex-col items-center overflow-hidden z-20">
                      <!-- Background -->
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50">
                     
-                    <div class="relative z-10 bg-white p-4 shadow-xl rotate-2 max-w-sm w-full">
+                    <div class="relative z-10 bg-white p-4 shadow-xl rotate-2 max-w-sm w-full mt-10">
                         <img src="./images/map_full.png" class="w-full h-auto bg-slate-200">
                         <p class="mt-4 text-center font-hand font-bold text-xl">Мы ехали, ехали...</p>
                     </div>
                 </div>
             `;
+
+            // --- ANIMATION LOGIC ---
+            const wrapper = document.getElementById('hero-wrapper');
+            const sticky = document.getElementById('hero-sticky');
+            const word1 = document.getElementById('word-1');
+            const word2 = document.getElementById('word-2');
+
+            const onScroll = () => {
+                if (!wrapper) return;
+                
+                const scrollY = window.scrollY;
+                const viewportHeight = window.innerHeight;
+                // The distance we can scroll inside the wrapper before it unsticks
+                const scrollableDistance = wrapper.offsetHeight - viewportHeight; // ~200vh
+                
+                // Progress: 0 (start) -> 1 (end of wrapper)
+                let progress = 0;
+                if (scrollableDistance > 0) {
+                    progress = Math.max(0, Math.min(1, scrollY / scrollableDistance));
+                }
+
+                // ANIMATION: Split & Scatter
+                // Word 1 goes Up-Left and Rotates
+                if (word1) {
+                    const x1 = -progress * 150; // -150px
+                    const y1 = -progress * 300; // -300px
+                    const r1 = -progress * 25;  // -25deg
+                    const b1 = progress * 15;   // 15px blur
+                    word1.style.transform = `translate(${x1}px, ${y1}px) rotate(${r1}deg)`;
+                    word1.style.filter = `blur(${b1}px)`;
+                    word1.style.opacity = Math.max(0, 1 - progress * 2); // Fade out faster
+                }
+
+                // Word 2 goes Down-Right and Rotates
+                if (word2) {
+                    const x2 = progress * 150;  // 150px
+                    const y2 = progress * 150;  // 150px
+                    const r2 = progress * 25;   // 25deg
+                    const b2 = progress * 15;   // 15px blur
+                    word2.style.transform = `translate(${x2}px, ${y2}px) rotate(${r2}deg)`;
+                    word2.style.filter = `blur(${b2}px)`;
+                    word2.style.opacity = Math.max(0, 1 - progress * 2);
+                }
+            };
+
+            if (window._heroScrollHandler) window.removeEventListener('scroll', window._heroScrollHandler);
+            window._heroScrollHandler = onScroll;
+            window.addEventListener('scroll', window._heroScrollHandler, { passive: true });
         }
 
         function closeStory() {
             storyViewer.classList.add('hidden');
             storyViewer.innerHTML = '';
             nav.style.display = 'flex';
+            if (window._heroScrollHandler) {
+                window.removeEventListener('scroll', window._heroScrollHandler);
+            }
         }
 
         // INITIAL RENDER
