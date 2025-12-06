@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.27 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.28 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -183,13 +183,14 @@
 
                             <!-- 3. RIGHT BOX (Layer 3, z-20) - INSIDE MASK -->
                             <!-- SWAPPED: Moved to LEFT side, strictly left-0 -->
-                            <img id="hero-box-right" src="./images/box_right.png" class="absolute left-0 bottom-10 w-[40%] z-20 object-contain will-change-transform -translate-x-full" style="transform: translateX(-150%);" alt="Box Right">
+                            <!-- Added negative margin just in case of PNG padding -->
+                            <img id="hero-box-right" src="./images/box_right.png" class="absolute left-0 -ml-2 bottom-10 w-[40%] z-20 object-contain will-change-transform -translate-x-full" style="transform: translateX(-150%);" alt="Box Right">
 
                             <!-- 6. KYLIE (Layer 4, z-25) - INSIDE MASK -->
                             <!-- Starts hidden (translateY 100%) -->
-                            <!-- Shifted right to left-[58%] -->
+                            <!-- Shifted to LEFT edge (left-0), Increased size to 70% -->
                             <!-- Raised to bottom-2 (~10px) -->
-                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-2 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
+                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-0 bottom-2 w-[70%] z-25 object-contain will-change-transform translate-y-full origin-bottom-left" style="transform: translate(0, 100%);" alt="Kylie">
 
                             <!-- 7. TEXT STICKER (Layer 5, z-40) - INSIDE MASK -->
                             <!-- Top Left, Letter Reveal Animation -->
@@ -210,9 +211,9 @@
 
                         <!-- 2. BOTTOM BOXES (Layer 4, z-30) - OUTSIDE MASK -->
                         <!-- Allows vertical overlap with next section -->
-                        <!-- FIX: Increased width to 110% and centered -->
-                        <div id="hero-boxes-bottom" class="absolute bottom-0 left-1/2 w-[110%] -translate-x-1/2 flex justify-center z-30 will-change-transform translate-y-full pointer-events-none">
-                            <img src="./images/boxes_bottom.png" class="w-full max-w-none h-auto object-contain" alt="Boxes Bottom">
+                        <!-- FIX: STRICTLY 100% width, centered -->
+                        <div id="hero-boxes-bottom" class="absolute bottom-0 left-0 w-full flex justify-center z-30 will-change-transform translate-y-full pointer-events-none">
+                            <img src="./images/boxes_bottom.png" class="w-full h-auto object-contain block" alt="Boxes Bottom">
                         </div>
                         
                     </div>
@@ -320,8 +321,8 @@
                 // 6. KYLIE: Slide Up (0.5 -> 0.8) - Shifted earlier
                 if (kylieLayer) {
                     const kylieY = getVal(progress, 0.5, 0.3, 100, 0);
-                    // Preserve X centering, Add ScaleX(-1)
-                    kylieLayer.style.transform = `translate(-50%, ${kylieY}%) scaleX(-1)`;
+                    // Left aligned (0), Add ScaleX(-1)
+                    kylieLayer.style.transform = `translate(0, ${kylieY}%) scaleX(-1)`;
                 }
                 
                 // STICKER TEXT: Smooth Letter Reveal (0.8 -> 1.0) - STARTS AFTER KYLIE
