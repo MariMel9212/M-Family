@@ -124,7 +124,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.11 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.12 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -161,32 +161,34 @@
                 <div id="hero-wrapper" class="relative w-full h-[300vh] z-30"> <!-- High Z to overlap Map -->
                     
                     <!-- STICKY CONTAINER: Stays visible while we scroll the wrapper -->
-                    <!-- overflow-visible to allow overlap -->
-                    <div id="hero-sticky" class="sticky top-0 w-full h-[100vh] flex flex-col items-center justify-center bg-white overflow-visible">
+                    <!-- overflow-visible to allow overlap of bottom boxes -->
+                    <div id="hero-sticky" class="fixed top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white overflow-visible z-10">
                         
-                        <!-- 1. BACKGROUND TEXTURE -->
-                        <!-- Masked to prevent horizontal spill if needed, but wrapper handles it -->
+                        <!-- SAFE MASK: Clips horizontal elements (We, Right Box) -->
                         <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+                            
+                            <!-- 1. BACKGROUND TEXTURE -->
                             <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
+                            
+                            <!-- 3. RIGHT BOX (Layer 2, z-20) - INSIDE MASK -->
+                            <img id="hero-box-right" src="./images/box_right.png" class="absolute right-0 bottom-10 w-[40%] z-20 object-contain will-change-transform translate-x-[150%]" alt="Box Right">
+
+                            <!-- 4. WE (Layer 3, z-25) - INSIDE MASK -->
+                            <!-- Raised to bottom-5 (~20px) -->
+                            <img id="hero-we" src="./images/we.png" class="absolute left-0 bottom-5 w-[85%] z-25 object-contain will-change-transform -translate-x-full" style="transform: translateX(-100%);" alt="We">
+
+                            <!-- TITLE (Single block for Smoke Animation) - INSIDE MASK -->
+                            <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight will-change-transform origin-center top-1/2 -translate-y-1/2" 
+                                style="font-family: 'Shantell Sans', cursive; font-weight: 600; font-size: clamp(50px, 15vw, 75px);">
+                                Большой<br>переезд
+                            </h1>
                         </div>
-                        
-                        <!-- 3. RIGHT BOX (Layer 2, z-20) - LOWER Z -->
-                        <img id="hero-box-right" src="./images/box_right.png" class="absolute right-0 bottom-10 w-[40%] z-20 object-contain will-change-transform translate-x-[150%]" alt="Box Right">
 
-                        <!-- 4. WE (Layer 3, z-25) - LEFT -->
-                        <img id="hero-we" src="./images/we.png" class="absolute left-0 bottom-0 w-[85%] z-25 object-contain will-change-transform -translate-x-full" style="transform: translateX(-100%);" alt="We">
-
-                        <!-- 2. BOTTOM BOXES (Layer 4, z-30) - HIGHER Z -->
-                        <!-- translate-y-full to hide initially -->
+                        <!-- 2. BOTTOM BOXES (Layer 4, z-30) - OUTSIDE MASK -->
+                        <!-- Allows vertical overlap with next section -->
                         <div id="hero-boxes-bottom" class="absolute bottom-0 left-0 w-full flex justify-center z-30 will-change-transform translate-y-full pointer-events-none">
                             <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto object-contain" alt="Boxes Bottom">
                         </div>
-
-                        <!-- TITLE (Single block for Smoke Animation) -->
-                        <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight will-change-transform origin-center" 
-                            style="font-family: 'Shantell Sans', cursive; font-weight: 600; font-size: clamp(50px, 15vw, 75px);">
-                            Большой<br>переезд
-                        </h1>
                         
                     </div>
                 </div>
