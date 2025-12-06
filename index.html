@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.43 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.44 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -239,16 +239,18 @@
                         
                         <!-- SMALL PIN ON MAP (Top Right) -->
                         <!-- Using pin_red_2.png (The second uploaded pin) -->
-                        <div id="map-pin-small" class="absolute top-[30%] right-[20%] w-8 z-15 opacity-0 translate-y-[-20px] transition-all duration-700 ease-out">
+                        <!-- Increased size to w-16 (doubled) -->
+                        <div id="map-pin-small" class="absolute top-[30%] right-[20%] w-16 z-15 opacity-0 translate-y-[-20px] transition-all duration-700 ease-out">
                              <img src="./images/pin_red_2.png" class="w-full h-auto drop-shadow-sm" alt="Location Pin">
                         </div>
 
                         <!-- POLAROID CONTAINER -->
                         <!-- Initially hidden, scaled down -->
-                        <div id="map-polaroid" class="relative bg-white p-3 pb-8 shadow-2xl rotate-[-3deg] max-w-[280px] w-full transform transition-all duration-700 ease-out opacity-0 scale-75 translate-y-10">
+                        <div id="map-polaroid" class="relative bg-white p-3 pb-8 shadow-2xl rotate-[-3deg] max-w-[280px] w-full transform transition-all duration-1000 ease-out opacity-0 scale-50 translate-y-20">
                             
                             <!-- PIN (Red Pin) -->
-                            <img src="./images/pin_red.png" class="absolute -top-5 right-1/2 translate-x-1/2 w-10 h-auto z-30 drop-shadow-md" alt="Pin">
+                            <!-- Increased size to w-20 (doubled) -->
+                            <img src="./images/pin_red.png" class="absolute -top-8 right-1/2 translate-x-1/2 w-20 h-auto z-30 drop-shadow-md" alt="Pin">
                             
                             <!-- PHOTO (Kylie in Car) -->
                             <div class="aspect-square w-full overflow-hidden bg-slate-100 mb-3">
