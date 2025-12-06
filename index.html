@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.23 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.24 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -177,15 +177,17 @@
                             <img id="hero-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 bottom-0 w-full z-5 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 150%);" alt="Boxes BG">
 
                             <!-- 4. WE (Layer 2, z-15) - INSIDE MASK -->
-                            <!-- Moved to RIGHT edge, reduced size -->
-                            <img id="hero-we" src="./images/we.png" class="absolute right-[-10%] bottom-10 w-[60%] z-15 object-contain will-change-transform translate-x-full" style="transform: translateX(100%);" alt="We">
+                            <!-- Lowered Z to be BEHIND Right Box -->
+                            <!-- Reduced width to 75% -->
+                            <img id="hero-we" src="./images/we.png" class="absolute left-0 bottom-10 w-[75%] z-15 object-contain will-change-transform -translate-x-full" style="transform: translateX(-100%);" alt="We">
 
                             <!-- 3. RIGHT BOX (Layer 3, z-20) - INSIDE MASK -->
                             <img id="hero-box-right" src="./images/box_right.png" class="absolute right-0 bottom-10 w-[40%] z-20 object-contain will-change-transform translate-x-[150%]" alt="Box Right">
 
                             <!-- 6. KYLIE (Layer 4, z-25) - INSIDE MASK -->
-                            <!-- Increased width to 85% -->
-                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-0 w-[85%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
+                            <!-- Starts hidden (translateY 100%) -->
+                            <!-- Shifted right to left-[58%] -->
+                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-0 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
 
                             <!-- 7. TEXT STICKER (Layer 5, z-40) - INSIDE MASK -->
                             <!-- Top Left, Letter Reveal Animation -->
@@ -206,8 +208,8 @@
 
                         <!-- 2. BOTTOM BOXES (Layer 4, z-30) - OUTSIDE MASK -->
                         <!-- Allows vertical overlap with next section -->
-                        <!-- FIX: Changed width to 150% and centered to be bigger -->
-                        <div id="hero-boxes-bottom" class="absolute bottom-0 left-1/2 w-[150%] -translate-x-1/2 flex justify-center z-30 will-change-transform translate-y-full pointer-events-none">
+                        <!-- FIX: Changed width to 100% to match texture and prevent X-scroll -->
+                        <div id="hero-boxes-bottom" class="absolute bottom-0 left-0 w-full flex justify-center z-30 will-change-transform translate-y-full pointer-events-none">
                             <img src="./images/boxes_bottom.png" class="w-full max-w-none h-auto object-contain" alt="Boxes Bottom">
                         </div>
                         
@@ -304,12 +306,12 @@
                     }
                 }
                 
-                // 5. WE: Slide In From RIGHT (0.5 -> 0.8)
+                // 5. WE: Slide In From Left (0.5 -> 0.8)
                 if (weLayer) {
-                    // Final position: 0% (Right edge)
-                    // Start: 100% (Hidden to right)
-                    const weX = getVal(progress, 0.5, 0.3, 100, 0); 
-                    weLayer.style.transform = `translateX(${weX}%)`;
+                    // Final position: -5% (Slightly more left)
+                    const weX = getVal(progress, 0.5, 0.3, -100, -5); 
+                    // Added scaleX(-1) to mirror image
+                    weLayer.style.transform = `translateX(${weX}%) scaleX(-1)`;
                 }
 
                 // 6. KYLIE: Slide Up (0.5 -> 0.8) - Shifted earlier
