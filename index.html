@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.17 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.18 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -189,9 +189,9 @@
                             <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-0 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
 
                             <!-- 7. TEXT STICKER (Layer 5, z-40) - INSIDE MASK -->
-                            <!-- Top Right, Fades In -->
-                            <div id="hero-sticker" class="absolute top-[15%] right-[5%] w-[250px] z-40 text-right will-change-transform opacity-0 translate-x-[50px]">
-                                <p class="text-slate-900 font-extrabold text-xl leading-tight font-hand" style="font-family: 'Manrope', sans-serif;">
+                            <!-- Top Right, Letter Reveal Animation -->
+                            <div id="hero-sticker" class="absolute top-[15%] right-[5%] w-[250px] z-40 text-right will-change-transform translate-x-[20px]">
+                                <p id="sticker-text" class="text-slate-900 font-extrabold text-xl leading-tight" style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;">
                                     Ноябрь. Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу.
                                 </p>
                             </div>
@@ -236,6 +236,14 @@
             const kylieLayer = document.getElementById('hero-kylie');
             const stickerLayer = document.getElementById('hero-sticker');
             const viewer = document.getElementById('story-viewer');
+
+            // PREPARE TEXT SPLITTING
+            const stickerText = document.getElementById('sticker-text');
+            if (stickerText) {
+                const text = stickerText.innerText;
+                stickerText.innerHTML = text.split('').map(char => `<span class="opacity-0 transition-opacity duration-75">${char}</span>`).join('');
+            }
+            const stickerSpans = stickerText ? stickerText.querySelectorAll('span') : [];
 
             // Helper for interpolation
             const getVal = (progress, startAt, duration, startVal, endVal) => {
@@ -286,32 +294,45 @@
                 if (boxRight) {
                     const boxX = getVal(progress, 0.4, 0.3, 150, 0);
                     boxRight.style.transform = `translateX(${boxX}%)`;
+                    
+                    // Sync sticker container slide with box (subtle slide)
+                    if (stickerLayer) {
+                         // Slide from 50px to 0px
+                         const stickerX = getVal(progress, 0.4, 0.3, 50, 0);
+                         stickerLayer.style.transform = `translateX(${stickerX}px)`;
+                    }
                 }
                 
-                // STICKER: Soft Focus Reveal (0.45 -> 0.75) - Cinematic Fade
-                if (stickerLayer) {
-                     const pSticker = (progress - 0.45) / 0.3; // Manual normalized progress
+                // STICKER TEXT: Smooth Letter Reveal (0.45 -> 0.75)
+                if (stickerSpans.length > 0) {
+                     // Total duration for text reveal
+                     const start = 0.45;
+                     const end = 0.75;
+                     const totalDur = end - start;
                      
-                     if (progress < 0.45) {
-                         // State BEFORE: Hidden, Blurred, Shifted
-                         stickerLayer.style.opacity = 0;
-                         stickerLayer.style.filter = 'blur(10px)';
-                         stickerLayer.style.transform = `translateX(50px) scale(0.9)`;
-                     } else if (progress > 0.75) {
-                         // State AFTER: Visible, Sharp, Normal
-                         stickerLayer.style.opacity = 1;
-                         stickerLayer.style.filter = 'blur(0px)';
-                         stickerLayer.style.transform = `translateX(0px) scale(1)`;
-                     } else {
-                         // State DURING: Interpolate
-                         const blurVal = (1 - pSticker) * 10;
-                         const xVal = (1 - pSticker) * 50;
-                         const scaleVal = 0.9 + (pSticker * 0.1);
+                     // We map global progress to local text progress (0 -> 1)
+                     let localP = 0;
+                     if (progress > start) localP = Math.min(1, (progress - start) / totalDur);
+                     
+                     // Reveal letters based on localP
+                     // If localP is 0.5, half letters should be visible
+                     const totalChars = stickerSpans.length;
+                     const visibleCount = Math.floor(localP * totalChars);
+                     
+                     stickerSpans.forEach((span, i) => {
+                         // Simple hard cutoff for now, or soft fade?
+                         // Let's do a soft threshold
+                         const charProgress = (localP * totalChars) - i; // How far past this char index are we?
+                         // if charProgress > 1 -> fully visible
+                         // if charProgress < 0 -> hidden
+                         // if 0..1 -> fading in
                          
-                         stickerLayer.style.opacity = pSticker;
-                         stickerLayer.style.filter = `blur(${blurVal}px)`;
-                         stickerLayer.style.transform = `translateX(${xVal}px) scale(${scaleVal})`;
-                     }
+                         let opacity = 0;
+                         if (charProgress >= 1) opacity = 1;
+                         else if (charProgress > 0) opacity = charProgress;
+                         
+                         span.style.opacity = opacity;
+                     });
                 }
 
                 // 5. WE: Slide In From Left (0.5 -> 0.8)
