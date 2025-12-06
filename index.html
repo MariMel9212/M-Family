@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.28 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.29 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -188,9 +188,8 @@
 
                             <!-- 6. KYLIE (Layer 4, z-25) - INSIDE MASK -->
                             <!-- Starts hidden (translateY 100%) -->
-                            <!-- Shifted to LEFT edge (left-0), Increased size to 70% -->
-                            <!-- Raised to bottom-2 (~10px) -->
-                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-0 bottom-2 w-[70%] z-25 object-contain will-change-transform translate-y-full origin-bottom-left" style="transform: translate(0, 100%);" alt="Kylie">
+                            <!-- Reverted to v6.27: left-[58%], w-[55%], bottom-2 -->
+                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-2 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
 
                             <!-- 7. TEXT STICKER (Layer 5, z-40) - INSIDE MASK -->
                             <!-- Top Left, Letter Reveal Animation -->
@@ -198,7 +197,7 @@
                             <div id="hero-sticker" class="absolute top-[13%] left-[5%] w-[280px] z-40 text-left will-change-transform translate-x-[-20px]">
                                 <!-- Shantell Sans Font -->
                                 <p id="sticker-text" class="text-slate-900 font-extrabold text-2xl leading-snug" style="font-family: 'Shantell Sans', cursive;">
-                                    Ноябрь. Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу.
+                                    Ноябрь<br>Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу.
                                 </p>
                             </div>
 
@@ -211,8 +210,8 @@
 
                         <!-- 2. BOTTOM BOXES (Layer 4, z-30) - OUTSIDE MASK -->
                         <!-- Allows vertical overlap with next section -->
-                        <!-- FIX: STRICTLY 100% width, centered -->
-                        <div id="hero-boxes-bottom" class="absolute bottom-0 left-0 w-full flex justify-center z-30 will-change-transform translate-y-full pointer-events-none">
+                        <!-- FIX: Increased width to 130% and centered to be bigger/clipped -->
+                        <div id="hero-boxes-bottom" class="absolute bottom-0 left-1/2 w-[130%] flex justify-center z-30 will-change-transform translate-y-full pointer-events-none" style="transform: translate(-50%, 100%);">
                             <img src="./images/boxes_bottom.png" class="w-full h-auto object-contain block" alt="Boxes Bottom">
                         </div>
                         
@@ -285,7 +284,8 @@
                 // Final position: 30% (Even Lower)
                 if (boxesBottom) {
                     const boxesY = getVal(progress, 0.2, 0.4, 100, 30); 
-                    boxesBottom.style.transform = `translateY(${boxesY}%)`;
+                    // MUST preserve X centering (-50%)
+                    boxesBottom.style.transform = `translate(-50%, ${boxesY}%)`;
                 }
 
                 // 3. BG BOXES: Slide Up (0.3 -> 0.7) (PARALLEL WITH OTHERS)
@@ -321,8 +321,8 @@
                 // 6. KYLIE: Slide Up (0.5 -> 0.8) - Shifted earlier
                 if (kylieLayer) {
                     const kylieY = getVal(progress, 0.5, 0.3, 100, 0);
-                    // Left aligned (0), Add ScaleX(-1)
-                    kylieLayer.style.transform = `translate(0, ${kylieY}%) scaleX(-1)`;
+                    // Reverted to v6.27 (Centered X, Mirrored)
+                    kylieLayer.style.transform = `translate(-50%, ${kylieY}%) scaleX(-1)`;
                 }
                 
                 // STICKER TEXT: Smooth Letter Reveal (0.8 -> 1.0) - STARTS AFTER KYLIE
