@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.26 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.27 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -173,21 +173,23 @@
                             <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
                             
                             <!-- 5. BG BOXES (Layer 1, z-5) - INSIDE MASK -->
-                            <!-- Lowered base position to bottom-0 and translate-y to 150% to ensure hidden -->
-                            <img id="hero-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 bottom-0 w-full z-5 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 150%);" alt="Boxes BG">
+                            <!-- Raised to bottom-6 (~25px) -->
+                            <img id="hero-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 bottom-6 w-full z-5 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 150%);" alt="Boxes BG">
 
                             <!-- 4. WE (Layer 2, z-15) - INSIDE MASK -->
                             <!-- SWAPPED: Moved to RIGHT side -->
-                            <img id="hero-we" src="./images/we.png" class="absolute right-[-5%] bottom-10 w-[75%] z-15 object-contain will-change-transform translate-x-full" style="transform: translateX(100%);" alt="We">
+                            <!-- Raised to bottom-16 (~65px), Right margin right-2 -->
+                            <img id="hero-we" src="./images/we.png" class="absolute right-2 bottom-16 w-[75%] z-15 object-contain will-change-transform translate-x-full" style="transform: translateX(100%);" alt="We">
 
                             <!-- 3. RIGHT BOX (Layer 3, z-20) - INSIDE MASK -->
-                            <!-- SWAPPED: Moved to LEFT side -->
+                            <!-- SWAPPED: Moved to LEFT side, strictly left-0 -->
                             <img id="hero-box-right" src="./images/box_right.png" class="absolute left-0 bottom-10 w-[40%] z-20 object-contain will-change-transform -translate-x-full" style="transform: translateX(-150%);" alt="Box Right">
 
                             <!-- 6. KYLIE (Layer 4, z-25) - INSIDE MASK -->
                             <!-- Starts hidden (translateY 100%) -->
                             <!-- Shifted right to left-[58%] -->
-                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-0 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
+                            <!-- Raised to bottom-2 (~10px) -->
+                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-2 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
 
                             <!-- 7. TEXT STICKER (Layer 5, z-40) - INSIDE MASK -->
                             <!-- Top Left, Letter Reveal Animation -->
@@ -318,8 +320,8 @@
                 // 6. KYLIE: Slide Up (0.5 -> 0.8) - Shifted earlier
                 if (kylieLayer) {
                     const kylieY = getVal(progress, 0.5, 0.3, 100, 0);
-                    // Preserve X centering
-                    kylieLayer.style.transform = `translate(-50%, ${kylieY}%)`;
+                    // Preserve X centering, Add ScaleX(-1)
+                    kylieLayer.style.transform = `translate(-50%, ${kylieY}%) scaleX(-1)`;
                 }
                 
                 // STICKER TEXT: Smooth Letter Reveal (0.8 -> 1.0) - STARTS AFTER KYLIE
