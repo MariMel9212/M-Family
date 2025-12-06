@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.25 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.26 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -208,8 +208,8 @@
 
                         <!-- 2. BOTTOM BOXES (Layer 4, z-30) - OUTSIDE MASK -->
                         <!-- Allows vertical overlap with next section -->
-                        <!-- FIX: Changed width to 100% to match texture and prevent X-scroll -->
-                        <div id="hero-boxes-bottom" class="absolute bottom-0 left-0 w-full flex justify-center z-30 will-change-transform translate-y-full pointer-events-none">
+                        <!-- FIX: Increased width to 110% and centered -->
+                        <div id="hero-boxes-bottom" class="absolute bottom-0 left-1/2 w-[110%] -translate-x-1/2 flex justify-center z-30 will-change-transform translate-y-full pointer-events-none">
                             <img src="./images/boxes_bottom.png" class="w-full max-w-none h-auto object-contain" alt="Boxes Bottom">
                         </div>
                         
@@ -311,8 +311,8 @@
                 if (weLayer) {
                     // From Right (100%) to 0 (Right edge)
                     const weX = getVal(progress, 0.5, 0.3, 100, 0); 
-                    // No mirror needed (or maybe scaleX(1) if image is flipped by default)
-                    weLayer.style.transform = `translateX(${weX}%)`;
+                    // Added scaleX(-1) to mirror image
+                    weLayer.style.transform = `translateX(${weX}%) scaleX(-1)`;
                 }
 
                 // 6. KYLIE: Slide Up (0.5 -> 0.8) - Shifted earlier
