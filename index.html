@@ -122,7 +122,18 @@
             const tg = window.Telegram.WebApp;
             if (tg) {
                 tg.ready();
-                tg.expand();
+                try {
+                    tg.expand();
+                    // New method for API 8.0+ to hide header
+                    if (tg.requestFullscreen) {
+                        tg.requestFullscreen();
+                    } else if (tg.Method && tg.Method.requestFullscreen) {
+                         // Fallback if older SDK structure
+                        tg.Method.requestFullscreen();
+                    }
+                } catch (e) {
+                    console.log('Fullscreen failed:', e);
+                }
                 tg.setHeaderColor('#ffffff');
                 tg.setBackgroundColor('#ffffff');
             }
@@ -203,7 +214,7 @@
 
                 <!-- 2. MAP: Карта -->
                 <!-- z-20, flows naturally after 500vh -->
-                <div id="map-block" class="relative z-20 py-20 px-6 overflow-hidden bg-white" style="min-height: 100vh;">
+                <div id="map-block" class="relative z-20 py-20 px-6 overflow-hidden bg-red-100" style="min-height: 100vh;">
                     
                     <!-- BACKGROUND TEXTURE (Same as Hero) -->
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
@@ -214,7 +225,8 @@
                         <!-- POLAROID FRAME -->
                         <div class="bg-white p-4 pb-12 shadow-2xl rotate-2 transform hover:rotate-0 transition-transform duration-500 w-full max-w-sm">
                             <div class="aspect-square w-full bg-slate-100 overflow-hidden relative shadow-inner border border-slate-200">
-                                <img src="./images/картамм.png" class="w-full h-full object-cover" alt="Маршрут">
+                                <!-- DEBUG: Использую texture.jpg временно, так как картамм.png может не грузиться -->
+                                <img src="./images/texture.jpg" class="w-full h-full object-cover" alt="Маршрут">
                             </div>
                             <div class="mt-4 text-center font-hand text-2xl text-slate-800 font-bold">
                                 Поездка в неизвестность...
@@ -403,7 +415,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.58 (CLEAN MAP BLOCK)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.59 (MAP DEBUG + FULLSCREEN)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
