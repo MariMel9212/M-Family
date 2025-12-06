@@ -149,14 +149,20 @@
                 <!-- BACK BTN -->
                 <button onclick="closeStory()" class="fixed top-4 right-4 z-[60] w-10 h-10 bg-white/80 backdrop-blur rounded-full shadow-lg flex items-center justify-center text-slate-800 font-bold">✕</button>
 
-                <!-- BLOCK 1: HERO (Step 1: Texture Background) -->
+                <!-- BLOCK 1: HERO (Step 2: Bottom Boxes Layout) -->
                 <div id="hero-block" class="relative w-full h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-white">
                     
                     <!-- 1. BACKGROUND TEXTURE -->
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
                     
-                    <!-- Content placeholder (will be replaced by animation layers) -->
-                    <h1 class="relative z-10 text-4xl font-extrabold text-slate-900 text-center">
+                    <!-- 2. BOTTOM BOXES (Layer 1) -->
+                    <div class="absolute bottom-0 left-0 w-full flex justify-center z-10">
+                        <!-- Using translate-y-0 for final position check -->
+                        <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto object-contain translate-y-[10%]" alt="Boxes Bottom">
+                    </div>
+
+                    <!-- Content placeholder -->
+                    <h1 class="relative z-20 text-4xl font-extrabold text-slate-900 text-center mb-20">
                         Большой<br>переезд
                     </h1>
                     
