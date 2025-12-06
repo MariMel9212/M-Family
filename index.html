@@ -160,14 +160,14 @@
                 </button>
 
                 <!-- 1. HERO: Большой Переезд -->
-                <!-- relative, 500vh spacer -->
-                <div id="hero-block" class="relative w-full" style="min-height: 500vh; height: 500vh;"> 
+                <!-- relative, 350vh spacer -->
+                <div id="hero-block" class="relative w-full flex flex-col" style="min-height: 350vh; height: 350vh;"> 
                     
-                    <!-- INNER CONTAINER: JS MANUAL PINNING (Fixed -> Absolute) -->
+                    <!-- INNER CONTAINER: CSS STICKY -->
                     <!-- id="hero-sticky" -->
-                    <!-- Start FIXED at top -->
-                    <!-- overflow-visible to allow boxes to overlap map -->
-                    <div id="hero-sticky" class="fixed top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white relative z-30 overflow-visible">
+                    <!-- sticky top-0, z-10 (below map) -->
+                    <!-- overflow-visible -->
+                    <div id="hero-sticky" class="sticky top-0 left-0 w-full h-[100vh] flex flex-col items-center justify-center bg-white relative z-10 overflow-visible">
                         
                         <!-- МАСКА ТОЛЬКО ДЛЯ ФОНА И БОКОВЫХ ЭЛЕМЕНТОВ (чтобы не было гор. скролла) -->
                         <!-- Но нижние коробки (z-50) ВНЕ этой маски -->
@@ -211,7 +211,8 @@
                 </div>
 
                 <!-- 2. MAP: Карта -->
-                <!-- z-20, flows naturally after 500vh -->
+                <!-- z-20, flows naturally after 350vh -->
+                <!-- Added mt-[-50vh] to start overlapping earlier if needed, but default flow is better for sticky -->
                 <div id="map-block" class="relative z-20 py-20 px-6 overflow-hidden bg-white" style="min-height: 100vh;">
                     
                     <!-- BACKGROUND TEXTURE (Same as Hero) -->
@@ -305,38 +306,19 @@
                         window.requestAnimationFrame(() => {
                             const scrolled = window.scrollY;
                             const viewportHeight = window.innerHeight;
-                            const blockHeight = heroBlock.offsetHeight; // 500vh
+                            const blockHeight = heroBlock.offsetHeight; // 350vh
                             
-                            // --- MANUAL JS PINNING ---
-                            // Logic:
-                            // 1. While inside hero block (scrollY < blockHeight - viewportHeight): FIXED
-                            // 2. When reached end (scrollY >= blockHeight - viewportHeight): ABSOLUTE at BOTTOM
+                            // --- CSS STICKY LOGIC (Simpler) ---
+                            // We just animate based on scroll within the block.
+                            // Sticky handles the positioning.
                             
-                            const pinDuration = blockHeight - viewportHeight; // Distance we scroll while pinned
-                            
-                            if (scrolled < pinDuration) {
-                                // PINNED
-                                heroSticky.style.position = 'fixed';
-                                heroSticky.style.top = '0';
-                                heroSticky.style.bottom = 'auto';
-                                heroSticky.style.left = '0';
-                                heroSticky.style.width = '100%';
-                            } else {
-                                // UNPINNED (Scrolls away with the page)
-                                heroSticky.style.position = 'absolute';
-                                heroSticky.style.top = 'auto';
-                                heroSticky.style.bottom = '0';
-                                heroSticky.style.left = '0';
-                                heroSticky.style.width = '100%';
-                            }
+                            const pinDuration = blockHeight - viewportHeight; // Scroll distance
 
                             // --- ANIMATION PROGRESS ---
-                            // Progress goes from 0 to 1 over the pin duration
                             let progress = 0;
                             if (pinDuration > 0) progress = Math.max(0, Math.min(1, scrolled / pinDuration));
 
                             // ... animations ...
-                            // Ensure animation finishes slightly BEFORE unpinning (e.g., at 0.95)
                             
                             // 1. ТЕКСТ (0.0 -> 0.25)
                             const titleOpacity = getVal(progress, 0.0, 0.25, 1, 0);
@@ -349,7 +331,8 @@
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
                             // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
-                            const boxesY = getVal(progress, 0.25, 0.25, 100, 15); // Вернул 15%, чтобы они стояли "на земле" перед подъемом
+                            // Вернул 0% (или даже выше -10%), чтобы они точно не обрезались
+                            const boxesY = getVal(progress, 0.25, 0.25, 100, 0); 
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
                             // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
@@ -368,8 +351,7 @@
                             const kylieX = getVal(progress, 0.7, 0.2, 150, -50);
                             if (layerKylie) layerKylie.style.transform = `translate(${kylieX}%, 0)`; 
 
-                            // 7. СТИКЕР (0.8 -> 0.95) - EXTENDED to END
-                            // Анимация заканчивается на 0.95, чтобы сразу после нее шло "отлипание"
+                            // 7. СТИКЕР (0.8 -> 0.95)
                             const stickerScale = getVal(progress, 0.8, 0.15, 0, 1);
                             if (layerSticker) layerSticker.style.transform = `scale(${stickerScale}) rotate(0deg)`;
 
@@ -412,7 +394,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.61 (RECOVERY & SYNC)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.62 (CSS STICKY + SPACER)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
