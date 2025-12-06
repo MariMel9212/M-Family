@@ -21,17 +21,18 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* STRICTLY NO HORIZONTAL SCROLL */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            /* overflow-y is auto by default */
             background-color: #f8fafc;
             font-family: 'Manrope', sans-serif;
             color: #1e293b;
         }
         
-        /* Additional safeguard for container */
+        /* Container - allow vertical scroll, clip horizontal */
         #app-container {
-            overflow-x: hidden;
             width: 100%;
             max-width: 100vw;
+            overflow-x: clip; /* Modern clip */
         }
         
         /* Global texture */
@@ -124,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.12 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.13 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -162,7 +163,8 @@
                     
                     <!-- STICKY CONTAINER: Stays visible while we scroll the wrapper -->
                     <!-- overflow-visible to allow overlap of bottom boxes -->
-                    <div id="hero-sticky" class="fixed top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white overflow-visible z-10">
+                    <!-- pointer-events-none to ensure scroll passes through to body/viewer if needed -->
+                    <div id="hero-sticky" class="fixed top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white overflow-visible z-10 pointer-events-none">
                         
                         <!-- SAFE MASK: Clips horizontal elements (We, Right Box) -->
                         <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
@@ -170,12 +172,15 @@
                             <!-- 1. BACKGROUND TEXTURE -->
                             <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
                             
+                            <!-- 5. BG BOXES (Layer 1, z-5) - INSIDE MASK -->
+                            <img id="hero-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 bottom-10 w-full z-5 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Boxes BG">
+
                             <!-- 3. RIGHT BOX (Layer 2, z-20) - INSIDE MASK -->
                             <img id="hero-box-right" src="./images/box_right.png" class="absolute right-0 bottom-10 w-[40%] z-20 object-contain will-change-transform translate-x-[150%]" alt="Box Right">
 
                             <!-- 4. WE (Layer 3, z-25) - INSIDE MASK -->
-                            <!-- Raised to bottom-5 (~20px) -->
-                            <img id="hero-we" src="./images/we.png" class="absolute left-0 bottom-5 w-[85%] z-25 object-contain will-change-transform -translate-x-full" style="transform: translateX(-100%);" alt="We">
+                            <!-- Raised to bottom-10 (~40px) -->
+                            <img id="hero-we" src="./images/we.png" class="absolute left-0 bottom-10 w-[85%] z-25 object-contain will-change-transform -translate-x-full" style="transform: translateX(-100%);" alt="We">
 
                             <!-- TITLE (Single block for Smoke Animation) - INSIDE MASK -->
                             <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight will-change-transform origin-center top-1/2 -translate-y-1/2" 
@@ -210,6 +215,7 @@
             const wrapper = document.getElementById('hero-wrapper');
             const title = document.getElementById('hero-title');
             const boxesBottom = document.getElementById('hero-boxes-bottom');
+            const boxesBg = document.getElementById('hero-boxes-bg');
             const boxRight = document.getElementById('hero-box-right');
             const weLayer = document.getElementById('hero-we');
             const viewer = document.getElementById('story-viewer');
@@ -251,15 +257,23 @@
                     boxesBottom.style.transform = `translateY(${boxesY}%)`;
                 }
 
-                // 3. RIGHT BOX: Slide In From Right (0.4 -> 0.7)
+                // 3. BG BOXES: Slide Up (0.3 -> 0.7) (PARALLEL WITH OTHERS)
+                // From 100% (hidden) to 0% (visible at bottom)
+                if (boxesBg) {
+                    const bgY = getVal(progress, 0.3, 0.4, 100, 0);
+                    // We must preserve -50% X translation for centering
+                    boxesBg.style.transform = `translate(-50%, ${bgY}%)`;
+                }
+
+                // 4. RIGHT BOX: Slide In From Right (0.4 -> 0.7)
                 if (boxRight) {
                     const boxX = getVal(progress, 0.4, 0.3, 150, 0);
                     boxRight.style.transform = `translateX(${boxX}%)`;
                 }
 
-                // 4. WE: Slide In From Left (0.5 -> 0.8)
+                // 5. WE: Slide In From Left (0.5 -> 0.8)
                 if (weLayer) {
-                    const weX = getVal(progress, 0.5, 0.3, -100, -5); // -5% overlap
+                    const weX = getVal(progress, 0.5, 0.3, -100, 0); // Just 0% is fine if centered via CSS
                     weLayer.style.transform = `translateX(${weX}%)`;
                 }
             };
