@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.13 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.14 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -162,9 +162,9 @@
                 <div id="hero-wrapper" class="relative w-full h-[300vh] z-30"> <!-- High Z to overlap Map -->
                     
                     <!-- STICKY CONTAINER: Stays visible while we scroll the wrapper -->
+                    <!-- Changed back to 'sticky' so it scrolls away when wrapper ends -->
                     <!-- overflow-visible to allow overlap of bottom boxes -->
-                    <!-- pointer-events-none to ensure scroll passes through to body/viewer if needed -->
-                    <div id="hero-sticky" class="fixed top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white overflow-visible z-10 pointer-events-none">
+                    <div id="hero-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white overflow-visible z-10 pointer-events-none">
                         
                         <!-- SAFE MASK: Clips horizontal elements (We, Right Box) -->
                         <div class="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
@@ -173,7 +173,8 @@
                             <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
                             
                             <!-- 5. BG BOXES (Layer 1, z-5) - INSIDE MASK -->
-                            <img id="hero-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 bottom-10 w-full z-5 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Boxes BG">
+                            <!-- Lowered base position to bottom-0 and translate-y to 150% to ensure hidden -->
+                            <img id="hero-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 bottom-0 w-full z-5 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 150%);" alt="Boxes BG">
 
                             <!-- 3. RIGHT BOX (Layer 2, z-20) - INSIDE MASK -->
                             <img id="hero-box-right" src="./images/box_right.png" class="absolute right-0 bottom-10 w-[40%] z-20 object-contain will-change-transform translate-x-[150%]" alt="Box Right">
@@ -258,9 +259,9 @@
                 }
 
                 // 3. BG BOXES: Slide Up (0.3 -> 0.7) (PARALLEL WITH OTHERS)
-                // From 100% (hidden) to 0% (visible at bottom)
+                // From 150% (hidden) to 0% (visible at bottom)
                 if (boxesBg) {
-                    const bgY = getVal(progress, 0.3, 0.4, 100, 0);
+                    const bgY = getVal(progress, 0.3, 0.4, 150, 0);
                     // We must preserve -50% X translation for centering
                     boxesBg.style.transform = `translate(-50%, ${bgY}%)`;
                 }
