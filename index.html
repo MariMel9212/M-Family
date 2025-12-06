@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.24 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.25 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -177,12 +177,12 @@
                             <img id="hero-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 bottom-0 w-full z-5 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 150%);" alt="Boxes BG">
 
                             <!-- 4. WE (Layer 2, z-15) - INSIDE MASK -->
-                            <!-- Lowered Z to be BEHIND Right Box -->
-                            <!-- Reduced width to 75% -->
-                            <img id="hero-we" src="./images/we.png" class="absolute left-0 bottom-10 w-[75%] z-15 object-contain will-change-transform -translate-x-full" style="transform: translateX(-100%);" alt="We">
+                            <!-- SWAPPED: Moved to RIGHT side -->
+                            <img id="hero-we" src="./images/we.png" class="absolute right-[-5%] bottom-10 w-[75%] z-15 object-contain will-change-transform translate-x-full" style="transform: translateX(100%);" alt="We">
 
                             <!-- 3. RIGHT BOX (Layer 3, z-20) - INSIDE MASK -->
-                            <img id="hero-box-right" src="./images/box_right.png" class="absolute right-0 bottom-10 w-[40%] z-20 object-contain will-change-transform translate-x-[150%]" alt="Box Right">
+                            <!-- SWAPPED: Moved to LEFT side -->
+                            <img id="hero-box-right" src="./images/box_right.png" class="absolute left-0 bottom-10 w-[40%] z-20 object-contain will-change-transform -translate-x-full" style="transform: translateX(-150%);" alt="Box Right">
 
                             <!-- 6. KYLIE (Layer 4, z-25) - INSIDE MASK -->
                             <!-- Starts hidden (translateY 100%) -->
@@ -293,25 +293,26 @@
                     boxesBg.style.transform = `translate(-50%, ${bgY}%)`;
                 }
 
-                // 4. RIGHT BOX & STICKER: Slide In From Right (0.4 -> 0.7)
+                // 4. BOX (Now Left) & STICKER: Slide In
                 if (boxRight) {
-                    const boxX = getVal(progress, 0.4, 0.3, 150, 0);
+                    // From Left (-150%) to 0
+                    const boxX = getVal(progress, 0.4, 0.3, -150, 0);
                     boxRight.style.transform = `translateX(${boxX}%)`;
                     
                     // Sync sticker container slide with box (subtle slide)
                     if (stickerLayer) {
-                         // Slide from 50px to 0px
-                         const stickerX = getVal(progress, 0.4, 0.3, 50, 0);
+                         // Slide from -50px to 0px (Left to Right)
+                         const stickerX = getVal(progress, 0.4, 0.3, -50, 0);
                          stickerLayer.style.transform = `translateX(${stickerX}px)`;
                     }
                 }
                 
-                // 5. WE: Slide In From Left (0.5 -> 0.8)
+                // 5. WE: Slide In From RIGHT (0.5 -> 0.8)
                 if (weLayer) {
-                    // Final position: -5% (Slightly more left)
-                    const weX = getVal(progress, 0.5, 0.3, -100, -5); 
-                    // Added scaleX(-1) to mirror image
-                    weLayer.style.transform = `translateX(${weX}%) scaleX(-1)`;
+                    // From Right (100%) to 0 (Right edge)
+                    const weX = getVal(progress, 0.5, 0.3, 100, 0); 
+                    // No mirror needed (or maybe scaleX(1) if image is flipped by default)
+                    weLayer.style.transform = `translateX(${weX}%)`;
                 }
 
                 // 6. KYLIE: Slide Up (0.5 -> 0.8) - Shifted earlier
