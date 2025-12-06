@@ -45,7 +45,6 @@
 
         body { 
             font-family: 'Manrope', sans-serif; 
-            /* background-color: #000; REMOVED */
             color: #1e293b;
         }
 
@@ -62,7 +61,6 @@
             width: 100%;
             min-height: 100vh; /* Allow growth */
             margin: 0 auto;
-            /* background-color: #ffffff; REMOVED */
             display: block; /* Was flex */
             position: relative;
         }
@@ -340,9 +338,9 @@
                             // ... animations ...
                             // Ensure animation finishes slightly BEFORE unpinning (e.g., at 0.95)
                             
-                            // 1. ТЕКСТ (0.0 -> 0.2)
-                            const titleOpacity = getVal(progress, 0.0, 0.2, 1, 0);
-                            const titleTransY = getVal(progress, 0.0, 0.25, -50, -100); // Slide up from center (-50%) to higher (-100%)
+                            // 1. ТЕКСТ (0.0 -> 0.25)
+                            const titleOpacity = getVal(progress, 0.0, 0.25, 1, 0);
+                            const titleTransY = getVal(progress, 0.0, 0.25, -50, -100);
                             
                             title.style.top = '50%';
                             title.style.left = '50%';
@@ -350,31 +348,30 @@
                             title.style.opacity = titleOpacity;
                             title.style.pointerEvents = progress > 0.25 ? 'none' : 'auto';
 
-                            // 2. НИЖНИЕ КОРОБКИ (0.2 -> 0.4)
-                            const boxesY = getVal(progress, 0.2, 0.2, 100, 30); // Опустил ниже (30%), чтобы было как раньше
+                            // 2. НИЖНИЕ КОРОБКИ (0.25 -> 0.5)
+                            const boxesY = getVal(progress, 0.25, 0.25, 100, 15); // Вернул 15%, чтобы они стояли "на земле" перед подъемом
                             if (boxesContainer) boxesContainer.style.transform = `translateY(${boxesY}%)`;
 
-                            // 3. КОРОБКА СПРАВА (0.4 -> 0.6)
-                            const boxRightX = getVal(progress, 0.4, 0.2, 150, 0); 
+                            // 3. КОРОБКА СПРАВА (0.5 -> 0.75)
+                            const boxRightX = getVal(progress, 0.5, 0.25, 150, 0); 
                             if (layerBoxRight) layerBoxRight.style.transform = `translateX(${boxRightX}%)`;
 
-                            // 4. МЫ (0.6 -> 0.75)
-                            const weX = getVal(progress, 0.6, 0.15, -100, 0);
+                            // 4. МЫ (0.7 -> 0.85)
+                            const weX = getVal(progress, 0.7, 0.15, -100, 0);
                             if (layerWe) layerWe.style.transform = `translateX(${weX}%)`;
 
-                            // 5. ФОНОВЫЕ КОРОБКИ (0.65 -> 0.8)
-                            const bgY = getVal(progress, 0.65, 0.15, 150, 0);
+                            // 5. ФОНОВЫЕ КОРОБКИ (0.75 -> 0.9)
+                            const bgY = getVal(progress, 0.75, 0.15, 150, 0);
                             if (layerBoxesBg) layerBoxesBg.style.transform = `translate(-50%, ${bgY}%)`;
 
-                            // 6. КАЙЛИ (0.6 -> 0.8)
-                            const kylieX = getVal(progress, 0.6, 0.2, 150, -50);
+                            // 6. КАЙЛИ (0.7 -> 0.9)
+                            const kylieX = getVal(progress, 0.7, 0.2, 150, -50);
                             if (layerKylie) layerKylie.style.transform = `translate(${kylieX}%, 0)`; 
 
-                            // 7. СТИКЕР (0.7 -> 0.8) - MORE PAUSE
-                            const stickerScale = getVal(progress, 0.7, 0.1, 0, 1);
+                            // 7. СТИКЕР (0.8 -> 0.95) - EXTENDED to END
+                            // Анимация заканчивается на 0.95, чтобы сразу после нее шло "отлипание"
+                            const stickerScale = getVal(progress, 0.8, 0.15, 0, 1);
                             if (layerSticker) layerSticker.style.transform = `scale(${stickerScale}) rotate(0deg)`;
-
-                            // УБРАЛ JS OPACITY ДЛЯ КАРТЫ (TEST)
 
                             ticking = false;
                         });
@@ -415,7 +412,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.60 (BOXES DOWN & MAP SRC)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.61 (RECOVERY & SYNC)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
