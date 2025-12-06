@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.16 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.17 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -185,7 +185,8 @@
 
                             <!-- 6. KYLIE (Layer 4, z-25) - INSIDE MASK -->
                             <!-- Starts hidden (translateY 100%) -->
-                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-1/2 bottom-0 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
+                            <!-- Shifted right to left-[58%] -->
+                            <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-0 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
 
                             <!-- 7. TEXT STICKER (Layer 5, z-40) - INSIDE MASK -->
                             <!-- Top Right, Fades In -->
@@ -287,18 +288,29 @@
                     boxRight.style.transform = `translateX(${boxX}%)`;
                 }
                 
-                // STICKER: Fade In + Slide (0.45 -> 0.75) - Slightly delayed
+                // STICKER: Soft Focus Reveal (0.45 -> 0.75) - Cinematic Fade
                 if (stickerLayer) {
                      const pSticker = (progress - 0.45) / 0.3; // Manual normalized progress
+                     
                      if (progress < 0.45) {
+                         // State BEFORE: Hidden, Blurred, Shifted
                          stickerLayer.style.opacity = 0;
-                         stickerLayer.style.transform = `translateX(50px)`;
+                         stickerLayer.style.filter = 'blur(10px)';
+                         stickerLayer.style.transform = `translateX(50px) scale(0.9)`;
                      } else if (progress > 0.75) {
+                         // State AFTER: Visible, Sharp, Normal
                          stickerLayer.style.opacity = 1;
-                         stickerLayer.style.transform = `translateX(0px)`;
+                         stickerLayer.style.filter = 'blur(0px)';
+                         stickerLayer.style.transform = `translateX(0px) scale(1)`;
                      } else {
+                         // State DURING: Interpolate
+                         const blurVal = (1 - pSticker) * 10;
+                         const xVal = (1 - pSticker) * 50;
+                         const scaleVal = 0.9 + (pSticker * 0.1);
+                         
                          stickerLayer.style.opacity = pSticker;
-                         stickerLayer.style.transform = `translateX(${(1 - pSticker) * 50}px)`;
+                         stickerLayer.style.filter = `blur(${blurVal}px)`;
+                         stickerLayer.style.transform = `translateX(${xVal}px) scale(${scaleVal})`;
                      }
                 }
 
