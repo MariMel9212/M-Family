@@ -117,7 +117,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.6 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.7 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -159,11 +159,10 @@
                         <!-- 1. BACKGROUND TEXTURE -->
                         <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
                         
-                        <!-- TITLE (Split for animation) -->
-                        <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight" 
+                        <!-- TITLE (Single block for Smoke Animation) -->
+                        <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight will-change-transform origin-center" 
                             style="font-family: 'Shantell Sans', cursive; font-weight: 600; font-size: clamp(50px, 15vw, 75px);">
-                            <span id="word-1" class="block will-change-transform origin-bottom-right">Большой</span>
-                            <span id="word-2" class="block will-change-transform origin-top-left">переезд</span>
+                            Большой<br>переезд
                         </h1>
                         
                     </div>
@@ -183,16 +182,13 @@
 
             // --- ANIMATION LOGIC ---
             const wrapper = document.getElementById('hero-wrapper');
-            const sticky = document.getElementById('hero-sticky');
-            const word1 = document.getElementById('word-1');
-            const word2 = document.getElementById('word-2');
-            // We need to listen to scroll on the STORY VIEWER, not window
+            const title = document.getElementById('hero-title');
             const viewer = document.getElementById('story-viewer');
 
             const onScroll = () => {
-                if (!wrapper || !viewer) return;
+                if (!wrapper || !viewer || !title) return;
                 
-                const scrollY = viewer.scrollTop; // Use viewer scroll
+                const scrollY = viewer.scrollTop; 
                 const viewportHeight = window.innerHeight;
                 const scrollableDistance = wrapper.offsetHeight - viewportHeight; 
                 
@@ -201,26 +197,17 @@
                     progress = Math.max(0, Math.min(1, scrollY / scrollableDistance));
                 }
 
-                // ANIMATION: Split & Scatter
-                if (word1) {
-                    const x1 = -progress * 150;
-                    const y1 = -progress * 300;
-                    const r1 = -progress * 25;
-                    const b1 = progress * 15;
-                    word1.style.transform = `translate(${x1}px, ${y1}px) rotate(${r1}deg)`;
-                    word1.style.filter = `blur(${b1}px)`;
-                    word1.style.opacity = Math.max(0, 1 - progress * 2);
-                }
+                // ANIMATION: Smoke / Blur Up
+                // Moves up, Scales up, Blurs, Fades out
+                
+                const y = -progress * 200; // Move UP 200px
+                const scale = 1 + progress * 0.5; // Scale up to 1.5
+                const blur = progress * 20; // Blur up to 20px
+                const opacity = Math.max(0, 1 - progress * 1.5); // Fade out by 66% scroll
 
-                if (word2) {
-                    const x2 = progress * 150;
-                    const y2 = progress * 150;
-                    const r2 = progress * 25;
-                    const b2 = progress * 15;
-                    word2.style.transform = `translate(${x2}px, ${y2}px) rotate(${r2}deg)`;
-                    word2.style.filter = `blur(${b2}px)`;
-                    word2.style.opacity = Math.max(0, 1 - progress * 2);
-                }
+                title.style.transform = `translateY(${y}px) scale(${scale})`;
+                title.style.filter = `blur(${blur}px)`;
+                title.style.opacity = opacity;
             };
 
             // Remove old window listener just in case
