@@ -160,14 +160,13 @@
                 </button>
 
                 <!-- 1. HERO: Большой Переезд -->
-                <!-- relative, 350vh spacer -->
-                <div id="hero-block" class="relative w-full flex flex-col" style="min-height: 350vh; height: 350vh;"> 
+                <!-- relative, 400vh WRAPPER for scroll space -->
+                <div id="hero-block" class="relative w-full" style="min-height: 400vh; height: 400vh;"> 
                     
-                    <!-- INNER CONTAINER: CSS STICKY -->
+                    <!-- INNER CONTAINER: MANUAL JS PINNING (FIXED -> ABSOLUTE) -->
                     <!-- id="hero-sticky" -->
-                    <!-- sticky top-0, z-10 (below map) -->
-                    <!-- overflow-visible -->
-                    <div id="hero-sticky" class="sticky top-0 left-0 w-full h-[100vh] flex flex-col items-center justify-center bg-white relative z-10 overflow-visible">
+                    <!-- Start FIXED top-0 -->
+                    <div id="hero-sticky" class="fixed top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white relative z-10 overflow-visible">
                         
                         <!-- МАСКА ТОЛЬКО ДЛЯ ФОНА И БОКОВЫХ ЭЛЕМЕНТОВ (чтобы не было гор. скролла) -->
                         <!-- Но нижние коробки (z-50) ВНЕ этой маски -->
@@ -306,13 +305,30 @@
                         window.requestAnimationFrame(() => {
                             const scrolled = window.scrollY;
                             const viewportHeight = window.innerHeight;
-                            const blockHeight = heroBlock.offsetHeight; // 350vh
+                            const blockHeight = heroBlock.offsetHeight; // 400vh
                             
-                            // --- CSS STICKY LOGIC (Simpler) ---
-                            // We just animate based on scroll within the block.
-                            // Sticky handles the positioning.
+                            // --- MANUAL JS PINNING V2 (SOLID) ---
+                            // 1. Wrapper is 400vh.
+                            // 2. Content is FIXED until we scroll 300vh (blockHeight - viewportHeight).
+                            // 3. Then it becomes ABSOLUTE BOTTOM of the wrapper.
                             
-                            const pinDuration = blockHeight - viewportHeight; // Scroll distance
+                            const pinDuration = blockHeight - viewportHeight; 
+                            
+                            if (scrolled < pinDuration) {
+                                // PINNED
+                                heroSticky.style.position = 'fixed';
+                                heroSticky.style.top = '0';
+                                heroSticky.style.bottom = 'auto';
+                                heroSticky.style.left = '0';
+                                heroSticky.style.width = '100%';
+                            } else {
+                                // UNPINNED (Sticks to bottom of wrapper and scrolls up)
+                                heroSticky.style.position = 'absolute';
+                                heroSticky.style.top = 'auto';
+                                heroSticky.style.bottom = '0';
+                                heroSticky.style.left = '0';
+                                heroSticky.style.width = '100%';
+                            }
 
                             // --- ANIMATION PROGRESS ---
                             let progress = 0;
@@ -355,6 +371,9 @@
                             const stickerScale = getVal(progress, 0.8, 0.15, 0, 1);
                             if (layerSticker) layerSticker.style.transform = `scale(${stickerScale}) rotate(0deg)`;
 
+                            // Force repaint fix for Safari sticking issue
+                            // heroSticky.style.transform = 'translateZ(0)';
+
                             ticking = false;
                         });
                         ticking = true;
@@ -394,7 +413,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.62 (CSS STICKY + SPACER)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.63 (SOLID PINNING V2)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
