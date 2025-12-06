@@ -116,7 +116,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-16"> <!-- Increased top padding for safe area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.3 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.4 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -149,25 +149,16 @@
                 <!-- BACK BTN -->
                 <button onclick="closeStory()" class="fixed top-4 right-4 z-[60] w-10 h-10 bg-white/80 backdrop-blur rounded-full shadow-lg flex items-center justify-center text-slate-800 font-bold">✕</button>
 
-                <!-- BLOCK 1: HERO (Step 3: We + Box Right) -->
+                <!-- BLOCK 1: HERO (Step 4: Typography & Animation) -->
                 <div id="hero-block" class="relative w-full h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-white">
                     
                     <!-- 1. BACKGROUND TEXTURE -->
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
                     
-                    <!-- 2. BOTTOM BOXES (Layer 1, z-10) -->
-                    <div class="absolute bottom-0 left-0 w-full flex justify-center z-10">
-                        <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto object-contain translate-y-[10%]" alt="Boxes Bottom">
-                    </div>
-
-                    <!-- 3. WE (Layer 2, z-20) - Left aligned -->
-                    <img src="./images/we.png" class="absolute left-0 bottom-0 w-[85%] z-20 object-contain" style="transform: translateX(-5%);" alt="We">
-
-                    <!-- 4. BOX RIGHT (Layer 3, z-30) - Right aligned -->
-                    <img src="./images/box_right.png" class="absolute right-0 bottom-10 w-[40%] z-30 object-contain" alt="Box Right">
-
-                    <!-- Content placeholder -->
-                    <h1 class="relative z-40 text-4xl font-extrabold text-slate-900 text-center mb-60">
+                    <!-- TITLE (Shantell Sans) -->
+                    <!-- Settings: SemiBold (600), Size ~75px, LH 90% (Tailwind leading-none is close, custom style used), Spacing -2% -->
+                    <h1 id="hero-title" class="relative z-40 text-center text-slate-900 will-change-transform origin-center" 
+                        style="font-family: 'Shantell Sans', cursive; font-weight: 600; font-size: clamp(50px, 15vw, 75px); line-height: 90%; letter-spacing: -0.02em;">
                         Большой<br>переезд
                     </h1>
                     
