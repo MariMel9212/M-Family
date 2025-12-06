@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.29 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.30 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -209,10 +209,12 @@
                         </div>
 
                         <!-- 2. BOTTOM BOXES (Layer 4, z-30) - OUTSIDE MASK -->
-                        <!-- Allows vertical overlap with next section -->
-                        <!-- FIX: Increased width to 130% and centered to be bigger/clipped -->
-                        <div id="hero-boxes-bottom" class="absolute bottom-0 left-1/2 w-[130%] flex justify-center z-30 will-change-transform translate-y-full pointer-events-none" style="transform: translate(-50%, 100%);">
-                            <img src="./images/boxes_bottom.png" class="w-full h-auto object-contain block" alt="Boxes Bottom">
+                        <!-- WRAPPER: Fixes width to 100vw and clips overflow, preventing page stretch -->
+                        <div id="hero-boxes-wrapper" class="absolute bottom-0 left-0 w-full h-auto overflow-hidden pointer-events-none z-30">
+                            <!-- IMAGE: 130% width, centered inside wrapper -->
+                            <div id="hero-boxes-bottom" class="relative left-1/2 w-[130%] flex justify-center will-change-transform translate-y-full" style="transform: translate(-50%, 100%);">
+                                <img src="./images/boxes_bottom.png" class="w-full h-auto object-contain block" alt="Boxes Bottom">
+                            </div>
                         </div>
                         
                     </div>
@@ -234,7 +236,7 @@
             // --- ANIMATION LOGIC ---
             const wrapper = document.getElementById('hero-wrapper');
             const title = document.getElementById('hero-title');
-            const boxesBottom = document.getElementById('hero-boxes-bottom');
+            const boxesBottom = document.getElementById('hero-boxes-bottom'); // Inner div
             const boxesBg = document.getElementById('hero-boxes-bg');
             const boxRight = document.getElementById('hero-box-right');
             const weLayer = document.getElementById('hero-we');
