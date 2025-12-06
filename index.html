@@ -117,7 +117,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.8 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.9 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -160,9 +160,12 @@
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
                     
                     <!-- 2. BOTTOM BOXES (Hidden initially) -->
-                    <div id="hero-boxes-bottom" class="absolute bottom-0 left-0 w-full flex justify-center z-20 will-change-transform translate-y-full">
+                    <div id="hero-boxes-bottom" class="absolute bottom-0 left-0 w-full flex justify-center z-20 will-change-transform translate-y-full pointer-events-none">
                         <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto object-contain" alt="Boxes Bottom">
                     </div>
+
+                    <!-- 3. RIGHT BOX (Hidden initially) -->
+                    <img id="hero-box-right" src="./images/box_right.png" class="absolute right-0 bottom-10 w-[40%] z-30 object-contain will-change-transform translate-x-[150%]" alt="Box Right">
 
                     <!-- TITLE (Single block for Smoke Animation) -->
                     <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight will-change-transform origin-center" 
@@ -189,6 +192,7 @@
             const wrapper = document.getElementById('hero-wrapper');
             const title = document.getElementById('hero-title');
             const boxesBottom = document.getElementById('hero-boxes-bottom');
+            const boxRight = document.getElementById('hero-box-right');
             const viewer = document.getElementById('story-viewer');
 
             // Helper for interpolation
@@ -212,22 +216,26 @@
                 }
 
                 // 1. TITLE ANIMATION: Smoke / Blur Up (0 -> 0.5)
-                // Moves up, Scales up, Blurs, Fades out
-                
-                const y = -progress * 200; // Move UP 200px
-                const scale = 1 + progress * 0.5; // Scale up to 1.5
-                const blur = progress * 20; // Blur up to 20px
-                const opacity = Math.max(0, 1 - progress * 2.0); // Fade out quicker (by 0.5)
+                const y = -progress * 200; 
+                const scale = 1 + progress * 0.5; 
+                const blur = progress * 20; 
+                const opacity = Math.max(0, 1 - progress * 2.0); 
 
                 title.style.transform = `translateY(${y}px) scale(${scale})`;
                 title.style.filter = `blur(${blur}px)`;
                 title.style.opacity = opacity;
 
-                // 2. BOTTOM BOXES ANIMATION: Slide Up (0.2 -> 0.6)
-                // Start: 100% (Hidden), End: 10% (Visible at bottom)
+                // 2. BOTTOM BOXES: Slide Up (0.2 -> 0.6)
+                // Final position: 25% (Lower than before)
                 if (boxesBottom) {
-                    const boxesY = getVal(progress, 0.2, 0.4, 100, 10); 
+                    const boxesY = getVal(progress, 0.2, 0.4, 100, 25); 
                     boxesBottom.style.transform = `translateY(${boxesY}%)`;
+                }
+
+                // 3. RIGHT BOX: Slide In From Right (0.4 -> 0.7)
+                if (boxRight) {
+                    const boxX = getVal(progress, 0.4, 0.3, 150, 0);
+                    boxRight.style.transform = `translateX(${boxX}%)`;
                 }
             };
 
