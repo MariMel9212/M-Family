@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.31 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.32 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -247,8 +247,14 @@
             // PREPARE TEXT SPLITTING
             const stickerText = document.getElementById('sticker-text');
             if (stickerText) {
+                // Use innerText to capture newlines from <br>
                 const text = stickerText.innerText;
-                stickerText.innerHTML = text.split('').map(char => `<span class="opacity-0 transition-opacity duration-75">${char}</span>`).join('');
+                stickerText.innerHTML = text.split('').map(char => {
+                    // If char is a newline (from <br>), return <br> tag
+                    // Note: innerText usually converts <br> to \n
+                    if (char === '\n') return '<br>'; 
+                    return `<span class="opacity-0 transition-opacity duration-75">${char}</span>`;
+                }).join('');
             }
             const stickerSpans = stickerText ? stickerText.querySelectorAll('span') : [];
 
