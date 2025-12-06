@@ -8,7 +8,7 @@
     <meta http-equiv="Expires" content="0">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MosDate</title>
+    <title>M-Family</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -115,9 +115,9 @@
 
         function renderMoments() {
             content.innerHTML = `
-                <div class="p-6 pt-10">
-                    <h1 class="text-2xl font-extrabold text-slate-900 mb-1">MosDate v6.0 (CLEAN)</h1>
-                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">Семейный архив</p>
+                <div class="p-6 pt-16"> <!-- Increased top padding for safe area -->
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family ❤️</h1>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
                         <!-- STORY CARD -->
@@ -149,18 +149,17 @@
                 <!-- BACK BTN -->
                 <button onclick="closeStory()" class="fixed top-4 right-4 z-[60] w-10 h-10 bg-white/80 backdrop-blur rounded-full shadow-lg flex items-center justify-center text-slate-800 font-bold">✕</button>
 
-                <!-- BLOCK 1: HERO (Static 100vh for now) -->
-                <div class="relative w-full h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-white">
-                    <!-- Background -->
-                    <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50">
+                <!-- BLOCK 1: HERO (Step 1: Texture Background) -->
+                <div id="hero-block" class="relative w-full h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-white">
                     
-                    <!-- Content Placeholder -->
+                    <!-- 1. BACKGROUND TEXTURE -->
+                    <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
+                    
+                    <!-- Content placeholder (will be replaced by animation layers) -->
                     <h1 class="relative z-10 text-4xl font-extrabold text-slate-900 text-center">
                         Большой<br>переезд
                     </h1>
-                    <p class="relative z-10 mt-4 text-slate-500">(Анимация будет здесь)</p>
                     
-                    <div class="absolute bottom-10 animate-bounce">⬇️</div>
                 </div>
 
                 <!-- BLOCK 2: MAP (Simple Flow) -->
