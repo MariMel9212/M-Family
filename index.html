@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.20 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.21 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -189,9 +189,9 @@
                             <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-0 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
 
                             <!-- 7. TEXT STICKER (Layer 5, z-40) - INSIDE MASK -->
-                            <!-- Top Right, Letter Reveal Animation -->
-                            <!-- Increased width to 280px, moved up to top-[13%] -->
-                            <div id="hero-sticker" class="absolute top-[13%] right-[5%] w-[280px] z-40 text-right will-change-transform translate-x-[20px]">
+                            <!-- Top Left, Letter Reveal Animation -->
+                            <!-- Moved to left-[5%], text-left -->
+                            <div id="hero-sticker" class="absolute top-[13%] left-[5%] w-[280px] z-40 text-left will-change-transform translate-x-[-20px]">
                                 <!-- Increased font size to text-2xl, relaxed leading -->
                                 <p id="sticker-text" class="text-slate-900 font-extrabold text-2xl leading-snug" style="font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;">
                                     Ноябрь. Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу.
@@ -308,7 +308,8 @@
                 // 5. WE: Slide In From Left (0.5 -> 0.8)
                 if (weLayer) {
                     const weX = getVal(progress, 0.5, 0.3, -100, 0); 
-                    weLayer.style.transform = `translateX(${weX}%)`;
+                    // Added scaleX(-1) to mirror image
+                    weLayer.style.transform = `translateX(${weX}%) scaleX(-1)`;
                 }
 
                 // 6. KYLIE: Slide Up (0.5 -> 0.8) - Shifted earlier
