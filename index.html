@@ -117,7 +117,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.7 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.8 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -156,14 +156,19 @@
                     <!-- STICKY CONTAINER: Stays visible while we scroll the wrapper -->
                     <div id="hero-sticky" class="sticky top-0 w-full h-[100vh] flex flex-col items-center justify-center overflow-hidden bg-white">
                         
-                        <!-- 1. BACKGROUND TEXTURE -->
-                        <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
-                        
-                        <!-- TITLE (Single block for Smoke Animation) -->
-                        <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight will-change-transform origin-center" 
-                            style="font-family: 'Shantell Sans', cursive; font-weight: 600; font-size: clamp(50px, 15vw, 75px);">
-                            Большой<br>переезд
-                        </h1>
+                    <!-- 1. BACKGROUND TEXTURE -->
+                    <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
+                    
+                    <!-- 2. BOTTOM BOXES (Hidden initially) -->
+                    <div id="hero-boxes-bottom" class="absolute bottom-0 left-0 w-full flex justify-center z-20 will-change-transform translate-y-full">
+                        <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto object-contain" alt="Boxes Bottom">
+                    </div>
+
+                    <!-- TITLE (Single block for Smoke Animation) -->
+                    <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight will-change-transform origin-center" 
+                        style="font-family: 'Shantell Sans', cursive; font-weight: 600; font-size: clamp(50px, 15vw, 75px);">
+                        Большой<br>переезд
+                    </h1>
                         
                     </div>
                 </div>
@@ -183,7 +188,16 @@
             // --- ANIMATION LOGIC ---
             const wrapper = document.getElementById('hero-wrapper');
             const title = document.getElementById('hero-title');
+            const boxesBottom = document.getElementById('hero-boxes-bottom');
             const viewer = document.getElementById('story-viewer');
+
+            // Helper for interpolation
+            const getVal = (progress, startAt, duration, startVal, endVal) => {
+                if (progress <= startAt) return startVal;
+                if (progress >= startAt + duration) return endVal;
+                const p = (progress - startAt) / duration;
+                return startVal + (p * (endVal - startVal));
+            };
 
             const onScroll = () => {
                 if (!wrapper || !viewer || !title) return;
@@ -197,17 +211,24 @@
                     progress = Math.max(0, Math.min(1, scrollY / scrollableDistance));
                 }
 
-                // ANIMATION: Smoke / Blur Up
+                // 1. TITLE ANIMATION: Smoke / Blur Up (0 -> 0.5)
                 // Moves up, Scales up, Blurs, Fades out
                 
                 const y = -progress * 200; // Move UP 200px
                 const scale = 1 + progress * 0.5; // Scale up to 1.5
                 const blur = progress * 20; // Blur up to 20px
-                const opacity = Math.max(0, 1 - progress * 1.5); // Fade out by 66% scroll
+                const opacity = Math.max(0, 1 - progress * 2.0); // Fade out quicker (by 0.5)
 
                 title.style.transform = `translateY(${y}px) scale(${scale})`;
                 title.style.filter = `blur(${blur}px)`;
                 title.style.opacity = opacity;
+
+                // 2. BOTTOM BOXES ANIMATION: Slide Up (0.2 -> 0.6)
+                // Start: 100% (Hidden), End: 10% (Visible at bottom)
+                if (boxesBottom) {
+                    const boxesY = getVal(progress, 0.2, 0.4, 100, 10); 
+                    boxesBottom.style.transform = `translateY(${boxesY}%)`;
+                }
             };
 
             // Remove old window listener just in case
