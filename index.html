@@ -202,22 +202,35 @@
                 </div>
 
                 <!-- 2. MAP: Карта -->
-                <!-- z-20, flows naturally after 400vh -->
-                <div id="map-block" class="py-12 px-6 relative z-20 pt-10 overflow-visible bg-white" style="min-height: 100vh;">
-                    <!-- Карта-картинка (фон) -->
-                    <div class="absolute inset-0 z-0 opacity-100">
-                        <img src="./images/картамм.png" class="w-full h-full object-cover" alt="Map">
-                    </div>
+                <!-- z-20, flows naturally after 500vh -->
+                <div id="map-block" class="relative z-20 py-20 px-6 overflow-hidden bg-white" style="min-height: 100vh;">
+                    
+                    <!-- BACKGROUND TEXTURE (Same as Hero) -->
+                    <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Texture">
 
-                    <!-- Контент карты (z-10 чтобы быть над текстурой) -->
-                    <div class="w-full aspect-square bg-blue-50 rounded-3xl overflow-hidden relative mb-6 shadow-inner border border-blue-100 z-10">
-                        <div class="absolute inset-0 opacity-30" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/1200px-Openstreetmap_logo.svg.png'); background-size: cover;"></div>
-                        <div class="absolute top-1/2 left-1/2 w-32 h-1 bg-red-500 -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full"></div>
-                        <div class="absolute top-[30%] left-[30%] text-4xl animate-bounce">📍</div>
-                        <div class="absolute bottom-[30%] right-[30%] text-4xl">🏁</div>
+                    <!-- CONTENT: MAP POLAROID -->
+                    <div class="relative z-10 flex flex-col items-center">
+                        
+                        <!-- POLAROID FRAME -->
+                        <div class="bg-white p-4 pb-12 shadow-2xl rotate-2 transform hover:rotate-0 transition-transform duration-500 w-full max-w-sm">
+                            <div class="aspect-square w-full bg-slate-100 overflow-hidden relative shadow-inner border border-slate-200">
+                                <img src="./images/картамм.png" class="w-full h-full object-cover" alt="Маршрут">
+                            </div>
+                            <div class="mt-4 text-center font-hand text-2xl text-slate-800 font-bold">
+                                Поездка в неизвестность...
+                            </div>
+                        </div>
+
+                        <!-- TEXT BELOW -->
+                        <div class="mt-12 text-center max-w-md">
+                            <p class="text-lg font-bold text-slate-800 leading-relaxed bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-sm border border-white/50">
+                                Мы думали, что не поместимся.<br>
+                                Кайли думала, что мы строим ей форт.<br>
+                                <span class="text-sm text-slate-500 font-normal block mt-2">(Спойлер: форт получился отличный)</span>
+                            </p>
+                        </div>
+
                     </div>
-                    <p class="text-xl font-bold text-slate-800">Поездка в неизвестность.</p>
-                    <p class="text-slate-500 mt-2">Мы думали, что не поместимся. Кайли думала, что мы строим ей форт.</p>
                 </div>
 
                 <!-- 3. ELEVATOR -->
@@ -390,7 +403,7 @@
                 <div class="p-6 pt-10 fade-enter">
                     <div class="flex items-center justify-between mb-6">
                         <div>
-                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.57 (VISIBLE OVERLAP)</h1>
+                            <h1 class="text-2xl font-extrabold text-slate-900">MosDate v5.58 (CLEAN MAP BLOCK)</h1>
                             <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Семейный архив</p>
                         </div>
                         <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200">👤</div>
