@@ -21,10 +21,17 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            overflow-x: hidden; /* STRICTLY NO HORIZONTAL SCROLL */
             background-color: #f8fafc;
             font-family: 'Manrope', sans-serif;
             color: #1e293b;
+        }
+        
+        /* Additional safeguard for container */
+        #app-container {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
         }
         
         /* Global texture */
@@ -117,7 +124,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.10 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.11 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -166,7 +173,10 @@
                         <!-- 3. RIGHT BOX (Layer 2, z-20) - LOWER Z -->
                         <img id="hero-box-right" src="./images/box_right.png" class="absolute right-0 bottom-10 w-[40%] z-20 object-contain will-change-transform translate-x-[150%]" alt="Box Right">
 
-                        <!-- 2. BOTTOM BOXES (Layer 3, z-30) - HIGHER Z -->
+                        <!-- 4. WE (Layer 3, z-25) - LEFT -->
+                        <img id="hero-we" src="./images/we.png" class="absolute left-0 bottom-0 w-[85%] z-25 object-contain will-change-transform -translate-x-full" style="transform: translateX(-100%);" alt="We">
+
+                        <!-- 2. BOTTOM BOXES (Layer 4, z-30) - HIGHER Z -->
                         <!-- translate-y-full to hide initially -->
                         <div id="hero-boxes-bottom" class="absolute bottom-0 left-0 w-full flex justify-center z-30 will-change-transform translate-y-full pointer-events-none">
                             <img src="./images/boxes_bottom.png" class="w-[110vw] max-w-none h-auto object-contain" alt="Boxes Bottom">
@@ -199,6 +209,7 @@
             const title = document.getElementById('hero-title');
             const boxesBottom = document.getElementById('hero-boxes-bottom');
             const boxRight = document.getElementById('hero-box-right');
+            const weLayer = document.getElementById('hero-we');
             const viewer = document.getElementById('story-viewer');
 
             // Helper for interpolation
@@ -242,6 +253,12 @@
                 if (boxRight) {
                     const boxX = getVal(progress, 0.4, 0.3, 150, 0);
                     boxRight.style.transform = `translateX(${boxX}%)`;
+                }
+
+                // 4. WE: Slide In From Left (0.5 -> 0.8)
+                if (weLayer) {
+                    const weX = getVal(progress, 0.5, 0.3, -100, -5); // -5% overlap
+                    weLayer.style.transform = `translateX(${weX}%)`;
                 }
             };
 
