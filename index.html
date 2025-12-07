@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.48 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.49 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -235,10 +235,11 @@
                     
                     <!-- SVG ROUTE LINE -->
                     <svg class="absolute inset-0 w-full h-full pointer-events-none z-12" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <!-- Route from Left-Center to Top-Right Pin Location (75, 15) -->
-                        <path id="map-route-path" d="M 0,60 C 20,60 30,80 50,50 S 75,15 75,15" 
-                              fill="none" stroke="#dc2626" stroke-width="0.8" stroke-dasharray="2 2" stroke-linecap="round" 
-                              style="stroke-dasharray: 200; stroke-dashoffset: 200; opacity: 0.6;" />
+                        <!-- Route: Blue, Jagged, Faint -->
+                        <!-- Path: Zig-zag from Left (-5,55) to Pin (75,15) -->
+                        <path id="map-route-path" d="M -5,55 L 10,60 L 25,45 L 35,55 L 55,35 L 65,25 L 75,15" 
+                              fill="none" stroke="#60a5fa" stroke-width="1.0" stroke-dasharray="3 3" stroke-linecap="round" 
+                              style="stroke-dasharray: 200; stroke-dashoffset: 200; opacity: 0.5;" />
                     </svg>
 
                     <!-- 3. Content (Polaroid + Pin) -->
