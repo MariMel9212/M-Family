@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.57 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.58 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -266,8 +266,8 @@
                         <!-- POLAROID 2 (Right Side) - Added v6.52 -->
                         <div id="map-polaroid-2" class="absolute top-[15%] right-[5%] z-25 bg-white p-3 pb-8 shadow-2xl rotate-[6deg] max-w-[240px] w-full transform transition-all duration-1000 ease-out opacity-0 scale-50 translate-y-20">
                              <!-- Pin for 2nd photo (Big Red Pin, Mirrored) -->
-                             <!-- Added ID for animation v6.57 -->
-                            <div id="map-pin-polaroid-2" class="absolute -top-10 left-1/2 -translate-x-1/2 w-24 z-30 drop-shadow-md" style="opacity: 0; transform: scaleX(-1) scale(2) translateY(-50px);">
+                             <!-- Lowered to -top-3 (was -top-10) to overlap photo -->
+                            <div id="map-pin-polaroid-2" class="absolute -top-3 left-1/2 -translate-x-1/2 w-24 z-30 drop-shadow-md" style="opacity: 0; transform: scaleX(-1) scale(2) translateY(-50px);">
                                 <img src="./images/pin_red.png" class="w-full h-auto" alt="Pin">
                             </div>
                             
