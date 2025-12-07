@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.49 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.50 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -228,19 +228,12 @@
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0" alt="Texture">
                     
                     <!-- 2. Map Overlay (Printed Effect) -->
-                    <!-- Opacity 10% (Watermark style) -->
+                    <!-- Opacity reduced to 5% (Very faint) -->
                     <!-- Added ID for Zoom Animation -->
                     <!-- Start at scale-90, animate to 110 -->
-                    <img id="map-bg" src="./images/map_full.png" class="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-multiply z-10 transition-transform duration-[10s] ease-out scale-90" alt="Map Background">
+                    <img id="map-bg" src="./images/map_full.png" class="absolute inset-0 w-full h-full object-cover opacity-5 mix-blend-multiply z-10 transition-transform duration-[10s] ease-out scale-90" alt="Map Background">
                     
-                    <!-- SVG ROUTE LINE -->
-                    <svg class="absolute inset-0 w-full h-full pointer-events-none z-12" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <!-- Route: Blue, Jagged, Faint -->
-                        <!-- Path: Zig-zag from Left (-5,55) to Pin (75,15) -->
-                        <path id="map-route-path" d="M -5,55 L 10,60 L 25,45 L 35,55 L 55,35 L 65,25 L 75,15" 
-                              fill="none" stroke="#60a5fa" stroke-width="1.0" stroke-dasharray="3 3" stroke-linecap="round" 
-                              style="stroke-dasharray: 200; stroke-dashoffset: 200; opacity: 0.5;" />
-                    </svg>
+                    <!-- SVG ROUTE REMOVED v6.50 -->
 
                     <!-- 3. Content (Polaroid + Pin) -->
                     <!-- Positioned towards bottom-left -->
@@ -248,8 +241,8 @@
                         
                         <!-- SMALL PIN ON MAP (Top Right) -->
                         <!-- Scroll-driven animation via JS -->
-                        <!-- Increased size to w-24, raised to top-[15%], right-[25%] -->
-                        <div id="map-pin-small" class="absolute top-[15%] right-[25%] w-24 z-15 will-change-transform" style="transform: translateY(-500px) scale(3); opacity: 0;">
+                        <!-- Increased size to w-24, raised to top-[15%], right-[10%] -->
+                        <div id="map-pin-small" class="absolute top-[15%] right-[10%] w-24 z-15 will-change-transform" style="transform: translateY(-500px) scale(3); opacity: 0;">
                              <img src="./images/pin_red_2.png" class="w-full h-auto drop-shadow-xl" alt="Location Pin">
                         </div>
 
@@ -293,7 +286,6 @@
             const mapBg = document.getElementById('map-bg');
             const mapPinSmall = document.getElementById('map-pin-small');
             const mapPolaroid = document.getElementById('map-polaroid');
-            const mapRoutePath = document.getElementById('map-route-path'); // New v6.48
             const mapPinPolaroid = document.getElementById('map-pin-polaroid'); // New v6.48
             
             const viewer = document.getElementById('story-viewer');
@@ -418,17 +410,10 @@
                     // Normalize progress over 1.2 viewport heights for better pacing
                     const mapProgress = Math.min(1, distIntoMap / (viewportHeight * 1.2));
                     
-                    // 1. ROUTE DRAW (0 -> 0.3)
-                    if (mapRoutePath) {
-                        const pRoute = Math.min(1, Math.max(0, mapProgress / 0.3));
-                        // stroke-dashoffset: 200 -> 0
-                        mapRoutePath.style.strokeDashoffset = 200 - (pRoute * 200);
-                    }
-
-                    // 2. METEOR PIN DROP (0.25 -> 0.45) - Start slightly before route finishes
+                    // 1. METEOR PIN DROP (0.1 -> 0.4)
                     if (mapPinSmall) {
-                        const start = 0.25; 
-                        const dur = 0.2;
+                        const start = 0.1; 
+                        const dur = 0.3;
                         let pPin = 0;
                         if (mapProgress > start) pPin = Math.min(1, (mapProgress - start) / dur);
                         
@@ -440,10 +425,10 @@
                         mapPinSmall.style.opacity = pinOpacity;
                     }
 
-                    // 3. POLAROID POP (0.45 -> 0.65)
+                    // 2. POLAROID POP (0.4 -> 0.7)
                     if (mapPolaroid) {
-                        const start = 0.45;
-                        const dur = 0.2;
+                        const start = 0.4;
+                        const dur = 0.3;
                         let pPol = 0;
                         if (mapProgress > start) pPol = Math.min(1, (mapProgress - start) / dur);
                         
@@ -455,9 +440,9 @@
                         mapPolaroid.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
                     }
 
-                    // 4. POLAROID PIN DROP (0.65 -> 0.85)
+                    // 3. POLAROID PIN DROP (0.7 -> 0.9)
                     if (mapPinPolaroid) {
-                        const start = 0.65;
+                        const start = 0.7;
                         const dur = 0.2;
                         let pPP = 0;
                         if (mapProgress > start) pPP = Math.min(1, (mapProgress - start) / dur);
@@ -471,7 +456,7 @@
                         mapPinPolaroid.style.transform = `translateX(50%) scale(${ppScale}) translateY(${ppY}px)`;
                     }
 
-                    // 5. MAP ZOOM (Continuous)
+                    // 4. MAP ZOOM (Continuous)
                     if (mapBg) {
                         const zoomScale = 0.9 + (mapProgress * 0.2); 
                         mapBg.style.transform = `scale(${zoomScale})`;
