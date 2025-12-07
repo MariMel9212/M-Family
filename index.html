@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.59 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.60 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -281,6 +281,17 @@
                         </div>
                         
                     </div>
+                </div>
+
+                <!-- BLOCK 3: ELEVATOR (v6.60) -->
+                <div id="elevator-block" class="relative w-full min-h-[100vh] flex flex-col items-center justify-center overflow-hidden z-10">
+                    <!-- BACKGROUND TEXTURE -->
+                    <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0" alt="Texture">
+                    
+                    <!-- Content Placeholder -->
+                    <h2 class="relative z-10 text-4xl font-bold text-slate-800 font-hand text-center opacity-50">
+                        Лифт<br>(Скоро)
+                    </h2>
                 </div>
             `;
 
