@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.70 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.02 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -283,7 +283,7 @@
                     </div>
                 </div>
 
-                <!-- BLOCK 3: ELEVATOR (v7.0) -->
+                <!-- BLOCK 3: ELEVATOR (v7.02) -->
                 <!-- High wrapper for scrollytelling -->
                 <div id="elevator-wrapper" class="relative w-full h-[400vh] z-20">
                     
@@ -293,23 +293,26 @@
                         <!-- 1. BACKGROUND (Under the doors) -->
                         <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0" alt="Texture">
                         
-                        <!-- 2. TRANSITION TEXT (Existing v6.70) -->
-                        <!-- Positioned at top junction -->
-                        <div id="elevator-sticker" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-[320px] opacity-0 pointer-events-none">
-                            <p id="elevator-text" class="text-left font-hand text-slate-800 leading-snug font-bold text-xl">
+                        <!-- 2. TRANSITION TEXT (v7.02) -->
+                        <!-- Updated style: Font Black, Larger, No 'font-hand' class -->
+                        <div id="elevator-sticker" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-[340px] opacity-0 pointer-events-none">
+                            <p id="elevator-text" class="text-left text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
                                 Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
                             </p>
                         </div>
 
                         <!-- 3. ELEVATOR DOORS (z-30) -->
+                        <!-- Improved "Steel" look: Zinc-400/200 gradient, inset shadow -->
                         <!-- LEFT DOOR -->
-                        <div id="door-left" class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 z-30 transform -translate-x-full border-r-4 border-zinc-400 shadow-2xl will-change-transform">
-                            <div class="absolute top-1/2 right-4 w-2 h-24 bg-zinc-500 rounded-full shadow-inner opacity-50"></div>
+                        <div id="door-left" class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-400 z-30 transform -translate-x-full border-r border-zinc-500 shadow-2xl will-change-transform flex items-center justify-end">
+                            <!-- Inner seam shadow -->
+                            <div class="w-4 h-full bg-gradient-to-r from-transparent to-black/10"></div>
                         </div>
                         
                         <!-- RIGHT DOOR -->
-                        <div id="door-right" class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zinc-300 via-zinc-100 to-zinc-400 z-30 transform translate-x-full border-l-4 border-zinc-400 shadow-2xl will-change-transform">
-                            <div class="absolute top-1/2 left-4 w-2 h-24 bg-zinc-500 rounded-full shadow-inner opacity-50"></div>
+                        <div id="door-right" class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zinc-400 via-zinc-200 to-zinc-400 z-30 transform translate-x-full border-l border-zinc-500 shadow-2xl will-change-transform flex items-center justify-start">
+                            <!-- Inner seam shadow -->
+                            <div class="w-4 h-full bg-gradient-to-l from-transparent to-black/10"></div>
                         </div>
 
                         <!-- 4. FLOOR PANEL (z-40) -->
@@ -605,11 +608,11 @@
                             
                             elevatorPanel.style.opacity = panelOpacity;
                             
-                            // Count Floors: 1 -> 15
+                            // Count Floors: 1 -> 9
                             // Active during 0.2 -> 0.8
                             if (elevP > 0.2) {
                                 const rideP = Math.min(1, (elevP - 0.2) / 0.6);
-                                const currentFloor = 1 + Math.floor(rideP * 14); // 1 to 15
+                                const currentFloor = 1 + Math.floor(rideP * 8); // 1 to 9
                                 floorCount.innerText = currentFloor.toString().padStart(2, '0');
                             }
                         }
