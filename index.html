@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.51 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.52 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -263,6 +263,22 @@
                             </h2>
                         </div>
                         
+                        <!-- POLAROID 2 (Right Side) - Added v6.52 -->
+                        <div id="map-polaroid-2" class="absolute top-[25%] right-[5%] z-25 bg-white p-3 pb-8 shadow-2xl rotate-[6deg] max-w-[240px] w-full transform transition-all duration-1000 ease-out opacity-0 scale-50 translate-y-20">
+                             <!-- Pin for 2nd photo (Small Red Pin recycled) -->
+                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-16 z-30 drop-shadow-md">
+                                <img src="./images/pin_red_2.png" class="w-full h-auto" alt="Pin">
+                            </div>
+                            
+                            <div class="aspect-square w-full overflow-hidden bg-slate-100 mb-3">
+                                <!-- Using URL encoded filename for spaces -->
+                                <img src="./images/Kylie%20in%20car.jpg" class="w-full h-full object-cover" alt="Kylie 2">
+                            </div>
+                             <h2 class="text-lg font-bold text-slate-800 font-hand text-center text-slate-600 leading-tight">
+                                Погнали!
+                            </h2>
+                        </div>
+                        
                     </div>
                 </div>
             `;
@@ -280,7 +296,8 @@
             // Map Elements (Added in v6.47)
             const mapBg = document.getElementById('map-bg');
             const mapPolaroid = document.getElementById('map-polaroid');
-            const mapPinPolaroid = document.getElementById('map-pin-polaroid'); // New v6.48
+            const mapPolaroid2 = document.getElementById('map-polaroid-2'); // New v6.52
+            const mapPinPolaroid = document.getElementById('map-pin-polaroid'); 
             
             const viewer = document.getElementById('story-viewer');
 
@@ -417,6 +434,21 @@
                         
                         mapPolaroid.style.opacity = pPol;
                         mapPolaroid.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
+                    }
+
+                    // 1.5 POLAROID 2 POP (0.4 -> 0.7)
+                    if (mapPolaroid2) {
+                        const start = 0.4;
+                        const dur = 0.3;
+                        let pPol2 = 0;
+                        if (mapProgress > start) pPol2 = Math.min(1, (mapProgress - start) / dur);
+                        
+                        const polScale = 0.5 + (pPol2 * 0.5);
+                        const polY = (1 - pPol2) * 100;
+                        const polRot = 6;
+                        
+                        mapPolaroid2.style.opacity = pPol2;
+                        mapPolaroid2.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
                     }
 
                     // 2. POLAROID PIN DROP (0.5 -> 0.7)
