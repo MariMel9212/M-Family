@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.62 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.63 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -288,11 +288,12 @@
                     <!-- BACKGROUND TEXTURE -->
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0" alt="Texture">
                     
-                    <!-- TRANSITION STICKER (v6.62) -->
+                    <!-- TRANSITION TEXT (v6.63) -->
                     <!-- Positioned ON THE JUNCTION (top-0, overlapping up) -->
-                    <div id="elevator-sticker" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-white p-8 shadow-2xl rotate-[-2deg] max-w-[90%] w-[380px] opacity-0">
-                        <p id="elevator-text" class="text-2xl font-bold font-hand text-slate-800 leading-relaxed text-center">
-                            Мы и до этого ездили в Москву, но лишь по делам.<br><br>В этот же раз мы ехали в свой новый дом.
+                    <!-- No background, just text -->
+                    <div id="elevator-sticker" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[90%] max-w-[400px] opacity-0 text-center">
+                        <p id="elevator-text" class="text-3xl font-extrabold font-hand text-slate-800 leading-tight drop-shadow-sm">
+                            Мы и до этого ездили в Москву, но лишь по делам.<br><br>В этот же раз мы ехали в свой новый <span class="text-red-500 text-4xl uppercase">ДОМ</span>.
                         </p>
                     </div>
 
@@ -542,9 +543,10 @@
                             if (elevProgress > start) pStick = Math.min(1, (elevProgress - start) / dur);
                             
                             elevatorSticker.style.opacity = pStick;
-                            // Scale 0.8 -> 1.0, preserving center alignment and rotation
+                            // Scale 0.8 -> 1.0, preserving center alignment
+                            // Removed rotation (v6.63)
                             const scale = 0.8 + (pStick * 0.2); 
-                            elevatorSticker.style.transform = `translate(-50%, -50%) rotate(-2deg) scale(${scale})`;
+                            elevatorSticker.style.transform = `translate(-50%, -50%) scale(${scale})`;
                         }
 
                         // 2. TEXT REVEAL (0.3 -> 0.8)
