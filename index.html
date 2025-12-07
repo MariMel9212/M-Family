@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.63 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.64 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -284,16 +284,17 @@
                 </div>
 
                 <!-- BLOCK 3: ELEVATOR (v6.60) -->
-                <div id="elevator-block" class="relative w-full min-h-[100vh] flex flex-col items-center justify-start overflow-hidden z-10 pt-20">
+                <!-- Changed overflow-hidden to overflow-visible to allow sticker to overlap top (v6.64) -->
+                <div id="elevator-block" class="relative w-full min-h-[100vh] flex flex-col items-center justify-start overflow-visible z-10 pt-20">
                     <!-- BACKGROUND TEXTURE -->
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0" alt="Texture">
                     
                     <!-- TRANSITION TEXT (v6.63) -->
                     <!-- Positioned ON THE JUNCTION (top-0, overlapping up) -->
                     <!-- No background, just text -->
-                    <div id="elevator-sticker" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[90%] max-w-[400px] opacity-0 text-center">
-                        <p id="elevator-text" class="text-3xl font-extrabold font-hand text-slate-800 leading-tight drop-shadow-sm">
-                            Мы и до этого ездили в Москву, но лишь по делам.<br><br>В этот же раз мы ехали в свой новый <span class="text-red-500 text-4xl uppercase">ДОМ</span>.
+                    <div id="elevator-sticker" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[90%] max-w-[500px] opacity-0 text-center pointer-events-none">
+                        <p id="elevator-text" class="text-3xl font-black text-slate-900 leading-tight drop-shadow-md" style="font-family: 'Shantell Sans', sans-serif; font-weight: 900;">
+                            Мы и до этого ездили в Москву, но лишь по делам.<br><br>В этот же раз мы ехали в свой новый <span class="text-red-600 text-4xl uppercase">ДОМ</span>.
                         </p>
                     </div>
 
@@ -456,24 +457,9 @@
                     // Normalize progress over 1.2 viewport heights for better pacing
                     const mapProgress = Math.min(1, distIntoMap / (viewportHeight * 1.2));
                     
-                    // 1. POLAROID POP (0.2 -> 0.5)
-                    if (mapPolaroid) {
-                        const start = 0.2;
-                        const dur = 0.3;
-                        let pPol = 0;
-                        if (mapProgress > start) pPol = Math.min(1, (mapProgress - start) / dur);
-                        
-                        const polScale = 0.5 + (pPol * 0.5);
-                        const polY = (1 - pPol) * 100;
-                        const polRot = -3;
-                        
-                        mapPolaroid.style.opacity = pPol;
-                        mapPolaroid.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
-                    }
-
-                    // 1.5 POLAROID 2 POP (0.4 -> 0.7)
+                    // 1. POLAROID 2 POP (Top Right) - FIRST (0.2 -> 0.5)
                     if (mapPolaroid2) {
-                        const start = 0.4;
+                        const start = 0.2;
                         const dur = 0.3;
                         let pPol2 = 0;
                         if (mapProgress > start) pPol2 = Math.min(1, (mapProgress - start) / dur);
@@ -486,36 +472,47 @@
                         mapPolaroid2.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
                     }
 
-                    // 2. POLAROID PIN DROP (0.5 -> 0.7)
-                    if (mapPinPolaroid) {
-                        const start = 0.5;
-                        const dur = 0.2;
-                        let pPP = 0;
-                        if (mapProgress > start) pPP = Math.min(1, (mapProgress - start) / dur);
-                        
-                        // Drop effect
-                        const ppScale = 2 - pPP; // 2 -> 1
-                        const ppY = (1 - pPP) * -50; // -50 -> 0
-                        
-                        mapPinPolaroid.style.opacity = pPP;
-                        // MUST include translateX(50%) because we overwrite the class transform
-                        mapPinPolaroid.style.transform = `translateX(50%) scale(${ppScale}) translateY(${ppY}px)`;
-                    }
-
-                    // 2.5 POLAROID 2 PIN DROP (0.7 -> 0.9)
+                    // 2. POLAROID 2 PIN DROP (0.4 -> 0.6)
                     if (mapPinPolaroid2) {
-                        const start = 0.7;
+                        const start = 0.4;
                         const dur = 0.2;
                         let pPP2 = 0;
                         if (mapProgress > start) pPP2 = Math.min(1, (mapProgress - start) / dur);
                         
-                        // Drop effect
                         const ppScale = 2 - pPP2; 
                         const ppY = (1 - pPP2) * -50; 
                         
                         mapPinPolaroid2.style.opacity = pPP2;
-                        // Combine transforms: scaleX(-1) + translateX(-50%)
                         mapPinPolaroid2.style.transform = `translateX(-50%) scaleX(-1) scale(${ppScale}) translateY(${ppY}px)`;
+                    }
+
+                    // 3. POLAROID 1 POP (Bottom Left) - SECOND (0.5 -> 0.8)
+                    if (mapPolaroid) {
+                        const start = 0.5;
+                        const dur = 0.3;
+                        let pPol = 0;
+                        if (mapProgress > start) pPol = Math.min(1, (mapProgress - start) / dur);
+                        
+                        const polScale = 0.5 + (pPol * 0.5);
+                        const polY = (1 - pPol) * 100;
+                        const polRot = -3;
+                        
+                        mapPolaroid.style.opacity = pPol;
+                        mapPolaroid.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
+                    }
+
+                    // 4. POLAROID 1 PIN DROP (0.7 -> 0.9)
+                    if (mapPinPolaroid) {
+                        const start = 0.7;
+                        const dur = 0.2;
+                        let pPP = 0;
+                        if (mapProgress > start) pPP = Math.min(1, (mapProgress - start) / dur);
+                        
+                        const ppScale = 2 - pPP; 
+                        const ppY = (1 - pPP) * -50; 
+                        
+                        mapPinPolaroid.style.opacity = pPP;
+                        mapPinPolaroid.style.transform = `translateX(50%) scale(${ppScale}) translateY(${ppY}px)`;
                     }
 
                     // 3. MAP ZOOM (Continuous)
