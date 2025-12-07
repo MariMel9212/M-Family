@@ -365,19 +365,6 @@
             }
             const stickerSpans = stickerText ? stickerText.querySelectorAll('span') : [];
 
-            // PREPARE TEXT SPLITTING (Block 3 - Elevator) - v6.61
-            const elevatorText = document.getElementById('elevator-text');
-            if (elevatorText) {
-                const text = elevatorText.innerText;
-                elevatorText.innerHTML = text.split('').map(char => {
-                    if (char === '\n') return '<br>'; 
-                    return `<span class="opacity-0 transition-opacity duration-75">${char}</span>`;
-                }).join('');
-            }
-            const elevatorSpans = elevatorText ? elevatorText.querySelectorAll('span') : [];
-            const elevatorSticker = document.getElementById('elevator-sticker');
-            const elevatorBlock = document.getElementById('elevator-block');
-
             // Helper for interpolation
             const getVal = (progress, startAt, duration, startVal, endVal) => {
                 if (progress <= startAt) return startVal;
