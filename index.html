@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.44 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.45 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -238,10 +238,10 @@
                     <div class="relative z-20 w-full h-full flex flex-col items-start justify-end min-h-[100vh] p-6 pb-32 pl-10">
                         
                         <!-- SMALL PIN ON MAP (Top Right) -->
-                        <!-- Using pin_red_2.png (The second uploaded pin) -->
-                        <!-- Increased size to w-16 (doubled) -->
-                        <div id="map-pin-small" class="absolute top-[30%] right-[20%] w-16 z-15 opacity-0 translate-y-[-20px] transition-all duration-700 ease-out">
-                             <img src="./images/pin_red_2.png" class="w-full h-auto drop-shadow-sm" alt="Location Pin">
+                        <!-- Scroll-driven animation via JS -->
+                        <!-- Increased size to w-24, raised to top-[15%], right-[25%] -->
+                        <div id="map-pin-small" class="absolute top-[15%] right-[25%] w-24 z-15 will-change-transform" style="transform: translateY(-500px) scale(3); opacity: 0;">
+                             <img src="./images/pin_red_2.png" class="w-full h-auto drop-shadow-xl" alt="Location Pin">
                         </div>
 
                         <!-- POLAROID CONTAINER -->
@@ -301,19 +301,23 @@
             };
 
             const onScroll = () => {
-                if (!wrapper || !viewer || !title) return;
+                if (!wrapper || !viewer) return;
                 
                 const scrollY = viewer.scrollTop; 
                 const viewportHeight = window.innerHeight;
-                const scrollableDistance = wrapper.offsetHeight - viewportHeight; 
+                
+                // --- BLOCK 1: HERO ---
+                const heroHeight = wrapper.offsetHeight;
+                const heroScrollable = heroHeight - viewportHeight;
                 
                 let progress = 0;
-                if (scrollableDistance > 0) {
-                    progress = Math.max(0, Math.min(1, scrollY / scrollableDistance));
+                if (heroScrollable > 0) {
+                    progress = Math.max(0, Math.min(1, scrollY / heroScrollable));
                 }
 
                 // 1. TITLE ANIMATION: Smoke / Blur Up (0 -> 0.5)
-                const y = -progress * 200; 
+                if (title) {
+                    const y = -progress * 200; 
                 const scale = 1 + progress * 0.5; 
                 const blur = progress * 20; 
                 const opacity = Math.max(0, 1 - progress * 2.0); 
@@ -367,36 +371,79 @@
                     kylieLayer.style.transform = `translate(-50%, ${kylieY}%) scaleX(-1)`;
                 }
                 
-                // STICKER TEXT: Smooth Letter Reveal (0.8 -> 1.0) - STARTS AFTER KYLIE
+                // STICKER TEXT: Smooth Letter Reveal (0.8 -> 1.0)
                 if (stickerSpans.length > 0) {
-                     // Total duration for text reveal
                      const start = 0.8;
-                     const end = 0.98; // Finish just before scroll ends
+                     const end = 0.98;
                      const totalDur = end - start;
-                     
-                     // We map global progress to local text progress (0 -> 1)
                      let localP = 0;
                      if (progress > start) localP = Math.min(1, (progress - start) / totalDur);
                      
-                     // Reveal letters based on localP
-                     // If localP is 0.5, half letters should be visible
                      const totalChars = stickerSpans.length;
-                     const visibleCount = Math.floor(localP * totalChars);
-                     
                      stickerSpans.forEach((span, i) => {
-                         // Simple hard cutoff for now, or soft fade?
-                         // Let's do a soft threshold
-                         const charProgress = (localP * totalChars) - i; // How far past this char index are we?
-                         // if charProgress > 1 -> fully visible
-                         // if charProgress < 0 -> hidden
-                         // if 0..1 -> fading in
-                         
+                         const charProgress = (localP * totalChars) - i;
                          let opacity = 0;
                          if (charProgress >= 1) opacity = 1;
                          else if (charProgress > 0) opacity = charProgress;
-                         
                          span.style.opacity = opacity;
                      });
+                }
+
+                // --- BLOCK 2: MAP ANIMATION (Scroll Driven) ---
+                const mapOffset = heroHeight; 
+                const distIntoMap = scrollY + viewportHeight - mapOffset;
+                
+                if (distIntoMap > 0) {
+                    // Map Progress: 0 when top of map hits bottom of screen
+                    // Full animation over 80% of viewport
+                    const mapProgress = Math.min(1, distIntoMap / (viewportHeight * 0.8));
+                    
+                    // 1. METEOR PIN DROP (0 -> 0.6)
+                    if (mapPinSmall) {
+                        // Start: Y = -500px, Scale = 3
+                        // End: Y = 0, Scale = 1
+                        
+                        // Normalized progress for pin (0 to 1 within mapProgress 0..0.6)
+                        let pPin = 0;
+                        if (mapProgress < 0.6) pPin = mapProgress / 0.6;
+                        else pPin = 1;
+
+                        const easePin = pPin * pPin; // ease-in (accelerate) for drop? Or ease-out for impact?
+                        // Let's use simple linear mapping for direct control, user asked for scroll-tied.
+                        // But gravity implies acceleration.
+                        
+                        const pinY = (1 - pPin) * -500; 
+                        const pinScale = 1 + (1 - pPin) * 2; 
+                        const pinOpacity = pPin; // Fade in as it drops
+                        
+                        mapPinSmall.style.transform = `translateY(${pinY}px) scale(${pinScale})`;
+                        mapPinSmall.style.opacity = pinOpacity;
+                    }
+
+                    // 2. POLAROID POP (0.5 -> 1.0)
+                    if (mapPolaroid) {
+                        let pPol = 0;
+                        if (mapProgress > 0.5) {
+                            pPol = (mapProgress - 0.5) / 0.5;
+                        }
+                        
+                        // Pop effect: Scale 0.5 -> 1.1 -> 1.0? No, just 0.5 -> 1
+                        const polScale = 0.5 + (pPol * 0.5);
+                        const polY = (1 - pPol) * 100; // Slide up a bit
+                        const polRot = -3; // Fixed rotation
+                        
+                        mapPolaroid.style.opacity = pPol;
+                        mapPolaroid.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
+                    }
+
+                    // 3. MAP ZOOM (Continuous)
+                    if (mapBg) {
+                        // Zoom based on distance scrolled into map
+                        // 0.9 -> 1.1 over 1.5 viewports
+                        const pMap = Math.min(1, distIntoMap / (viewportHeight * 1.5));
+                        const zoomScale = 0.9 + (pMap * 0.2); 
+                        mapBg.style.transform = `scale(${zoomScale})`;
+                    }
                 }
             };
 
@@ -408,44 +455,6 @@
             
             // Initial call to set state
             onScroll();
-
-            // --- INTERSECTION OBSERVER FOR MAP BLOCK ---
-            const mapBlock = document.getElementById('map-block');
-            const mapBg = document.getElementById('map-bg');
-            const mapPinSmall = document.getElementById('map-pin-small');
-            const mapPolaroid = document.getElementById('map-polaroid');
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting && entry.intersectionRatio > 0.3) {
-                        // Trigger Animations
-                        
-                        // 1. Zoom Map (scale 90 -> 110)
-                        if (mapBg) mapBg.style.transform = 'scale(1.1)';
-                        
-                        // 2. Drop Small Pin (Delay 200ms)
-                        setTimeout(() => {
-                            if (mapPinSmall) {
-                                mapPinSmall.style.opacity = '1';
-                                mapPinSmall.style.transform = 'translateY(0)';
-                            }
-                        }, 200);
-
-                        // 3. Pop Polaroid (Delay 800ms)
-                        setTimeout(() => {
-                            if (mapPolaroid) {
-                                mapPolaroid.style.opacity = '1';
-                                mapPolaroid.style.transform = 'scale(1) rotate(-3deg) translateY(0)';
-                            }
-                        }, 800);
-                    } else {
-                        // Optional: Reset if scrolled away up?
-                        // Better to keep it played once.
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            if (mapBlock) observer.observe(mapBlock);
         }
 
         function closeStory() {
