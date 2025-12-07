@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.50 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v6.51 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -239,21 +239,16 @@
                     <!-- Positioned towards bottom-left -->
                     <div class="relative z-20 w-full h-full flex flex-col items-start justify-end min-h-[100vh] p-6 pb-32 pl-10">
                         
-                        <!-- SMALL PIN ON MAP (Top Right) -->
-                        <!-- Scroll-driven animation via JS -->
-                        <!-- Increased size to w-24, raised to top-[15%], right-[10%] -->
-                        <div id="map-pin-small" class="absolute top-[15%] right-[10%] w-24 z-15 will-change-transform" style="transform: translateY(-500px) scale(3); opacity: 0;">
-                             <img src="./images/pin_red_2.png" class="w-full h-auto drop-shadow-xl" alt="Location Pin">
-                        </div>
+                        <!-- SMALL PIN REMOVED v6.51 -->
 
                         <!-- POLAROID CONTAINER -->
                         <!-- Initially hidden, scaled down -->
                         <div id="map-polaroid" class="relative bg-white p-3 pb-8 shadow-2xl rotate-[-3deg] max-w-[280px] w-full transform transition-all duration-1000 ease-out opacity-0 scale-50 translate-y-20">
                             
-                            <!-- PIN (Red Pin) - Now "White Pin" logic (User calls it white, file is pin_red.png) -->
-                            <!-- Increased size to w-32 -->
+                            <!-- PIN (Red Pin) - Now "White Pin" logic -->
+                            <!-- Reduced size to w-24 (v6.51) -->
                             <!-- Animated separately via JS (starts opacity 0, scaled up) -->
-                            <div id="map-pin-polaroid" class="absolute -top-10 right-1/2 translate-x-1/2 w-32 z-30 drop-shadow-md" style="opacity: 0; transform: scale(2) translateY(-50px);">
+                            <div id="map-pin-polaroid" class="absolute -top-10 right-1/2 translate-x-1/2 w-24 z-30 drop-shadow-md" style="opacity: 0; transform: scale(2) translateY(-50px);">
                                 <img src="./images/pin_red.png" class="w-full h-auto" alt="Pin">
                             </div>
                             
@@ -284,7 +279,6 @@
             
             // Map Elements (Added in v6.47)
             const mapBg = document.getElementById('map-bg');
-            const mapPinSmall = document.getElementById('map-pin-small');
             const mapPolaroid = document.getElementById('map-polaroid');
             const mapPinPolaroid = document.getElementById('map-pin-polaroid'); // New v6.48
             
@@ -410,24 +404,9 @@
                     // Normalize progress over 1.2 viewport heights for better pacing
                     const mapProgress = Math.min(1, distIntoMap / (viewportHeight * 1.2));
                     
-                    // 1. METEOR PIN DROP (0.1 -> 0.4)
-                    if (mapPinSmall) {
-                        const start = 0.1; 
-                        const dur = 0.3;
-                        let pPin = 0;
-                        if (mapProgress > start) pPin = Math.min(1, (mapProgress - start) / dur);
-                        
-                        const pinY = (1 - pPin) * -500; 
-                        const pinScale = 1 + (1 - pPin) * 2; 
-                        const pinOpacity = pPin;
-                        
-                        mapPinSmall.style.transform = `translateY(${pinY}px) scale(${pinScale})`;
-                        mapPinSmall.style.opacity = pinOpacity;
-                    }
-
-                    // 2. POLAROID POP (0.4 -> 0.7)
+                    // 1. POLAROID POP (0.2 -> 0.5)
                     if (mapPolaroid) {
-                        const start = 0.4;
+                        const start = 0.2;
                         const dur = 0.3;
                         let pPol = 0;
                         if (mapProgress > start) pPol = Math.min(1, (mapProgress - start) / dur);
@@ -440,9 +419,9 @@
                         mapPolaroid.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
                     }
 
-                    // 3. POLAROID PIN DROP (0.7 -> 0.9)
+                    // 2. POLAROID PIN DROP (0.5 -> 0.7)
                     if (mapPinPolaroid) {
-                        const start = 0.7;
+                        const start = 0.5;
                         const dur = 0.2;
                         let pPP = 0;
                         if (mapProgress > start) pPP = Math.min(1, (mapProgress - start) / dur);
@@ -456,7 +435,7 @@
                         mapPinPolaroid.style.transform = `translateX(50%) scale(${ppScale}) translateY(${ppY}px)`;
                     }
 
-                    // 4. MAP ZOOM (Continuous)
+                    // 3. MAP ZOOM (Continuous)
                     if (mapBg) {
                         const zoomScale = 0.9 + (mapProgress * 0.2); 
                         mapBg.style.transform = `scale(${zoomScale})`;
