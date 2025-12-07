@@ -283,25 +283,44 @@
                     </div>
                 </div>
 
-                <!-- BLOCK 3: ELEVATOR (v6.60) -->
-                <!-- Changed overflow-hidden to overflow-visible to allow sticker to overlap top (v6.64) -->
-                <div id="elevator-block" class="relative w-full min-h-[100vh] flex flex-col items-center justify-start overflow-visible z-10 pt-20">
-                    <!-- BACKGROUND TEXTURE -->
-                    <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0" alt="Texture">
+                <!-- BLOCK 3: ELEVATOR (v7.0) -->
+                <!-- High wrapper for scrollytelling -->
+                <div id="elevator-wrapper" class="relative w-full h-[400vh] z-20">
                     
-                    <!-- TRANSITION TEXT (v6.70) -->
-                    <!-- Positioned ON THE JUNCTION (top-0, overlapping up) -->
-                    <!-- MATCHING HERO FONT: Shantell Sans (not Amatic SC/font-hand) -->
-                    <div id="elevator-sticker" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-[320px] opacity-0 pointer-events-none">
-                        <p id="elevator-text" class="text-left text-slate-900 leading-snug font-extrabold text-2xl" style="font-family: 'Shantell Sans', cursive;">
-                            Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
-                        </p>
-                    </div>
+                    <!-- STICKY CONTAINER -->
+                    <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] overflow-hidden flex flex-col items-center justify-center">
+                        
+                        <!-- 1. BACKGROUND (Under the doors) -->
+                        <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0" alt="Texture">
+                        
+                        <!-- 2. TRANSITION TEXT (Existing v6.70) -->
+                        <!-- Positioned at top junction -->
+                        <div id="elevator-sticker" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-[320px] opacity-0 pointer-events-none">
+                            <p id="elevator-text" class="text-left font-hand text-slate-800 leading-snug font-bold text-xl">
+                                Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
+                            </p>
+                        </div>
 
-                    <!-- Content Placeholder -->
-                    <h2 class="relative z-10 text-4xl font-bold text-slate-800 font-hand text-center opacity-50 mt-40">
-                        Лифт<br>(Скоро)
-                    </h2>
+                        <!-- 3. ELEVATOR DOORS (z-30) -->
+                        <!-- LEFT DOOR -->
+                        <div id="door-left" class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 z-30 transform -translate-x-full border-r-4 border-zinc-400 shadow-2xl will-change-transform">
+                            <div class="absolute top-1/2 right-4 w-2 h-24 bg-zinc-500 rounded-full shadow-inner opacity-50"></div>
+                        </div>
+                        
+                        <!-- RIGHT DOOR -->
+                        <div id="door-right" class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zinc-300 via-zinc-100 to-zinc-400 z-30 transform translate-x-full border-l-4 border-zinc-400 shadow-2xl will-change-transform">
+                            <div class="absolute top-1/2 left-4 w-2 h-24 bg-zinc-500 rounded-full shadow-inner opacity-50"></div>
+                        </div>
+
+                        <!-- 4. FLOOR PANEL (z-40) -->
+                        <div id="elevator-panel" class="absolute top-[20%] left-1/2 -translate-x-1/2 z-40 bg-zinc-900 border-4 border-zinc-600 rounded-lg p-4 px-8 shadow-2xl opacity-0 transform scale-90 will-change-transform">
+                            <div class="flex items-center gap-4">
+                                <div class="text-green-500 text-4xl animate-pulse">▲</div>
+                                <div id="floor-count" class="font-mono text-6xl text-red-500 tracking-widest font-bold">01</div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             `;
 
@@ -322,6 +341,14 @@
             const mapPinPolaroid = document.getElementById('map-pin-polaroid'); 
             const mapPinPolaroid2 = document.getElementById('map-pin-polaroid-2'); // New v6.57
             
+            // Elevator Elements (v7.0)
+            const elevatorWrapper = document.getElementById('elevator-wrapper');
+            const elevatorSticker = document.getElementById('elevator-sticker');
+            const doorLeft = document.getElementById('door-left');
+            const doorRight = document.getElementById('door-right');
+            const elevatorPanel = document.getElementById('elevator-panel');
+            const floorCount = document.getElementById('floor-count');
+
             const viewer = document.getElementById('story-viewer');
 
             // PREPARE TEXT SPLITTING
@@ -522,45 +549,82 @@
                     }
                 }
 
-                // --- BLOCK 3: ELEVATOR TRANSITION (v6.61) ---
-                if (elevatorBlock) {
-                    const rect = elevatorBlock.getBoundingClientRect();
-                    // How much is visible from the top
-                    const visibleY = window.innerHeight - rect.top;
+                // --- BLOCK 3: ELEVATOR ANIMATION (v7.0) ---
+                if (elevatorWrapper) {
+                    // Calculate progress within the tall wrapper
+                    const wrapperTop = elevatorWrapper.offsetTop;
+                    const wrapperHeight = elevatorWrapper.offsetHeight;
+                    const scrollable = wrapperHeight - viewportHeight;
                     
-                    if (visibleY > 0) {
-                        // Animation runs over first 60% of viewport height
-                        const elevProgress = Math.min(1, visibleY / (window.innerHeight * 0.6));
-                        
-                        // 1. STICKER REVEAL (0 -> 0.3)
-                        if (elevatorSticker) {
-                            const start = 0;
-                            const dur = 0.3;
-                            let pStick = 0;
-                            if (elevProgress > start) pStick = Math.min(1, (elevProgress - start) / dur);
-                            
-                            elevatorSticker.style.opacity = pStick;
-                            // Scale 0.8 -> 1.0, preserving center alignment
-                            // Removed rotation (v6.63)
-                            const scale = 0.8 + (pStick * 0.2); 
-                            elevatorSticker.style.transform = `translate(-50%, -50%) scale(${scale})`;
-                        }
+                    // Transition Sticker Logic (Before elevator really starts)
+                    const distToElevator = scrollY + viewportHeight - wrapperTop;
+                    if (distToElevator > 0 && scrollY < wrapperTop) {
+                         // 0 -> 1 as we approach the sticky point
+                         const transitionP = Math.min(1, distToElevator / (viewportHeight * 0.5));
+                         
+                         if (elevatorSticker) {
+                             // Fade in sticker
+                             elevatorSticker.style.opacity = transitionP;
+                             const scale = 0.8 + (transitionP * 0.2);
+                             elevatorSticker.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                         }
+                    } else if (scrollY >= wrapperTop) {
+                        // Sticker fades out quickly as doors close
+                        if (elevatorSticker) elevatorSticker.style.opacity = Math.max(0, 1 - (scrollY - wrapperTop) / 200);
+                    }
 
-                        // 2. TEXT REVEAL (0.3 -> 0.8)
-                        if (elevatorSpans.length > 0) {
-                            const start = 0.3;
-                            const dur = 0.5;
-                            let pText = 0;
-                            if (elevProgress > start) pText = Math.min(1, (elevProgress - start) / dur);
+                    // Elevator Mechanics (Inside Sticky)
+                    if (scrollY >= wrapperTop) {
+                        const elevP = Math.min(1, (scrollY - wrapperTop) / scrollable);
+                        
+                        // 1. DOORS CLOSE (0 -> 0.2)
+                        if (doorLeft && doorRight) {
+                            const start = 0;
+                            const dur = 0.2;
+                            let pClose = 0;
+                            if (elevP > start) pClose = Math.min(1, (elevP - start) / dur);
                             
-                            const totalChars = elevatorSpans.length;
-                            elevatorSpans.forEach((span, i) => {
-                                const charProgress = (pText * totalChars) - i;
-                                let opacity = 0;
-                                if (charProgress >= 1) opacity = 1;
-                                else if (charProgress > 0) opacity = charProgress;
-                                span.style.opacity = opacity;
-                            });
+                            // DOORS OPEN (0.8 -> 1.0) logic overrides close?
+                            // Let's separate stages.
+                            
+                            let xLeft = -100;
+                            let xRight = 100;
+                            
+                            if (elevP < 0.8) {
+                                // Closing Phase
+                                xLeft = -100 + (pClose * 100); // -100 -> 0
+                                xRight = 100 - (pClose * 100); // 100 -> 0
+                            } else {
+                                // Opening Phase (0.8 -> 1.0)
+                                const startOpen = 0.8;
+                                const durOpen = 0.2;
+                                let pOpen = Math.min(1, (elevP - startOpen) / durOpen);
+                                
+                                xLeft = -(pOpen * 100); // 0 -> -100
+                                xRight = (pOpen * 100); // 0 -> 100
+                            }
+                            
+                            doorLeft.style.transform = `translateX(${xLeft}%)`;
+                            doorRight.style.transform = `translateX(${xRight}%)`;
+                        }
+                        
+                        // 2. FLOOR PANEL (0.2 -> 0.8)
+                        if (elevatorPanel && floorCount) {
+                            // Fade In/Out
+                            let panelOpacity = 0;
+                            if (elevP > 0.2 && elevP < 0.8) panelOpacity = 1;
+                            else if (elevP > 0.15 && elevP <= 0.2) panelOpacity = (elevP - 0.15) / 0.05;
+                            else if (elevP >= 0.8 && elevP < 0.85) panelOpacity = 1 - (elevP - 0.8) / 0.05;
+                            
+                            elevatorPanel.style.opacity = panelOpacity;
+                            
+                            // Count Floors: 1 -> 15
+                            // Active during 0.2 -> 0.8
+                            if (elevP > 0.2) {
+                                const rideP = Math.min(1, (elevP - 0.2) / 0.6);
+                                const currentFloor = 1 + Math.floor(rideP * 14); // 1 to 15
+                                floorCount.innerText = currentFloor.toString().padStart(2, '0');
+                            }
                         }
                     }
                 }
