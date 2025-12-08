@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.43 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.45 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -288,7 +288,8 @@
                 <div id="elevator-wrapper" class="relative w-full h-[500vh] z-20">
                     
                     <!-- STICKY CONTAINER -->
-                    <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] overflow-hidden flex flex-col items-center justify-center">
+                    <!-- CHANGED v7.44: overflow-visible to allow text to go above top edge without clipping -->
+                    <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center overflow-visible">
                         
                         <!-- 1. BACKGROUND WALL (Texture) - Always Visible -->
                         <div class="absolute inset-0 w-full h-full z-0 bg-white">
@@ -303,9 +304,9 @@
                              <img id="elevator-photo" src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100 will-change-transform" alt="Kylie Inside">
                         </div>
                         
-                        <!-- 2. TRANSITION TEXT (v7.43 Fix - Safe Top Position) -->
-                        <!-- Removed negative margin to prevent clipping. Using top-12 (48px) to sit comfortably at top. -->
-                        <div id="elevator-sticker" class="absolute top-12 left-1/2 transform -translate-x-1/2 z-50 w-[340px] text-left pointer-events-none">
+                        <!-- 2. TRANSITION TEXT (v7.45 Fix - Raised even higher) -->
+                        <!-- Moved to -mt-24 (approx -96px from top). This should be well into the previous block area. -->
+                        <div id="elevator-sticker" class="absolute top-0 -mt-24 left-1/2 transform -translate-x-1/2 z-50 w-[340px] text-left pointer-events-none">
                             <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
                                 Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
                             </p>
