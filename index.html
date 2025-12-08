@@ -687,51 +687,92 @@
                             }
                         }
 
-                        // --- AVATAR MORPH (v7.31 - SIMPLE CIRCLE MORPH) ---
+                        // --- AVATAR MORPH & MOVE (v7.31 - EXACT STEPS) ---
                         if (elevatorInterior) {
                             if (elevP > morphStart) {
-                                // 0.75 -> 1.0
-                                const pMorph = (elevP - morphStart) / (1 - morphStart); // 0 -> 1
+                                // Phase 1: Morph to Center Circle (0.55 -> 0.7)
+                                // Phase 2: Move to Left Avatar (0.7 -> 0.8)
                                 
-                                // Goal: Morph from Full Screen Rectangle to Centered Square Circle
                                 const winW = window.innerWidth;
                                 const winH = window.innerHeight;
                                 
-                                // Final Circle Size (let's use 80% of screen width)
-                                const diameter = winW * 0.8;
+                                // Target 1: Center Circle (280px)
+                                const size1 = 280;
+                                const margin1X = (winW - size1) / 2;
+                                const margin1Y = (winH - size1) / 2;
                                 
-                                // Calculate margins to center the circle
-                                const targetMarginX = (winW - diameter) / 2;
-                                const targetMarginY = (winH - diameter) / 2;
-                                
-                                // Interpolate Margins
-                                // Start: 0
-                                // End: targetMargin
-                                const mx = pMorph * targetMarginX;
-                                const my = pMorph * targetMarginY;
-                                
-                                // Apply Margins via inset
-                                elevatorInterior.style.left = `${mx}px`;
-                                elevatorInterior.style.right = `${mx}px`;
-                                elevatorInterior.style.top = `${my}px`;
-                                elevatorInterior.style.bottom = `${my}px`;
-                                
-                                // Interpolate Border Radius
-                                // 0 -> 50%
-                                const radius = pMorph * 50;
-                                elevatorInterior.style.borderRadius = `${radius}%`;
-                                
-                                // Reset transform just in case
-                                elevatorInterior.style.transform = 'none';
+                                if (elevP <= moveStart) {
+                                    // STEP 1: Full Screen -> Center Circle
+                                    const pMorph = (elevP - morphStart) / (morphEnd - morphStart); // 0 -> 1
+                                    
+                                    // Calculate current margins
+                                    const mx = pMorph * margin1X;
+                                    const my = pMorph * margin1Y;
+                                    
+                                    // Apply margins via inset
+                                    elevatorInterior.style.top = `${my}px`;
+                                    elevatorInterior.style.bottom = `${my}px`;
+                                    elevatorInterior.style.left = `${mx}px`;
+                                    elevatorInterior.style.right = `${mx}px`;
+                                    
+                                    // Radius 0 -> 50%
+                                    elevatorInterior.style.borderRadius = `${pMorph * 50}%`;
+                                    
+                                } else {
+                                    // STEP 2: Center Circle -> Left Avatar Position
+                                    const pMove = (elevP - moveStart) / (moveEnd - moveStart); // 0 -> 1
+                                    
+                                    // Target 2: Bottom Left Avatar
+                                    const size2 = 48; // 12 * 4px (Tailwind w-12)
+                                    const targetLeft = 16; // px-4
+                                    // Calculate target Bottom based on chat layout
+                                    // Chat layer has pb-32 (128px). First bubble is at bottom.
+                                    // Let's estimate visually or use calc. 
+                                    // Bottom ~130px.
+                                    const targetBottom = 130;
+                                    const targetTop = winH - targetBottom - size2;
+                                    
+                                    // Interpolate
+                                    // Start: margin1X, margin1Y, size1
+                                    // End: targetLeft, targetTop, size2
+                                    
+                                    // Current Size (interpolated)
+                                    const curSize = size1 - ((size1 - size2) * pMove);
+                                    
+                                    // We need to calculate Top/Left based on center movement?
+                                    // No, interpolate the Insets directly.
+                                    
+                                    // Start Insets:
+                                    const startTop = margin1Y;
+                                    const startBottom = margin1Y;
+                                    const startLeft = margin1X;
+                                    const startRight = margin1X;
+                                    
+                                    // End Insets:
+                                    const endTop = targetTop;
+                                    const endBottom = targetBottom;
+                                    const endLeft = targetLeft;
+                                    const endRight = winW - targetLeft - size2;
+                                    
+                                    const curTop = startTop + (endTop - startTop) * pMove;
+                                    const curBottom = startBottom + (endBottom - startBottom) * pMove;
+                                    const curLeft = startLeft + (endLeft - startLeft) * pMove;
+                                    const curRight = startRight + (endRight - startRight) * pMove;
+                                    
+                                    elevatorInterior.style.top = `${curTop}px`;
+                                    elevatorInterior.style.bottom = `${curBottom}px`;
+                                    elevatorInterior.style.left = `${curLeft}px`;
+                                    elevatorInterior.style.right = `${curRight}px`;
+                                    elevatorInterior.style.borderRadius = '50%';
+                                }
                                 
                             } else {
-                                // Reset to Full Screen
+                                // Reset
                                 elevatorInterior.style.top = '0px';
                                 elevatorInterior.style.bottom = '0px';
                                 elevatorInterior.style.left = '0px';
                                 elevatorInterior.style.right = '0px';
                                 elevatorInterior.style.borderRadius = '0px';
-                                elevatorInterior.style.transform = 'none';
                             }
                         }
                         
