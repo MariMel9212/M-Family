@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.25 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.26 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -284,7 +284,8 @@
 
                 <!-- BLOCK 3: ELEVATOR (v7.02) -->
                 <!-- High wrapper for scrollytelling -->
-                <div id="elevator-wrapper" class="relative w-full h-[400vh] z-20">
+                <!-- Increased height to 500vh to fit the new "Santa Barbara" morph phase -->
+                <div id="elevator-wrapper" class="relative w-full h-[500vh] z-20">
                     
                     <!-- STICKY CONTAINER -->
                     <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] overflow-hidden flex flex-col items-center justify-center">
@@ -296,8 +297,9 @@
 
                         <!-- 1.5. ELEVATOR INTERIOR (Hidden initially) -->
                         <!-- This container holds the dark background and Kylie photo. -->
-                        <!-- It appears only when doors are about to open or closed. -->
-                        <div id="elevator-interior" class="absolute inset-0 w-full h-full z-10 bg-slate-900 opacity-0">
+                        <!-- Added rounded-none and will-change to animate border-radius -->
+                        <!-- overflow-hidden is CRITICAL for the image to clip when corners round -->
+                        <div id="elevator-interior" class="absolute inset-0 w-full h-full z-10 bg-slate-900 opacity-0 overflow-hidden shadow-2xl origin-center will-change-transform">
                              <!-- Fixed path: kylie_elevator_final.jpg (Restored correct photo) -->
                              <img src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100" alt="Kylie Inside">
                         </div>
@@ -615,40 +617,52 @@
                     if (scrollY >= wrapperTop) {
                         const elevP = Math.min(1, (scrollY - wrapperTop) / scrollable);
                         
-                        // 1. DOORS CLOSE (0 -> 0.2)
+                        // Revised Timeline for Santa Barbara Effect (Total 500vh)
+                        // 0.0 - 0.15: Doors Close
+                        // 0.15 - 0.55: Ride
+                        // 0.55 - 0.75: Doors Open
+                        // 0.75 - 1.00: Santa Barbara Morph (Rounding + Scale)
+
+                        // 1. DOORS CLOSE (0 -> 0.15)
+                        const closeEnd = 0.15;
+                        
+                        // 2. RIDE (0.15 -> 0.55)
+                        const rideStart = 0.15;
+                        const rideEnd = 0.55;
+                        
+                        // 3. DOORS OPEN (0.55 -> 0.75)
+                        const openStart = 0.55;
+                        const openEnd = 0.75;
+
+                        // 4. MORPH (0.75 -> 1.0)
+                        const morphStart = 0.75;
+                        
+                        // --- DOORS LOGIC ---
                         if (doorLeft && doorRight) {
-                            const start = 0;
-                            const dur = 0.2;
-                            let pClose = 0;
-                            if (elevP > start) pClose = Math.min(1, (elevP - start) / dur);
-                            
-                            // DOORS OPEN (0.8 -> 1.0) logic overrides close?
-                            // Let's separate stages.
-                            
                             let xLeft = -100;
                             let xRight = 100;
                             
-                            if (elevP < 0.8) {
-                                // Closing Phase
+                            if (elevP < openStart) {
+                                // Closing Phase (0 -> 0.15)
+                                let pClose = 0;
+                                if (elevP > 0) pClose = Math.min(1, elevP / closeEnd);
+                                
                                 xLeft = -100 + (pClose * 100); // -100 -> 0
                                 xRight = 100 - (pClose * 100); // 100 -> 0
                                 
-                                // Show interior dark bg only when closed (pClose > 0.9) to be ready for opening?
-                                // Actually, better to fade it in while doors are closed (0.2 -> 0.8)
-                                // But since doors are solid, we can just set opacity=1 when doors are fully closed (pClose=1)
-                                if (elevatorInterior && pClose > 0.9) elevatorInterior.style.opacity = 1;
-                                else if (elevatorInterior && pClose <= 0.9 && elevP < 0.2) elevatorInterior.style.opacity = 0; // Reset if scrolling back up
+                                // Interior Opacity Logic
+                                if (elevatorInterior) {
+                                    if (pClose > 0.9) elevatorInterior.style.opacity = 1;
+                                    else if (elevP < 0.1) elevatorInterior.style.opacity = 0; 
+                                }
 
                             } else {
-                                // Opening Phase (0.8 -> 1.0)
-                                const startOpen = 0.8;
-                                const durOpen = 0.2;
-                                let pOpen = Math.min(1, (elevP - startOpen) / durOpen);
+                                // Opening Phase (0.55 -> 0.75)
+                                let pOpen = Math.min(1, (elevP - openStart) / (openEnd - openStart));
                                 
                                 xLeft = -(pOpen * 100); // 0 -> -100
                                 xRight = (pOpen * 100); // 0 -> 100
                                 
-                                // Interior should be fully visible now
                                 if (elevatorInterior) elevatorInterior.style.opacity = 1;
                             }
                             
@@ -656,23 +670,44 @@
                             doorRight.style.transform = `translateX(${xRight}%)`;
                         }
                         
-                        // 2. FLOOR PANEL (0.2 -> 0.8)
+                        // --- FLOOR PANEL LOGIC ---
                         if (elevatorPanel && floorCount) {
-                            // Fade In/Out
                             let panelOpacity = 0;
-                            if (elevP > 0.2 && elevP < 0.8) panelOpacity = 1;
-                            else if (elevP > 0.15 && elevP <= 0.2) panelOpacity = (elevP - 0.15) / 0.05;
-                            else if (elevP >= 0.8 && elevP < 0.85) panelOpacity = 1 - (elevP - 0.8) / 0.05;
+                            // Show during Ride
+                            if (elevP > rideStart && elevP < rideEnd) panelOpacity = 1;
+                            // Fade in
+                            else if (elevP > (rideStart - 0.05) && elevP <= rideStart) panelOpacity = (elevP - (rideStart - 0.05)) / 0.05;
+                            // Fade out
+                            else if (elevP >= rideEnd && elevP < (rideEnd + 0.05)) panelOpacity = 1 - (elevP - rideEnd) / 0.05;
                             
                             elevatorPanel.style.opacity = panelOpacity;
                             
-                            // Count Floors: 1 -> 9
-                            // Active during 0.2 -> 0.8
-                            if (elevP > 0.2) {
-                                const rideP = Math.min(1, (elevP - 0.2) / 0.6);
-                                const currentFloor = 1 + Math.floor(rideP * 8); // 1 to 9
+                            if (elevP > rideStart) {
+                                const rideP = Math.min(1, (elevP - rideStart) / (rideEnd - rideStart));
+                                const currentFloor = 1 + Math.floor(rideP * 8); 
                                 floorCount.innerText = currentFloor.toString().padStart(2, '0');
                             }
+                        }
+
+                        // --- SANTA BARBARA MORPH (v7.26) ---
+                        if (elevatorInterior && elevP > morphStart) {
+                            const pMorph = (elevP - morphStart) / (1 - morphStart); // 0 -> 1
+                            
+                            // Round Corners: 0px -> 150px (Pill/Arch shape)
+                            const radius = pMorph * 150; 
+                            
+                            // Scale Down: 1.0 -> 0.85 (Card effect)
+                            const scale = 1 - (pMorph * 0.15);
+                            
+                            // Translate Y slightly to center/move up? Let's scale center.
+                            
+                            elevatorInterior.style.borderRadius = `${radius}px`;
+                            elevatorInterior.style.transform = `scale(${scale})`;
+                            
+                        } else if (elevatorInterior && elevP <= morphStart) {
+                            // Reset if scrolling back
+                            elevatorInterior.style.borderRadius = '0px';
+                            elevatorInterior.style.transform = 'scale(1)';
                         }
                     }
                 }
