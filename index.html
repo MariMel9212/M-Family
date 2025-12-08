@@ -335,9 +335,9 @@
                         </div>
 
                         <!-- 5. CHAT BUBBLE (v7.53) -->
-                        <!-- Positioned at bottom left, next to where avatar will fly -->
-                        <div id="chat-bubble-1" class="absolute bottom-12 left-20 z-50 max-w-[250px] bg-slate-100 p-4 rounded-2xl rounded-bl-none shadow-lg opacity-0 translate-y-4 transition-all duration-500 transform origin-bottom-left">
-                            <p class="text-sm font-semibold text-slate-800 leading-snug">
+                        <!-- Positioned to the right of the avatar (Avatar is at left: 40px) -->
+                        <div id="chat-bubble-1" class="absolute bottom-24 left-24 z-50 max-w-[250px] bg-white p-4 rounded-2xl rounded-bl-none shadow-xl border border-slate-100 opacity-0 translate-y-4 transition-all duration-500 transform origin-bottom-left">
+                            <p class="text-sm font-medium text-slate-800 leading-snug">
                                 В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте 🐶
                             </p>
                         </div>
@@ -760,16 +760,14 @@
 
                         // --- AVATAR ROUNDING (v7.42 - CLIP PATH CIRCLE) ---
                         if (elevatorInterior) {
-                            // v7.55 FIX: Ensure correct centering for transforms
-                            // Revert any static positioning overrides from previous versions
-                            elevatorInterior.style.top = '50%';
-                            elevatorInterior.style.left = '50%';
+                            // v7.56 FIX: Force standard positioning (Top-Left 0,0) to avoid centering confusion
+                            elevatorInterior.style.top = '0px';
+                            elevatorInterior.style.left = '0px';
                             elevatorInterior.style.width = '100%';
                             elevatorInterior.style.height = '100%';
-                            // Default transform is handled in logic below
+                            // Remove any transform-origin centering assumptions by handling it explicitly
                             
                             // 2. Animate Avatar (Morph -> Fly)
-                            // v7.54: Robust Container Transform Logic
                             const winW = window.innerWidth;
                             const winH = window.innerHeight;
 
@@ -784,19 +782,19 @@
                             // Phase 2 Target (Avatar)
                             const avatarRadius = 28; // 56px size
                             // Position: Bottom Left (fixed px)
-                            const avatarX = 50; 
-                            const avatarY = winH - 100; // Above nav/bottom
+                            const avatarX = 40 + 28; // 40px margin + radius
+                            const avatarY = winH - (100 + 28); // 100px from bottom + radius center
 
                             if (elevP <= morphStart) {
                                 // BEFORE MORPH: Full Screen
                                 elevatorInterior.style.webkitClipPath = 'circle(150% at 50% 50%)'; 
                                 elevatorInterior.style.clipPath = 'circle(150% at 50% 50%)';
-                                elevatorInterior.style.transform = 'translate(-50%, -50%)'; // Reset container
+                                elevatorInterior.style.transform = 'none'; // Reset to 0,0
                                 if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(1)'; // Reset photo
                                 
                             } else if (elevP > morphStart && elevP <= morphEnd) {
                                 // PHASE 1: MORPH TO CENTER CIRCLE (Clip Path Only)
-                                elevatorInterior.style.transform = 'translate(-50%, -50%)'; // Keep centered
+                                elevatorInterior.style.transform = 'none'; // Stay full screen 0,0
                                 
                                 let pRound = (elevP - morphStart) / (morphEnd - morphStart);
                                 
@@ -826,18 +824,29 @@
                                 if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(0.71)';
                                 
                                 // 2. Animate Container Transform
-                                // Scale down the WHOLE container (including the circle hole)
+                                // We are moving from Center (winW/2, winH/2) to Avatar (avatarX, avatarY)
+                                // AND Scaling from 1.0 to (avatarRadius / midRadius)
+                                
                                 const targetScale = avatarRadius / midRadius;
                                 const curScale = 1.0 - (pFly * (1.0 - targetScale));
                                 
-                                // Translate from Center to Avatar Position
-                                const targetDx = avatarX - centerX;
-                                const targetDy = avatarY - centerY;
-                                const curDx = pFly * targetDx;
-                                const curDy = pFly * targetDy;
+                                // Translation:
+                                // When we scale a full-screen div with 'transform-origin: 50% 50%' (default),
+                                // it shrinks towards the center. So the content at center STAYS at center.
+                                // So we just need to translate the CENTER to the new position.
+                                // Delta = Destination - Source
+                                const dx = avatarX - centerX;
+                                const dy = avatarY - centerY;
                                 
-                                // Apply: Center(-50,-50) + Translate(dx,dy) + Scale(s)
-                                elevatorInterior.style.transform = `translate(-50%, -50%) translate(${curDx}px, ${curDy}px) scale(${curScale})`;
+                                const curDx = pFly * dx;
+                                const curDy = pFly * dy;
+                                
+                                // Apply: Translate then Scale? Or Scale then Translate?
+                                // Standard: translate(x,y) scale(s) applies translation first (moving origin), then scale.
+                                // But if we translate, we move the center.
+                                // Wait, if we scale(s), the visual center remains at centerX, centerY.
+                                // Then we translate that center by curDx, curDy.
+                                elevatorInterior.style.transform = `translate(${curDx}px, ${curDy}px) scale(${curScale})`;
                             }
                             
                             // Opacity handled by doors
