@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.31 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.32 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -303,9 +303,9 @@
                              <img src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100" alt="Kylie Inside">
                         </div>
                         
-                        <!-- 2. TRANSITION TEXT (v7.05 Fix) -->
-                        <!-- Moved down to top-24 (~15%) to avoid clipping, removed translateY centering -->
-                        <div id="elevator-sticker" class="absolute top-32 left-1/2 transform -translate-x-1/2 z-20 w-[340px] opacity-0 pointer-events-none">
+                        <!-- 2. TRANSITION TEXT (v7.32 Fix - Higher) -->
+                        <!-- Moved up to top-24 -->
+                        <div id="elevator-sticker" class="absolute top-24 left-1/2 transform -translate-x-1/2 z-20 w-[340px] opacity-0 pointer-events-none">
                             <p id="elevator-text" class="text-left text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
                                 Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
                             </p>
@@ -687,77 +687,68 @@
                             }
                         }
 
-                        // --- AVATAR MORPH & MOVE (v7.31 - EXACT STEPS) ---
+                        // --- AVATAR MORPH & MOVE (v7.32 - STRICT SEPARATION) ---
                         if (elevatorInterior) {
+                            // Reset state helper
+                            const resetInterior = () => {
+                                elevatorInterior.style.top = '0px';
+                                elevatorInterior.style.bottom = '0px';
+                                elevatorInterior.style.left = '0px';
+                                elevatorInterior.style.right = '0px';
+                                elevatorInterior.style.borderRadius = '0px';
+                            };
+
                             if (elevP > morphStart) {
-                                // Phase 1: Morph to Center Circle (0.55 -> 0.7)
-                                // Phase 2: Move to Left Avatar (0.7 -> 0.8)
-                                
                                 const winW = window.innerWidth;
                                 const winH = window.innerHeight;
                                 
-                                // Target 1: Center Circle (280px)
-                                const size1 = 280;
-                                const margin1X = (winW - size1) / 2;
-                                const margin1Y = (winH - size1) / 2;
-                                
+                                // GOAL 1: Center Circle (Diameter = 80% of Width)
+                                const diameter = winW * 0.8;
+                                const targetMarginX = (winW - diameter) / 2;
+                                const targetMarginY = (winH - diameter) / 2;
+
                                 if (elevP <= moveStart) {
-                                    // STEP 1: Full Screen -> Center Circle
+                                    // PHASE 1: Rect -> Center Circle (Morph Only)
+                                    // From 0.55 to 0.70
                                     const pMorph = (elevP - morphStart) / (morphEnd - morphStart); // 0 -> 1
                                     
-                                    // Calculate current margins
-                                    const mx = pMorph * margin1X;
-                                    const my = pMorph * margin1Y;
+                                    // Insets grow from 0 to targetMargin
+                                    // Top/Bottom must grow faster to squish the height into a square
+                                    const my = pMorph * targetMarginY;
+                                    const mx = pMorph * targetMarginX;
                                     
-                                    // Apply margins via inset
                                     elevatorInterior.style.top = `${my}px`;
                                     elevatorInterior.style.bottom = `${my}px`;
                                     elevatorInterior.style.left = `${mx}px`;
                                     elevatorInterior.style.right = `${mx}px`;
                                     
-                                    // Radius 0 -> 50%
+                                    // Radius goes 0 -> 50%
                                     elevatorInterior.style.borderRadius = `${pMorph * 50}%`;
                                     
                                 } else {
-                                    // STEP 2: Center Circle -> Left Avatar Position
+                                    // PHASE 2: Center Circle -> Chat Avatar (Move Only)
+                                    // From 0.70 to 0.80
+                                    // Circle stays circle (radius 50%), just moves coordinates
                                     const pMove = (elevP - moveStart) / (moveEnd - moveStart); // 0 -> 1
                                     
-                                    // Target 2: Bottom Left Avatar
-                                    const size2 = 48; // 12 * 4px (Tailwind w-12)
-                                    const targetLeft = 16; // px-4
-                                    // Calculate target Bottom based on chat layout
-                                    // Chat layer has pb-32 (128px). First bubble is at bottom.
-                                    // Let's estimate visually or use calc. 
-                                    // Bottom ~130px.
-                                    const targetBottom = 130;
-                                    const targetTop = winH - targetBottom - size2;
+                                    // Start Coords (Center):
+                                    const startTop = targetMarginY;
+                                    const startBottom = targetMarginY;
+                                    const startLeft = targetMarginX;
+                                    const startRight = targetMarginX;
+                                    
+                                    // End Coords (Bottom Left Avatar):
+                                    const avSize = 48; // 12 * 4
+                                    const avLeft = 16;
+                                    const avBottom = 130; // Matches Chat Bubble
+                                    const avTop = winH - avBottom - avSize;
+                                    const avRight = winW - avLeft - avSize;
                                     
                                     // Interpolate
-                                    // Start: margin1X, margin1Y, size1
-                                    // End: targetLeft, targetTop, size2
-                                    
-                                    // Current Size (interpolated)
-                                    const curSize = size1 - ((size1 - size2) * pMove);
-                                    
-                                    // We need to calculate Top/Left based on center movement?
-                                    // No, interpolate the Insets directly.
-                                    
-                                    // Start Insets:
-                                    const startTop = margin1Y;
-                                    const startBottom = margin1Y;
-                                    const startLeft = margin1X;
-                                    const startRight = margin1X;
-                                    
-                                    // End Insets:
-                                    const endTop = targetTop;
-                                    const endBottom = targetBottom;
-                                    const endLeft = targetLeft;
-                                    const endRight = winW - targetLeft - size2;
-                                    
-                                    const curTop = startTop + (endTop - startTop) * pMove;
-                                    const curBottom = startBottom + (endBottom - startBottom) * pMove;
-                                    const curLeft = startLeft + (endLeft - startLeft) * pMove;
-                                    const curRight = startRight + (endRight - startRight) * pMove;
+                                    const curTop = startTop + (avTop - startTop) * pMove;
+                                    const curBottom = startBottom + (avBottom - startBottom) * pMove;
+                                    const curLeft = startLeft + (avLeft - startLeft) * pMove;
+                                    const curRight = startRight + (avRight - startRight) * pMove;
                                     
                                     elevatorInterior.style.top = `${curTop}px`;
                                     elevatorInterior.style.bottom = `${curBottom}px`;
@@ -767,12 +758,7 @@
                                 }
                                 
                             } else {
-                                // Reset
-                                elevatorInterior.style.top = '0px';
-                                elevatorInterior.style.bottom = '0px';
-                                elevatorInterior.style.left = '0px';
-                                elevatorInterior.style.right = '0px';
-                                elevatorInterior.style.borderRadius = '0px';
+                                resetInterior();
                             }
                         }
                         
