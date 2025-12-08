@@ -634,10 +634,14 @@
                         const rideEnd = 0.4;
                         const openStart = 0.4;
                         const openEnd = 0.55;
+                        
+                        // STEP 1: Morph to Circle (Stay Centered)
                         const morphStart = 0.55;
-                        const morphEnd = 0.7;
-                        const moveStart = 0.7;
-                        const moveEnd = 0.8;
+                        const morphEnd = 0.75; // Increased duration for clarity
+                        
+                        // STEP 2: Move to Left (After Morph is done)
+                        const moveStart = 0.75;
+                        const moveEnd = 0.85;
                         
                         // --- DOORS LOGIC ---
                         if (doorLeft && doorRight) {
