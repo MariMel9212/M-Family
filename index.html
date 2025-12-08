@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.52 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.53 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -334,6 +334,14 @@
                             </div>
                         </div>
 
+                        <!-- 5. CHAT BUBBLE (v7.53) -->
+                        <!-- Positioned at bottom left, next to where avatar will fly -->
+                        <div id="chat-bubble-1" class="absolute bottom-12 left-20 z-50 max-w-[250px] bg-slate-100 p-4 rounded-2xl rounded-bl-none shadow-lg opacity-0 translate-y-4 transition-all duration-500 transform origin-bottom-left">
+                            <p class="text-sm font-semibold text-slate-800 leading-snug">
+                                В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте 🐶
+                            </p>
+                        </div>
+
                     </div>
                 </div>
 
@@ -396,9 +404,8 @@
             const elevatorInterior = document.getElementById('elevator-interior'); 
             const elevatorPhoto = document.getElementById('elevator-photo'); // New v7.41 
             
-            // Chat Elements (v7.28)
-            const chatRowKylie = document.getElementById('chat-row-kylie');
-            const chatRowHusband = document.getElementById('chat-row-husband');
+            // Chat Elements (v7.53)
+            const chatBubble1 = document.getElementById('chat-bubble-1');
 
             // Home Block Elements (v7.25)
             const homeBlock = document.getElementById('home-block');
@@ -695,11 +702,13 @@
                         
                         // STEP 1: Morph to Circle (Stay Centered)
                         const morphStart = 0.55;
-                        const morphEnd = 0.75; // Increased duration for clarity
+                        const morphEnd = 0.75; 
                         
-                        // STEP 2: Move to Left (After Morph is done)
-                        const moveStart = 0.75;
-                        const moveEnd = 0.85;
+                        // STEP 2: Fly to Avatar (0.75 -> 0.85)
+                        const flyStart = 0.75;
+                        const flyEnd = 0.85;
+
+                        // STEP 3: Chat Appears (0.85 -> 1.0)
                         
                         // --- DOORS LOGIC ---
                         if (doorLeft && doorRight) {
