@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.69 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.70 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -353,9 +353,9 @@
                         </div>
 
                         <!-- 6. CHAT BUBBLE 2 (Husband) - Telegram Style (Right) -->
-                        <!-- v7.69: REMOVED initial opacity/scale classes to test visibility. -->
-                        <!-- Added z-[100] to ensure it's on top of everything. -->
-                        <div id="chat-row-2" class="absolute bottom-[18vh] right-4 z-[100] flex items-end gap-2 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) origin-bottom-right">
+                        <!-- v7.70: Restore initial hidden state (opacity-0, scale-90, translate-y-4) -->
+                        <!-- The diagnostic v7.69 proved it CAN render. Now we just need to hide it until the right time. -->
+                        <div id="chat-row-2" class="absolute bottom-[18vh] right-4 z-[100] flex items-end gap-2 opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) origin-bottom-right">
                             
                             <!-- Bubble (Green) -->
                             <div class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[240px]">
@@ -930,15 +930,13 @@
                             }
                         }
                         
-                        // v7.69: Show Husband Reply (Inverted Logic)
-                        // By default it is VISIBLE in HTML. We HIDE it if not yet time.
+                        // v7.70: Restore normal visibility logic
+                        // Default hidden in HTML. Show when > 0.85
                         if (chatRow2) {
                             if (elevP > 0.85) {
-                                // SHOW
                                 chatRow2.classList.remove('opacity-0', 'translate-y-4', 'scale-90');
-                                chatRow2.classList.add('scale-100'); 
+                                chatRow2.classList.add('scale-100'); // Pop!
                             } else {
-                                // HIDE
                                 chatRow2.classList.add('opacity-0', 'translate-y-4', 'scale-90');
                                 chatRow2.classList.remove('scale-100');
                             }
