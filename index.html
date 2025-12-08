@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.58 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.59 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -853,13 +853,9 @@
                         }
                         
                         // --- BUBBLES FADE IN ---
-                        // v7.57 FIX: Removed dependency on missing chatBubble2
+                        // v7.59 FIX: Show bubble earlier (0.85) immediately after fly ends
                         if (chatBubble1) {
-                            // Bubble 1: After morph done (moveEnd = 1.0)
-                            // We might need more space or just trigger it at the very end
-                            // Let's show Bubble 1 as avatar moves into place?
-                            // 0.95 -> 1.0
-                            if (elevP > 0.95) {
+                            if (elevP > 0.85) {
                                 chatBubble1.classList.remove('opacity-0', 'translate-y-4');
                             } else {
                                 chatBubble1.classList.add('opacity-0', 'translate-y-4');
