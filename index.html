@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.33 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.34 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -768,15 +768,18 @@
                         
                         // --- BUBBLES FADE IN ---
                         if (chatBubble1 && chatBubble2) {
-                            // Bubble 1: 0.8 -> 0.85
-                            if (elevP > 0.8) {
+                            // Bubble 1: After morph done (moveEnd = 1.0)
+                            // We might need more space or just trigger it at the very end
+                            // Let's show Bubble 1 as avatar moves into place?
+                            // 0.95 -> 1.0
+                            if (elevP > 0.95) {
                                 chatBubble1.classList.remove('opacity-0', 'translate-y-4');
                             } else {
                                 chatBubble1.classList.add('opacity-0', 'translate-y-4');
                             }
                             
-                            // Bubble 2: 0.9 -> 0.95
-                            if (elevP > 0.9) {
+                            // Bubble 2: Also at end
+                            if (elevP > 0.98) {
                                 chatBubble2.classList.remove('opacity-0', 'translate-y-4');
                             } else {
                                 chatBubble2.classList.add('opacity-0', 'translate-y-4');
