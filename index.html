@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.38 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.39 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -303,9 +303,9 @@
                              <img src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100" alt="Kylie Inside">
                         </div>
                         
-                        <!-- 2. TRANSITION TEXT (v7.38 Fix - Text Animation restored) -->
-                        <!-- Moved to top-20 (between 10 and 32) -->
-                        <div id="elevator-sticker" class="absolute top-20 left-1/2 transform -translate-x-1/2 z-20 w-[340px] text-left">
+                        <!-- 2. TRANSITION TEXT (v7.39 Fix - Raised 20px) -->
+                        <!-- Moved from top-20 to top-14 (approx 24px higher) -->
+                        <div id="elevator-sticker" class="absolute top-14 left-1/2 transform -translate-x-1/2 z-20 w-[340px] text-left">
                             <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
                                 Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
                             </p>
@@ -770,11 +770,12 @@
                                 // Calculate Insets to create a Square in the Center
                                 const winW = window.innerWidth;
                                 const winH = window.innerHeight;
-                                const size = Math.min(winW, winH); // Square size
+                                // CHANGED v7.39: Reduce size to 80% to create whitespace (Avatar Look)
+                                const size = Math.min(winW, winH) * 0.80; // 80% of min dimension
                                 
                                 // Target Insets (to crop to square)
-                                const targetInsetY = (winH > size) ? (winH - size) / 2 : 0;
-                                const targetInsetX = (winW > size) ? (winW - size) / 2 : 0;
+                                const targetInsetY = (winH - size) / 2;
+                                const targetInsetX = (winW - size) / 2;
                                 
                                 // Interpolate Insets
                                 const curInsetY = pRound * targetInsetY;
