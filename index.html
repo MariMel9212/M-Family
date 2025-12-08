@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.23 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.24 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -341,11 +341,15 @@
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0" alt="Texture">
                     
                     <!-- DECORATIVE BRANCHES -->
-                    <!-- Top Left -->
-                    <img src="./images/tree_branch.png" class="absolute -top-10 -left-10 w-48 z-10 opacity-90 rotate-180" alt="Branch">
-                    <!-- Top Right -->
-                    <img src="./images/tree_branch.png" class="absolute -top-10 -right-10 w-48 z-10 opacity-90 -rotate-90" alt="Branch">
-                    <!-- Bottom Left -->
+                    <!-- Top Left: Rotated "twice" (flipped 180 relative to before) and doubled size (w-96) -->
+                    <!-- Was rotate-180, now rotate-0 (or similar). Adjusted offset for size. -->
+                    <img src="./images/tree_branch.png" class="absolute -top-20 -left-24 w-96 z-10 opacity-90 rotate-0" alt="Branch">
+                    
+                    <!-- Top Right: Rotated "twice" (flipped) and doubled size -->
+                    <!-- Was -rotate-90, now rotate-90. -->
+                    <img src="./images/tree_branch.png" class="absolute -top-20 -right-24 w-96 z-10 opacity-90 rotate-90" alt="Branch">
+                    
+                    <!-- Bottom Left (unchanged for now, or user implied only top ones?) User said "с правой сделай тоже самое" referring to the right one. -->
                     <img src="./images/tree_branch.png" class="absolute bottom-20 -left-10 w-56 z-10 opacity-90 -rotate-180" alt="Branch">
                     
                     <div class="relative z-10 p-6 flex flex-col items-center justify-center min-h-[50vh] pt-32">
