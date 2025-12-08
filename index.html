@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.39 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.40 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -303,9 +303,9 @@
                              <img src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100" alt="Kylie Inside">
                         </div>
                         
-                        <!-- 2. TRANSITION TEXT (v7.39 Fix - Raised 20px) -->
-                        <!-- Moved from top-20 to top-14 (approx 24px higher) -->
-                        <div id="elevator-sticker" class="absolute top-14 left-1/2 transform -translate-x-1/2 z-20 w-[340px] text-left">
+                        <!-- 2. TRANSITION TEXT (v7.40 Fix - Top-5) -->
+                        <!-- Moved to top-5 (20px) as requested -->
+                        <div id="elevator-sticker" class="absolute top-5 left-1/2 transform -translate-x-1/2 z-20 w-[340px] text-left">
                             <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
                                 Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
                             </p>
@@ -747,7 +747,7 @@
                             }
                         }
 
-                        // --- AVATAR ROUNDING (v7.38 - CLIP PATH TO CIRCLE) ---
+                        // --- AVATAR ROUNDING (v7.40 - CLIP PATH MORPH TO CIRCLE) ---
                         if (elevatorInterior) {
                             // 1. Force Static Position
                             elevatorInterior.style.top = '0px';
@@ -758,8 +758,7 @@
                             elevatorInterior.style.height = '100%';
                             elevatorInterior.style.transform = 'none';
                             
-                            // 2. Animate Clip Path (Square -> Circle)
-                            // Start after doors are fully open + pause
+                            // 2. Animate Clip Path (Full Screen -> Center Circle)
                             const roundStart = 0.65;
                             const roundEnd = 0.85;
                             
@@ -767,34 +766,36 @@
                                 // 0 -> 1 progress
                                 const pRound = Math.min(1, (elevP - roundStart) / (roundEnd - roundStart));
                                 
-                                // Calculate Insets to create a Square in the Center
+                                // Calculate dimensions
                                 const winW = window.innerWidth;
                                 const winH = window.innerHeight;
-                                // CHANGED v7.39: Reduce size to 80% to create whitespace (Avatar Look)
-                                const size = Math.min(winW, winH) * 0.80; // 80% of min dimension
+                                // Use 80% of min dimension for the final circle size
+                                const circleDiameter = Math.min(winW, winH) * 0.80;
                                 
-                                // Target Insets (to crop to square)
-                                const targetInsetY = (winH - size) / 2;
-                                const targetInsetX = (winW - size) / 2;
+                                // We interpolate from Full Screen Rect to Center Circle.
+                                // Full Screen Rect can be represented as: inset(0 0 0 0 round 0%)
+                                // Center Circle can be represented as: inset(dY dX dY dX round 50%)
                                 
-                                // Interpolate Insets
+                                // Target Insets for the circle
+                                const targetInsetY = (winH - circleDiameter) / 2;
+                                const targetInsetX = (winW - circleDiameter) / 2;
+                                
+                                // Interpolate
                                 const curInsetY = pRound * targetInsetY;
                                 const curInsetX = pRound * targetInsetX;
+                                const curRadius = pRound * 50; // 0% -> 50%
                                 
-                                // Radius: 0 -> 50%
-                                const curRadius = pRound * 50;
-                                
-                                // Apply Clip Path
-                                // inset(top right bottom left round radius)
+                                // Apply clip-path
                                 elevatorInterior.style.clipPath = `inset(${curInsetY}px ${curInsetX}px ${curInsetY}px ${curInsetX}px round ${curRadius}%)`;
-                                elevatorInterior.style.borderRadius = '0px'; // Disable border-radius to let clip-path work
+                                elevatorInterior.style.borderRadius = '0px'; // Override any border-radius
                                 
                             } else {
-                                elevatorInterior.style.clipPath = 'none'; // Full screen
+                                // Reset to full screen
+                                elevatorInterior.style.clipPath = 'inset(0px 0px 0px 0px round 0%)';
                                 elevatorInterior.style.borderRadius = '0px';
                             }
                             
-                            // Opacity is handled by the doors closing/opening logic above
+                            // Opacity handled by doors
                         }
                         
                         // --- BUBBLES FADE IN ---
