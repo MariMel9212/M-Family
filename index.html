@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.24 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.25 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -341,16 +341,22 @@
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0" alt="Texture">
                     
                     <!-- DECORATIVE BRANCHES -->
+                    <!-- Added IDs for animation -->
                     <!-- Top Left: Rotated "twice" (flipped 180 relative to before) and doubled size (w-96) -->
-                    <!-- Was rotate-180, now rotate-0 (or similar). Adjusted offset for size. -->
-                    <img src="./images/tree_branch.png" class="absolute -top-20 -left-24 w-96 z-10 opacity-90 rotate-0" alt="Branch">
+                    <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-20 -left-24 w-96 z-10 opacity-90 rotate-0 will-change-transform" style="transform: translate(-100%, -100%);" alt="Branch">
                     
                     <!-- Top Right: Rotated "twice" (flipped) and doubled size -->
-                    <!-- Was -rotate-90, now rotate-90. -->
-                    <img src="./images/tree_branch.png" class="absolute -top-20 -right-24 w-96 z-10 opacity-90 rotate-90" alt="Branch">
+                    <img id="branch-tr" src="./images/tree_branch.png" class="absolute -top-20 -right-24 w-96 z-10 opacity-90 rotate-90 will-change-transform" style="transform: translate(100%, -100%);" alt="Branch">
                     
-                    <!-- Bottom Left (unchanged for now, or user implied only top ones?) User said "с правой сделай тоже самое" referring to the right one. -->
-                    <img src="./images/tree_branch.png" class="absolute bottom-20 -left-10 w-56 z-10 opacity-90 -rotate-180" alt="Branch">
+                    <!-- Bottom Left -->
+                    <img id="branch-bl" src="./images/tree_branch.png" class="absolute bottom-20 -left-10 w-56 z-10 opacity-90 -rotate-180 will-change-transform" style="transform: translate(-100%, 100%);" alt="Branch">
+                    
+                    <div class="relative z-10 p-6 flex flex-col items-center justify-center min-h-[50vh] pt-32">
+                        <!-- Content will go here -->
+                        <h2 id="home-title" class="text-3xl font-extrabold text-slate-900 text-center mb-4 opacity-0 translate-y-10 transition-all duration-1000 ease-out" style="font-family: 'Shantell Sans', cursive;">
+                            Наш первый праздник здесь
+                        </h2>
+                    </div>
                     
                     <div class="relative z-10 p-6 flex flex-col items-center justify-center min-h-[50vh] pt-32">
                         <!-- Content will go here -->
@@ -386,6 +392,13 @@
             const elevatorPanel = document.getElementById('elevator-panel');
             const floorCount = document.getElementById('floor-count');
             const elevatorInterior = document.getElementById('elevator-interior'); // New v7.05 Container
+
+            // Home Block Elements (v7.25)
+            const homeBlock = document.getElementById('home-block');
+            const branchTL = document.getElementById('branch-tl');
+            const branchTR = document.getElementById('branch-tr');
+            const branchBL = document.getElementById('branch-bl');
+            const homeTitle = document.getElementById('home-title');
 
             const viewer = document.getElementById('story-viewer');
 
@@ -659,6 +672,56 @@
                                 const rideP = Math.min(1, (elevP - 0.2) / 0.6);
                                 const currentFloor = 1 + Math.floor(rideP * 8); // 1 to 9
                                 floorCount.innerText = currentFloor.toString().padStart(2, '0');
+                            }
+                        }
+                    }
+                }
+
+                // --- BLOCK 4: HOME ANIMATION (v7.25) ---
+                if (homeBlock) {
+                    const rect = homeBlock.getBoundingClientRect();
+                    const viewH = window.innerHeight;
+                    
+                    // Start animating when top of block enters viewport
+                    // Full animation by the time it's 50% visible?
+                    const startOffset = viewH; // When top just touches bottom of screen
+                    const endOffset = viewH * 0.5; // When top is halfway up
+                    
+                    const dist = rect.top; // Distance from top of viewport
+                    
+                    if (dist < viewH) {
+                        // 0 -> 1 progress as it slides up
+                        // We want it to be fully composed when it's taking up most of the screen
+                        // Let's say from dist=viewH (0) to dist=0 (1)
+                        const pHome = Math.max(0, Math.min(1, (viewH - dist) / (viewH * 0.6)));
+                        
+                        // Branches Slide In (cubic-bezier ease out feel via simple math)
+                        // Using 'pHome' directly gives linear. 
+                        // Let's use easeOut: 1 - pow(1 - p, 3)
+                        const easeP = 1 - Math.pow(1 - pHome, 3);
+                        
+                        if (branchTL) {
+                            const x = -100 + (easeP * 100); // -100 -> 0
+                            const y = -100 + (easeP * 100); // -100 -> 0
+                            branchTL.style.transform = `translate(${x}%, ${y}%)`;
+                        }
+                        if (branchTR) {
+                            const x = 100 - (easeP * 100); // 100 -> 0
+                            const y = -100 + (easeP * 100); // -100 -> 0
+                            branchTR.style.transform = `translate(${x}%, ${y}%)`;
+                        }
+                        if (branchBL) {
+                            const x = -100 + (easeP * 100); // -100 -> 0
+                            const y = 100 - (easeP * 100); // 100 -> 0
+                            branchBL.style.transform = `translate(${x}%, ${y}%)`;
+                        }
+                        
+                        // Title Fade In
+                        if (homeTitle) {
+                            if (pHome > 0.5) {
+                                homeTitle.classList.remove('opacity-0', 'translate-y-10');
+                            } else {
+                                homeTitle.classList.add('opacity-0', 'translate-y-10');
                             }
                         }
                     }
