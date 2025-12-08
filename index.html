@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.66 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.67 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -930,9 +930,11 @@
                         }
                         
                         // v7.60: Show Husband Reply
+                        // v7.67 FIX: Force opacity 1 and scale 100 without conditional flicker for debugging if needed,
+                        // but sticking to scroll logic: ensure threshold is reachable.
+                        // Lowering threshold even more to 0.87 to overlap with slide start (0.88)
                         if (chatRow2) {
-                            // v7.66: Lower threshold to 0.88 to ensure it appears during the slide
-                            if (elevP > 0.88) {
+                            if (elevP > 0.87) {
                                 chatRow2.classList.remove('opacity-0', 'translate-y-4', 'scale-90');
                                 chatRow2.classList.add('scale-100'); // Pop!
                             } else {
