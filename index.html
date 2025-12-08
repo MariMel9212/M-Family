@@ -760,14 +760,13 @@
 
                         // --- AVATAR ROUNDING (v7.42 - CLIP PATH CIRCLE) ---
                         if (elevatorInterior) {
-                            // 1. Force Static Position
-                            elevatorInterior.style.top = '0px';
-                            elevatorInterior.style.bottom = '0px';
-                            elevatorInterior.style.left = '0px';
-                            elevatorInterior.style.right = '0px';
+                            // v7.55 FIX: Ensure correct centering for transforms
+                            // Revert any static positioning overrides from previous versions
+                            elevatorInterior.style.top = '50%';
+                            elevatorInterior.style.left = '50%';
                             elevatorInterior.style.width = '100%';
                             elevatorInterior.style.height = '100%';
-                            elevatorInterior.style.transform = 'none';
+                            // Default transform is handled in logic below
                             
                             // 2. Animate Avatar (Morph -> Fly)
                             // v7.54: Robust Container Transform Logic
