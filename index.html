@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.60 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.61 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -334,25 +334,47 @@
                             </div>
                         </div>
 
-                        <!-- 5. CHAT BUBBLE 1 (Kylie) -->
-                        <div id="chat-bubble-1" class="absolute bottom-24 left-24 z-50 max-w-[250px] bg-white p-4 rounded-2xl rounded-bl-none shadow-xl border border-slate-100 opacity-0 translate-y-4 transition-all duration-500 transform origin-bottom-left">
-                            <p class="text-sm font-medium text-slate-800 leading-snug">
-                                В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте 🐶
+                        <!-- 5. CHAT BUBBLE 1 (Kylie) - Telegram Style (Left) -->
+                        <div id="chat-bubble-1" class="absolute bottom-32 left-[80px] z-50 max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 translate-y-4 transition-all duration-500 transform origin-bottom-left">
+                            <!-- Name -->
+                            <p class="text-xs font-bold text-[#5790df] mb-1">Kylie 🐶</p>
+                            <!-- Text -->
+                            <p class="text-[15px] text-slate-900 leading-snug">
+                                В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
                             </p>
+                            <!-- Time -->
+                            <p class="text-[10px] text-slate-400 text-right mt-1">18:30</p>
+                            
+                            <!-- Tail SVG -->
+                            <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
+                                <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                            </svg>
                         </div>
 
-                        <!-- 6. CHAT BUBBLE 2 (Husband) - v7.60 -->
-                        <!-- Positioned Bottom Right -->
-                        <div id="chat-row-2" class="absolute bottom-12 right-4 z-50 flex items-end gap-3 opacity-0 translate-y-4 transition-all duration-500">
-                            <!-- Bubble -->
-                            <div class="bg-gray-200 p-4 rounded-2xl rounded-br-none shadow-md max-w-[220px]">
-                                <!-- Placeholder or empty as per screenshot? -->
-                                <p class="text-sm font-medium text-slate-800 leading-snug">
-                                    ❤️
+                        <!-- 6. CHAT BUBBLE 2 (Husband) - Telegram Style (Right) -->
+                        <div id="chat-row-2" class="absolute bottom-8 right-4 z-50 flex items-end gap-2 opacity-0 translate-y-4 transition-all duration-500">
+                            
+                            <!-- Bubble (Green) -->
+                            <div class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[240px]">
+                                <p class="text-[15px] text-slate-900 leading-snug">
+                                    Моя самая любимая москвичка! Горжусь тобой ❤️
                                 </p>
+                                <!-- Time & Checks -->
+                                <div class="flex items-center justify-end gap-1 mt-1">
+                                    <p class="text-[10px] text-[#539e55]">18:31</p>
+                                    <!-- Double Check -->
+                                    <span class="text-[#539e55] text-[10px]">✓✓</span>
+                                </div>
+
+                                <!-- Tail SVG -->
+                                <svg class="absolute -bottom-[0px] -right-[9px] w-[20px] h-[20px] text-[#EEFFDE] fill-current z-[-1] transform scale-x-[-1]">
+                                    <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                                </svg>
                             </div>
-                            <!-- Avatar -->
-                            <div class="w-12 h-12 rounded-full overflow-hidden shadow-lg border-2 border-white flex-shrink-0">
+
+                            <!-- Avatar (Round) -->
+                            <!-- Fixed Path: ./images/husband_avatar.jpg -->
+                            <div class="w-10 h-10 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200">
                                 <img src="./images/husband_avatar.jpg" class="w-full h-full object-cover" alt="Husband">
                             </div>
                         </div>
