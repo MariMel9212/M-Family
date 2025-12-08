@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.29 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.30 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -687,66 +687,78 @@
                             }
                         }
 
-                        // --- AVATAR MORPH & MOVE (v7.29 SIMPLIFIED) ---
+                        // --- AVATAR MORPH & MOVE (v7.30 - REVERT TO SANTA BARBARA LOGIC) ---
                         if (elevatorInterior) {
                             if (elevP > morphStart) {
                                 // 1. MORPH TO CENTER CIRCLE (0.55 -> 0.7)
                                 const pMorph = Math.min(1, (elevP - morphStart) / (morphEnd - morphStart));
                                 
-                                // Just resize, center, and round. No complex inset math that breaks Safari.
-                                // We want:
-                                // Start: Full Screen (scale 1, radius 0)
-                                // End: Small Circle Center (scale 0.3, radius 50%)
+                                // Start: Full Screen
+                                // End: Center Circle (280px)
+                                
+                                const winW = window.innerWidth;
+                                const winH = window.innerHeight;
+                                
+                                // Target 1: Center Circle (280px)
+                                const size1 = 280;
+                                const margin1X = (winW - size1) / 2;
+                                const margin1Y = (winH - size1) / 2;
                                 
                                 if (elevP <= moveStart) {
-                                    // Phase 1: Shrink to Circle Center
+                                    // Phase 1: Shrink to Center Circle
+                                    // Use INSET + BORDER RADIUS (This was the Santa Barbara logic that worked partially)
+                                    // But to fix "squashed" look, we must ensure we are cropping, not resizing content?
+                                    // Actually, 'object-cover' handles content. We need to resize the CONTAINER.
+                                    
                                     const t = pMorph; 
-                                    const scale = 1 - (t * 0.7); // 1 -> 0.3
-                                    const radius = t * 50; // 0 -> 50%
                                     
-                                    elevatorInterior.style.transform = `scale(${scale})`;
-                                    elevatorInterior.style.borderRadius = `${radius}%`;
-                                    elevatorInterior.style.opacity = 1;
+                                    // Calculate current margins
+                                    const mx = t * margin1X;
+                                    const my = t * margin1Y;
                                     
-                                    // Ensure it stays centered (default behavior of absolute centered element)
-                                    elevatorInterior.style.top = '50%';
-                                    elevatorInterior.style.left = '50%';
+                                    // Apply margins via inset
+                                    elevatorInterior.style.top = `${my}px`;
+                                    elevatorInterior.style.bottom = `${my}px`;
+                                    elevatorInterior.style.left = `${mx}px`;
+                                    elevatorInterior.style.right = `${mx}px`;
                                     
-                                    // Hide real avatar
-                                    if(chatAvatarKylie) chatAvatarKylie.style.opacity = 0;
-
+                                    // Radius 0 -> 50%
+                                    elevatorInterior.style.borderRadius = `${t * 50}%`;
+                                    
+                                    // Ensure transform is reset
+                                    elevatorInterior.style.transform = 'none';
+                                    
                                 } else {
-                                    // Phase 2: Move Left & Fade Out (Hand off to Chat Bubble)
-                                    // 0.7 -> 0.8
+                                    // Phase 2: Move to Left Avatar (0.7 -> 0.8)
                                     const pMove = Math.min(1, (elevP - moveStart) / (moveEnd - moveStart));
                                     
-                                    // Move to bottom left: translate(-X, +Y)
-                                    // Screen width is e.g. 400. Center is 200. Target is 30. Delta X = -170.
-                                    // Screen height is e.g. 800. Center is 400. Target is 700. Delta Y = +300.
+                                    // Target: Bottom Left (Chat Avatar Position)
+                                    const targetSize = 48; // 12 * 4
+                                    const targetLeft = 16; 
+                                    const targetBottom = 200; // Approx
+                                    const targetTop = winH - targetBottom - targetSize; // Calculate top from bottom
                                     
-                                    const moveX = -window.innerWidth * 0.4 * pMove;
-                                    const moveY = window.innerHeight * 0.3 * pMove;
-                                    const scale = 0.3 - (pMove * 0.2); // Shrink further to 0.1
-                                    const opacity = 1 - (pMove * 2); // Fade out quickly
+                                    // Interpolate from Center (margin1) to Target
+                                    const curLeft = margin1X + (targetLeft - margin1X) * pMove;
+                                    const curRight = margin1X + ((winW - targetLeft - targetSize) - margin1X) * pMove;
+                                    const curTop = margin1Y + (targetTop - margin1Y) * pMove;
+                                    const curBottom = margin1Y + (targetBottom - margin1Y) * pMove;
                                     
-                                    elevatorInterior.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px)) scale(${scale})`;
-                                    elevatorInterior.style.opacity = opacity > 0 ? opacity : 0;
-                                    
-                                    // Reveal Real Avatar
-                                    if(chatAvatarKylie) {
-                                        if (pMove > 0.5) chatAvatarKylie.style.opacity = 1;
-                                        else chatAvatarKylie.style.opacity = 0;
-                                    }
+                                    elevatorInterior.style.left = `${curLeft}px`;
+                                    elevatorInterior.style.right = `${curRight}px`;
+                                    elevatorInterior.style.top = `${curTop}px`;
+                                    elevatorInterior.style.bottom = `${curBottom}px`;
+                                    elevatorInterior.style.borderRadius = '50%';
                                 }
                                 
                             } else {
                                 // Reset
-                                elevatorInterior.style.transform = 'translate(-50%, -50%) scale(1)';
+                                elevatorInterior.style.top = '0px';
+                                elevatorInterior.style.bottom = '0px';
+                                elevatorInterior.style.left = '0px';
+                                elevatorInterior.style.right = '0px';
                                 elevatorInterior.style.borderRadius = '0px';
-                                elevatorInterior.style.opacity = 1;
-                                elevatorInterior.style.top = '50%';
-                                elevatorInterior.style.left = '50%';
-                                if(chatAvatarKylie) chatAvatarKylie.style.opacity = 0;
+                                elevatorInterior.style.transform = 'none';
                             }
                         }
                         
