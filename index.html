@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.34 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.35 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -691,79 +691,19 @@
                             }
                         }
 
-                        // --- AVATAR MORPH & MOVE (v7.32 - STRICT SEPARATION) ---
+                        // --- AVATAR MORPH & MOVE (v7.35 - DISABLED / STATIC FULL SCREEN) ---
                         if (elevatorInterior) {
-                            // Reset state helper
-                            const resetInterior = () => {
-                                elevatorInterior.style.top = '0px';
-                                elevatorInterior.style.bottom = '0px';
-                                elevatorInterior.style.left = '0px';
-                                elevatorInterior.style.right = '0px';
-                                elevatorInterior.style.borderRadius = '0px';
-                            };
-
-                            if (elevP > morphStart) {
-                                const winW = window.innerWidth;
-                                const winH = window.innerHeight;
-                                
-                                // GOAL 1: Center Circle (Diameter = 80% of Width)
-                                const diameter = winW * 0.8;
-                                const targetMarginX = (winW - diameter) / 2;
-                                const targetMarginY = (winH - diameter) / 2;
-
-                                if (elevP <= moveStart) {
-                                    // PHASE 1: Rect -> Center Circle (Morph Only)
-                                    // From 0.55 to 0.70
-                                    const pMorph = (elevP - morphStart) / (morphEnd - morphStart); // 0 -> 1
-                                    
-                                    // Insets grow from 0 to targetMargin
-                                    // Top/Bottom must grow faster to squish the height into a square
-                                    const my = pMorph * targetMarginY;
-                                    const mx = pMorph * targetMarginX;
-                                    
-                                    elevatorInterior.style.top = `${my}px`;
-                                    elevatorInterior.style.bottom = `${my}px`;
-                                    elevatorInterior.style.left = `${mx}px`;
-                                    elevatorInterior.style.right = `${mx}px`;
-                                    
-                                    // Radius goes 0 -> 50%
-                                    elevatorInterior.style.borderRadius = `${pMorph * 50}%`;
-                                    
-                                } else {
-                                    // PHASE 2: Center Circle -> Chat Avatar (Move Only)
-                                    // From 0.70 to 0.80
-                                    // Circle stays circle (radius 50%), just moves coordinates
-                                    const pMove = (elevP - moveStart) / (moveEnd - moveStart); // 0 -> 1
-                                    
-                                    // Start Coords (Center):
-                                    const startTop = targetMarginY;
-                                    const startBottom = targetMarginY;
-                                    const startLeft = targetMarginX;
-                                    const startRight = targetMarginX;
-                                    
-                                    // End Coords (Bottom Left Avatar):
-                                    const avSize = 48; // 12 * 4
-                                    const avLeft = 16;
-                                    const avBottom = 130; // Matches Chat Bubble
-                                    const avTop = winH - avBottom - avSize;
-                                    const avRight = winW - avLeft - avSize;
-                                    
-                                    // Interpolate
-                                    const curTop = startTop + (avTop - startTop) * pMove;
-                                    const curBottom = startBottom + (avBottom - startBottom) * pMove;
-                                    const curLeft = startLeft + (avLeft - startLeft) * pMove;
-                                    const curRight = startRight + (avRight - startRight) * pMove;
-                                    
-                                    elevatorInterior.style.top = `${curTop}px`;
-                                    elevatorInterior.style.bottom = `${curBottom}px`;
-                                    elevatorInterior.style.left = `${curLeft}px`;
-                                    elevatorInterior.style.right = `${curRight}px`;
-                                    elevatorInterior.style.borderRadius = '50%';
-                                }
-                                
-                            } else {
-                                resetInterior();
-                            }
+                            // Force Static Full Screen - NO MOVEMENT
+                            elevatorInterior.style.top = '0px';
+                            elevatorInterior.style.bottom = '0px';
+                            elevatorInterior.style.left = '0px';
+                            elevatorInterior.style.right = '0px';
+                            elevatorInterior.style.width = '100%';
+                            elevatorInterior.style.height = '100%';
+                            elevatorInterior.style.borderRadius = '0px';
+                            elevatorInterior.style.transform = 'none';
+                            
+                            // Opacity is handled by the doors closing/opening logic above
                         }
                         
                         // --- BUBBLES FADE IN ---
