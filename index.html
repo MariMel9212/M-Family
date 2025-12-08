@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.63 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.64 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -335,8 +335,8 @@
                         </div>
 
                         <!-- 5. CHAT BUBBLE 1 (Kylie) - Telegram Style (Left) -->
-                        <!-- v7.62: Moved to left-[105px] to clear avatar. Added scale-90 for pop animation. -->
-                        <div id="chat-bubble-1" class="absolute bottom-32 left-[105px] z-50 max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) transform origin-bottom-left">
+                        <!-- v7.64: Raised base position to bottom-48 (approx 192px) -->
+                        <div id="chat-bubble-1" class="absolute bottom-48 left-[105px] z-50 max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) transform origin-bottom-left">
                             <!-- Name -->
                             <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
                             <!-- Text -->
@@ -353,8 +353,8 @@
                         </div>
 
                         <!-- 6. CHAT BUBBLE 2 (Husband) - Telegram Style (Right) -->
-                        <!-- v7.62: Added scale-90 and origin-bottom-right for pop animation. Cache busted image. -->
-                        <div id="chat-row-2" class="absolute bottom-8 right-4 z-50 flex items-end gap-2 opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) origin-bottom-right">
+                        <!-- v7.64: Raised base position to bottom-24 (approx 96px) -->
+                        <div id="chat-row-2" class="absolute bottom-24 right-4 z-50 flex items-end gap-2 opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) origin-bottom-right">
                             
                             <!-- Bubble (Green) -->
                             <div class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[240px]">
@@ -823,7 +823,9 @@
                             const avatarRadius = 28; // 56px size
                             // Position: Bottom Left (fixed px)
                             const avatarX = 40 + 28; // 40px margin + radius
-                            const avatarY = winH - (100 + 28); // 100px from bottom + radius center
+                            // v7.64 FIX: Raise avatar destination to match raised bubble (bottom-48 = 192px)
+                            // Target Y should be roughly: winH - 192 (bottom) - 20 (adjust)
+                            const avatarY = winH - 210; 
 
                             if (elevP <= morphStart) {
                                 // BEFORE MORPH: Full Screen
@@ -881,7 +883,7 @@
                                 // When husband message appears, slide Kylie up to make room.
                                 const slideStart = 0.88;
                                 const slideEnd = 0.98;
-                                const slideDist = 100; // Move up 100px
+                                const slideDist = 80; // Reduced to 80px to keep it in view
                                 
                                 if (elevP > slideStart) {
                                     let pSlide = (elevP - slideStart) / (slideEnd - slideStart);
@@ -906,8 +908,8 @@
                                 // v7.63: Slide Up Animation (Sync with Avatar)
                                 const slideStart = 0.88;
                                 const slideEnd = 0.98;
-                                const slideDist = 100;
-                                let bottomOffset = 128; // Initial bottom-32 (128px)
+                                const slideDist = 80; // Match avatar slide
+                                let bottomOffset = 192; // Initial bottom-48 (192px) - v7.64 Adjusted base
                                 
                                 if (elevP > slideStart) {
                                     let pSlide = (elevP - slideStart) / (slideEnd - slideStart);
