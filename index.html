@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.59 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.60 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -334,12 +334,27 @@
                             </div>
                         </div>
 
-                        <!-- 5. CHAT BUBBLE (v7.53) -->
-                        <!-- Positioned to the right of the avatar (Avatar is at left: 40px) -->
+                        <!-- 5. CHAT BUBBLE 1 (Kylie) -->
                         <div id="chat-bubble-1" class="absolute bottom-24 left-24 z-50 max-w-[250px] bg-white p-4 rounded-2xl rounded-bl-none shadow-xl border border-slate-100 opacity-0 translate-y-4 transition-all duration-500 transform origin-bottom-left">
                             <p class="text-sm font-medium text-slate-800 leading-snug">
                                 В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте 🐶
                             </p>
+                        </div>
+
+                        <!-- 6. CHAT BUBBLE 2 (Husband) - v7.60 -->
+                        <!-- Positioned Bottom Right -->
+                        <div id="chat-row-2" class="absolute bottom-12 right-4 z-50 flex items-end gap-3 opacity-0 translate-y-4 transition-all duration-500">
+                            <!-- Bubble -->
+                            <div class="bg-gray-200 p-4 rounded-2xl rounded-br-none shadow-md max-w-[220px]">
+                                <!-- Placeholder or empty as per screenshot? -->
+                                <p class="text-sm font-medium text-slate-800 leading-snug">
+                                    ❤️
+                                </p>
+                            </div>
+                            <!-- Avatar -->
+                            <div class="w-12 h-12 rounded-full overflow-hidden shadow-lg border-2 border-white flex-shrink-0">
+                                <img src="./images/husband_avatar.jpg" class="w-full h-full object-cover" alt="Husband">
+                            </div>
                         </div>
 
                     </div>
@@ -406,6 +421,7 @@
             
             // Chat Elements (v7.53)
             const chatBubble1 = document.getElementById('chat-bubble-1');
+            const chatRow2 = document.getElementById('chat-row-2'); // v7.60
 
             // Home Block Elements (v7.25)
             const homeBlock = document.getElementById('home-block');
@@ -859,6 +875,15 @@
                                 chatBubble1.classList.remove('opacity-0', 'translate-y-4');
                             } else {
                                 chatBubble1.classList.add('opacity-0', 'translate-y-4');
+                            }
+                        }
+                        
+                        // v7.60: Show Husband Reply slightly later (0.90)
+                        if (chatRow2) {
+                            if (elevP > 0.90) {
+                                chatRow2.classList.remove('opacity-0', 'translate-y-4');
+                            } else {
+                                chatRow2.classList.add('opacity-0', 'translate-y-4');
                             }
                         }
                     }
