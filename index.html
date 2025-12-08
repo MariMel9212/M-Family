@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.62 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.63 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -871,22 +871,26 @@
                                 const curScale = 1.0 - (pFly * (1.0 - targetScale));
                                 
                                 // Translation:
-                                // When we scale a full-screen div with 'transform-origin: 50% 50%' (default),
-                                // it shrinks towards the center. So the content at center STAYS at center.
-                                // So we just need to translate the CENTER to the new position.
-                                // Delta = Destination - Source
                                 const dx = avatarX - centerX;
                                 const dy = avatarY - centerY;
                                 
-                                const curDx = pFly * dx;
-                                const curDy = pFly * dy;
+                                let curDx = pFly * dx;
+                                let curDy = pFly * dy;
                                 
-                                // Apply: Translate then Scale? Or Scale then Translate?
-                                // Standard: translate(x,y) scale(s) applies translation first (moving origin), then scale.
-                                // But if we translate, we move the center.
-                                // Wait, if we scale(s), the visual center remains at centerX, centerY.
-                                // Then we translate that center by curDx, curDy.
-                                elevatorInterior.style.transform = `translate(${curDx}px, ${curDy}px) scale(${curScale})`;
+                                // PHASE 3: SLIDE UP (Conversation Flow) - v7.63
+                                // When husband message appears, slide Kylie up to make room.
+                                const slideStart = 0.88;
+                                const slideEnd = 0.98;
+                                const slideDist = 100; // Move up 100px
+                                
+                                if (elevP > slideStart) {
+                                    let pSlide = (elevP - slideStart) / (slideEnd - slideStart);
+                                    if (pSlide > 1) pSlide = 1;
+                                    curDy -= (pSlide * slideDist);
+                                }
+                                
+                                // Apply: Center(-50,-50) + Translate(dx,dy) + Scale(s)
+                                elevatorInterior.style.transform = `translate(-50%, -50%) translate(${curDx}px, ${curDy}px) scale(${curScale})`;
                             }
                             
                             // Opacity handled by doors
@@ -898,9 +902,24 @@
                             if (elevP > 0.85) {
                                 chatBubble1.classList.remove('opacity-0', 'translate-y-4', 'scale-90');
                                 chatBubble1.classList.add('scale-100'); // Pop!
+                                
+                                // v7.63: Slide Up Animation (Sync with Avatar)
+                                const slideStart = 0.88;
+                                const slideEnd = 0.98;
+                                const slideDist = 100;
+                                let bottomOffset = 128; // Initial bottom-32 (128px)
+                                
+                                if (elevP > slideStart) {
+                                    let pSlide = (elevP - slideStart) / (slideEnd - slideStart);
+                                    if (pSlide > 1) pSlide = 1;
+                                    bottomOffset += (pSlide * slideDist);
+                                }
+                                chatBubble1.style.bottom = `${bottomOffset}px`;
+                                
                             } else {
                                 chatBubble1.classList.add('opacity-0', 'translate-y-4', 'scale-90');
                                 chatBubble1.classList.remove('scale-100');
+                                chatBubble1.style.bottom = ''; // Reset
                             }
                         }
                         
