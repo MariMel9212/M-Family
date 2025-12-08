@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.45 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.46 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -788,14 +788,13 @@
                                 elevatorInterior.style.webkitClipPath = clipVal;
                                 elevatorInterior.style.clipPath = clipVal;
                                 
-                                // 3. Scale Photo Down & Move Left
+                                // 3. Scale Photo Down (No Shift to avoid gaps)
                                 if (elevatorPhoto) {
-                                    // Scale: 1.0 -> 0.65 (Smaller)
-                                    const scale = 1.0 - (pRound * 0.35);
-                                    // TranslateX: 0 -> -15% (Move left)
-                                    const moveX = pRound * -15;
+                                    // Scale: 1.0 -> 0.85 (Zoomed out slightly, but large enough to cover gaps)
+                                    // Removed translateX to keep it perfectly centered and safe
+                                    const scale = 1.0 - (pRound * 0.15); // 1.0 -> 0.85
                                     
-                                    elevatorPhoto.style.transform = `scale(${scale}) translateX(${moveX}%)`;
+                                    elevatorPhoto.style.transform = `scale(${scale})`;
                                 }
                                 
                             } else {
