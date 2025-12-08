@@ -769,47 +769,76 @@
                             elevatorInterior.style.height = '100%';
                             elevatorInterior.style.transform = 'none';
                             
-                            // 2. Animate Clip Path (Full Screen -> Center Circle)
-                            const roundStart = 0.55; 
-                            const roundEnd = 0.75;
+                            // 2. Animate Avatar (Morph -> Fly)
+                            // v7.54: Robust Container Transform Logic
+                            const winW = window.innerWidth;
+                            const winH = window.innerHeight;
+
+                            // CONSTANTS
+                            const centerX = winW / 2;
+                            const centerY = winH / 2;
                             
-                            if (elevP > roundStart) {
-                                // 0 -> 1 progress
-                                let pRound = (elevP - roundStart) / (roundEnd - roundStart);
-                                if (pRound > 1) pRound = 1; 
+                            // Phase 1 Target (Mid Circle)
+                            const midDiameter = Math.min(winW, winH) * 0.70; // 70% width
+                            const midRadius = midDiameter / 2;
+                            
+                            // Phase 2 Target (Avatar)
+                            const avatarRadius = 28; // 56px size
+                            // Position: Bottom Left (fixed px)
+                            const avatarX = 50; 
+                            const avatarY = winH - 100; // Above nav/bottom
+
+                            if (elevP <= morphStart) {
+                                // BEFORE MORPH: Full Screen
+                                elevatorInterior.style.webkitClipPath = 'circle(150% at 50% 50%)'; 
+                                elevatorInterior.style.clipPath = 'circle(150% at 50% 50%)';
+                                elevatorInterior.style.transform = 'translate(-50%, -50%)'; // Reset container
+                                if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(1)'; // Reset photo
                                 
-                                const winW = window.innerWidth;
-                                const winH = window.innerHeight;
+                            } else if (elevP > morphStart && elevP <= morphEnd) {
+                                // PHASE 1: MORPH TO CENTER CIRCLE (Clip Path Only)
+                                elevatorInterior.style.transform = 'translate(-50%, -50%)'; // Keep centered
                                 
-                                // Start Radius: Enough to cover the screen (hypotenuse/2)
-                                const diag = Math.sqrt(winW*winW + winH*winH);
-                                const startRadius = diag / 2;
+                                let pRound = (elevP - morphStart) / (morphEnd - morphStart);
                                 
-                                // End Radius: 35% of min dimension (70% diameter)
-                                const endRadius = Math.min(winW, winH) * 0.35;
+                                // Interpolate Radius: Start (Full) -> Mid
+                                const startRadius = Math.sqrt(winW*winW + winH*winH) / 2;
+                                const curRadius = startRadius - (pRound * (startRadius - midRadius));
                                 
-                                // Interpolate Radius
-                                const curRadius = startRadius - (pRound * (startRadius - endRadius));
-                                
-                                // Apply clip-path CIRCLE
-                                // This guarantees a perfect circle shape
                                 const clipVal = `circle(${curRadius}px at 50% 50%)`;
                                 elevatorInterior.style.webkitClipPath = clipVal;
                                 elevatorInterior.style.clipPath = clipVal;
                                 
-                                // 3. Scale Photo Down (Slightly Smaller)
+                                // Photo Scale: 1.0 -> 0.71
                                 if (elevatorPhoto) {
-                                    // Scale: 1.0 -> 0.80 (Midpoint between 0.75 [gaps] and 0.85 [safe])
-                                    // Hopefully 0.80 is the sweet spot
-                                    const scale = 1.0 - (pRound * 0.20); 
+                                    const scale = 1.0 - (pRound * 0.29); 
                                     elevatorPhoto.style.transform = `scale(${scale})`;
                                 }
+
+                            } else if (elevP > flyStart) {
+                                // PHASE 2: FLY (Transform Container)
+                                let pFly = (elevP - flyStart) / (flyEnd - flyStart);
+                                if (pFly > 1) pFly = 1;
                                 
-                            } else {
-                                // Reset to full screen (circle covering everything)
-                                elevatorInterior.style.webkitClipPath = 'circle(150% at 50% 50%)'; 
-                                elevatorInterior.style.clipPath = 'circle(150% at 50% 50%)';
-                                if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(1) translateX(0)';
+                                // 1. Freeze Clip Path & Photo Scale at Phase 1 End
+                                const clipVal = `circle(${midRadius}px at 50% 50%)`;
+                                elevatorInterior.style.webkitClipPath = clipVal;
+                                elevatorInterior.style.clipPath = clipVal;
+                                if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(0.71)';
+                                
+                                // 2. Animate Container Transform
+                                // Scale down the WHOLE container (including the circle hole)
+                                const targetScale = avatarRadius / midRadius;
+                                const curScale = 1.0 - (pFly * (1.0 - targetScale));
+                                
+                                // Translate from Center to Avatar Position
+                                const targetDx = avatarX - centerX;
+                                const targetDy = avatarY - centerY;
+                                const curDx = pFly * targetDx;
+                                const curDy = pFly * targetDy;
+                                
+                                // Apply: Center(-50,-50) + Translate(dx,dy) + Scale(s)
+                                elevatorInterior.style.transform = `translate(-50%, -50%) translate(${curDx}px, ${curDy}px) scale(${curScale})`;
                             }
                             
                             // Opacity handled by doors
