@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.26 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.27 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -297,9 +297,8 @@
 
                         <!-- 1.5. ELEVATOR INTERIOR (Hidden initially) -->
                         <!-- This container holds the dark background and Kylie photo. -->
-                        <!-- Added rounded-none and will-change to animate border-radius -->
-                        <!-- overflow-hidden is CRITICAL for the image to clip when corners round -->
-                        <div id="elevator-interior" class="absolute inset-0 w-full h-full z-10 bg-slate-900 opacity-0 overflow-hidden shadow-2xl origin-center will-change-transform">
+                        <!-- CHANGED v7.27: Removed inset-0, added centering classes to allow resizing to circle -->
+                        <div id="elevator-interior" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full z-10 bg-slate-900 opacity-0 overflow-hidden shadow-2xl origin-center will-change-transform">
                              <!-- Fixed path: kylie_elevator_final.jpg (Restored correct photo) -->
                              <img src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100" alt="Kylie Inside">
                         </div>
@@ -689,25 +688,47 @@
                             }
                         }
 
-                        // --- SANTA BARBARA MORPH (v7.26) ---
+                        // --- SANTA BARBARA MORPH (v7.27 - Circle Avatar) ---
                         if (elevatorInterior && elevP > morphStart) {
                             const pMorph = (elevP - morphStart) / (1 - morphStart); // 0 -> 1
                             
-                            // Round Corners: 0px -> 150px (Pill/Arch shape)
-                            const radius = pMorph * 150; 
+                            // 1. Border Radius: 0 -> 50%
+                            const radius = pMorph * 50; 
+                            elevatorInterior.style.borderRadius = `${radius}%`;
                             
-                            // Scale Down: 1.0 -> 0.85 (Card effect)
-                            const scale = 1 - (pMorph * 0.15);
+                            // 2. Inset / Size Animation
+                            // We want to shrink from full screen to a 280px square in the center
+                            // Note: Using calc on inset is reliable.
                             
-                            // Translate Y slightly to center/move up? Let's scale center.
+                            // Approx. final margin for centered 280px box on typical mobile width (390px) is ~55px.
+                            // On height (844px) is ~280px.
                             
-                            elevatorInterior.style.borderRadius = `${radius}px`;
-                            elevatorInterior.style.transform = `scale(${scale})`;
+                            const winW = window.innerWidth;
+                            const winH = window.innerHeight;
+                            const size = 280;
+                            
+                            const finalMarginX = (winW - size) / 2;
+                            const finalMarginY = (winH - size) / 2;
+                            
+                            const mx = pMorph * finalMarginX;
+                            const my = pMorph * finalMarginY;
+                            
+                            elevatorInterior.style.top = `${my}px`;
+                            elevatorInterior.style.bottom = `${my}px`;
+                            elevatorInterior.style.left = `${mx}px`;
+                            elevatorInterior.style.right = `${mx}px`;
+                            
+                            // Reset transform from previous logic
+                            elevatorInterior.style.transform = 'none';
                             
                         } else if (elevatorInterior && elevP <= morphStart) {
-                            // Reset if scrolling back
+                            // Reset to full screen
                             elevatorInterior.style.borderRadius = '0px';
-                            elevatorInterior.style.transform = 'scale(1)';
+                            elevatorInterior.style.top = '0px';
+                            elevatorInterior.style.bottom = '0px';
+                            elevatorInterior.style.left = '0px';
+                            elevatorInterior.style.right = '0px';
+                            elevatorInterior.style.transform = 'none';
                         }
                     }
                 }
