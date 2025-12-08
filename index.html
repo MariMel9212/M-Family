@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.65 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.66 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -893,8 +893,9 @@
                                     curDy -= (pSlide * slideDist);
                                 }
                                 
-                                // Apply: Center(-50,-50) + Translate(dx,dy) + Scale(s)
-                                elevatorInterior.style.transform = `translate(-50%, -50%) translate(${curDx}px, ${curDy}px) scale(${curScale})`;
+                                // Apply: Translate(dx,dy) + Scale(s) (Origin is center 0,0 relative to element)
+                                // v7.66 FIX: REMOVED erroneous translate(-50%, -50%) which was pushing it off-screen
+                                elevatorInterior.style.transform = `translate(${curDx}px, ${curDy}px) scale(${curScale})`;
                             }
                             
                             // Opacity handled by doors
@@ -928,9 +929,10 @@
                             }
                         }
                         
-                        // v7.60: Show Husband Reply slightly later (0.90)
+                        // v7.60: Show Husband Reply
                         if (chatRow2) {
-                            if (elevP > 0.90) {
+                            // v7.66: Lower threshold to 0.88 to ensure it appears during the slide
+                            if (elevP > 0.88) {
                                 chatRow2.classList.remove('opacity-0', 'translate-y-4', 'scale-90');
                                 chatRow2.classList.add('scale-100'); // Pop!
                             } else {
