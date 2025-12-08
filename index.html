@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.61 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.62 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -335,9 +335,10 @@
                         </div>
 
                         <!-- 5. CHAT BUBBLE 1 (Kylie) - Telegram Style (Left) -->
-                        <div id="chat-bubble-1" class="absolute bottom-32 left-[80px] z-50 max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 translate-y-4 transition-all duration-500 transform origin-bottom-left">
+                        <!-- v7.62: Moved to left-[105px] to clear avatar. Added scale-90 for pop animation. -->
+                        <div id="chat-bubble-1" class="absolute bottom-32 left-[105px] z-50 max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) transform origin-bottom-left">
                             <!-- Name -->
-                            <p class="text-xs font-bold text-[#5790df] mb-1">Kylie 🐶</p>
+                            <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
                             <!-- Text -->
                             <p class="text-[15px] text-slate-900 leading-snug">
                                 В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
@@ -352,7 +353,8 @@
                         </div>
 
                         <!-- 6. CHAT BUBBLE 2 (Husband) - Telegram Style (Right) -->
-                        <div id="chat-row-2" class="absolute bottom-8 right-4 z-50 flex items-end gap-2 opacity-0 translate-y-4 transition-all duration-500">
+                        <!-- v7.62: Added scale-90 and origin-bottom-right for pop animation. Cache busted image. -->
+                        <div id="chat-row-2" class="absolute bottom-8 right-4 z-50 flex items-end gap-2 opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) origin-bottom-right">
                             
                             <!-- Bubble (Green) -->
                             <div class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[240px]">
@@ -373,9 +375,9 @@
                             </div>
 
                             <!-- Avatar (Round) -->
-                            <!-- Fixed Path: ./images/husband_avatar.jpg -->
+                            <!-- Fixed Path with Cache Buster -->
                             <div class="w-10 h-10 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200">
-                                <img src="./images/husband_avatar.jpg" class="w-full h-full object-cover" alt="Husband">
+                                <img src="./images/husband_avatar.jpg?v=2" class="w-full h-full object-cover" alt="Husband">
                             </div>
                         </div>
 
@@ -894,18 +896,22 @@
                         // v7.59 FIX: Show bubble earlier (0.85) immediately after fly ends
                         if (chatBubble1) {
                             if (elevP > 0.85) {
-                                chatBubble1.classList.remove('opacity-0', 'translate-y-4');
+                                chatBubble1.classList.remove('opacity-0', 'translate-y-4', 'scale-90');
+                                chatBubble1.classList.add('scale-100'); // Pop!
                             } else {
-                                chatBubble1.classList.add('opacity-0', 'translate-y-4');
+                                chatBubble1.classList.add('opacity-0', 'translate-y-4', 'scale-90');
+                                chatBubble1.classList.remove('scale-100');
                             }
                         }
                         
                         // v7.60: Show Husband Reply slightly later (0.90)
                         if (chatRow2) {
                             if (elevP > 0.90) {
-                                chatRow2.classList.remove('opacity-0', 'translate-y-4');
+                                chatRow2.classList.remove('opacity-0', 'translate-y-4', 'scale-90');
+                                chatRow2.classList.add('scale-100'); // Pop!
                             } else {
-                                chatRow2.classList.add('opacity-0', 'translate-y-4');
+                                chatRow2.classList.add('opacity-0', 'translate-y-4', 'scale-90');
+                                chatRow2.classList.remove('scale-100');
                             }
                         }
                     }
