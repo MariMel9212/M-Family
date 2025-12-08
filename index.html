@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.41 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.42 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -303,10 +303,10 @@
                              <img id="elevator-photo" src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100 will-change-transform" alt="Kylie Inside">
                         </div>
                         
-                        <!-- 2. TRANSITION TEXT (v7.41 Fix - Raised another 30px) -->
-                        <!-- Previous was top-5 (20px). Requested 30px higher -> -10px. -->
-                        <!-- Using top-0 and negative margin to be safe -->
-                        <div id="elevator-sticker" class="absolute top-0 -mt-2 left-1/2 transform -translate-x-1/2 z-50 w-[340px] text-left pointer-events-none">
+                        <!-- 2. TRANSITION TEXT (v7.42 Fix - Raised another 20px) -->
+                        <!-- Previous was top-0 -mt-2. Requested 20px higher. -->
+                        <!-- New: top-0 -mt-8 (approx 32px up) -->
+                        <div id="elevator-sticker" class="absolute top-0 -mt-8 left-1/2 transform -translate-x-1/2 z-50 w-[340px] text-left pointer-events-none">
                             <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
                                 Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
                             </p>
@@ -749,7 +749,7 @@
                             }
                         }
 
-                        // --- AVATAR ROUNDING (v7.41 - FASTER & PERFECT CIRCLE & SCALE) ---
+                        // --- AVATAR ROUNDING (v7.42 - CLIP PATH CIRCLE) ---
                         if (elevatorInterior) {
                             // 1. Force Static Position
                             elevatorInterior.style.top = '0px';
@@ -761,46 +761,44 @@
                             elevatorInterior.style.transform = 'none';
                             
                             // 2. Animate Clip Path (Full Screen -> Center Circle)
-                            // Start EARLIER to ensure completion
-                            const roundStart = 0.55; // Immediately after doors open
-                            const roundEnd = 0.75;   // Finish quickly
+                            const roundStart = 0.55; 
+                            const roundEnd = 0.75;
                             
                             if (elevP > roundStart) {
                                 // 0 -> 1 progress
                                 let pRound = (elevP - roundStart) / (roundEnd - roundStart);
-                                if (pRound > 1) pRound = 1; // Clamp hard to 1
+                                if (pRound > 1) pRound = 1; 
                                 
-                                // Calculate dimensions
                                 const winW = window.innerWidth;
                                 const winH = window.innerHeight;
-                                // Use 70% of min dimension for a tighter avatar look (requested "reduce photo")
-                                const circleDiameter = Math.min(winW, winH) * 0.70;
                                 
-                                // Target Insets for the circle
-                                const targetInsetY = (winH - circleDiameter) / 2;
-                                const targetInsetX = (winW - circleDiameter) / 2;
+                                // Start Radius: Enough to cover the screen (hypotenuse/2)
+                                const diag = Math.sqrt(winW*winW + winH*winH);
+                                const startRadius = diag / 2;
                                 
-                                // Interpolate Insets
-                                const curInsetY = pRound * targetInsetY;
-                                const curInsetX = pRound * targetInsetX;
-                                const curRadius = pRound * 50; // 0% -> 50%
+                                // End Radius: 35% of min dimension (70% diameter)
+                                const endRadius = Math.min(winW, winH) * 0.35;
                                 
-                                // Apply clip-path (Standard + Webkit)
-                                const clipVal = `inset(${curInsetY}px ${curInsetX}px ${curInsetY}px ${curInsetX}px round ${curRadius}%)`;
+                                // Interpolate Radius
+                                const curRadius = startRadius - (pRound * (startRadius - endRadius));
+                                
+                                // Apply clip-path CIRCLE
+                                // This guarantees a perfect circle shape
+                                const clipVal = `circle(${curRadius}px at 50% 50%)`;
                                 elevatorInterior.style.webkitClipPath = clipVal;
                                 elevatorInterior.style.clipPath = clipVal;
                                 
                                 // 3. Scale Photo Down (Zoom Out)
                                 if (elevatorPhoto) {
-                                    // Scale from 1.0 -> 0.85
-                                    const scale = 1.0 - (pRound * 0.15);
+                                    // Scale from 1.0 -> 0.75 (Reduced more as requested)
+                                    const scale = 1.0 - (pRound * 0.25);
                                     elevatorPhoto.style.transform = `scale(${scale})`;
                                 }
                                 
                             } else {
-                                // Reset to full screen
-                                elevatorInterior.style.webkitClipPath = 'inset(0px 0px 0px 0px round 0%)';
-                                elevatorInterior.style.clipPath = 'inset(0px 0px 0px 0px round 0%)';
+                                // Reset to full screen (circle covering everything)
+                                elevatorInterior.style.webkitClipPath = 'circle(150% at 50% 50%)'; 
+                                elevatorInterior.style.clipPath = 'circle(150% at 50% 50%)';
                                 if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(1)';
                             }
                             
