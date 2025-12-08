@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.27 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.28 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -620,25 +620,24 @@
                     if (scrollY >= wrapperTop) {
                         const elevP = Math.min(1, (scrollY - wrapperTop) / scrollable);
                         
-                        // Revised Timeline for Santa Barbara Effect (Total 500vh)
-                        // 0.0 - 0.15: Doors Close
-                        // 0.15 - 0.55: Ride
-                        // 0.55 - 0.75: Doors Open
-                        // 0.75 - 1.00: Santa Barbara Morph (Rounding + Scale)
+                        // Revised Timeline for Chat Morph (Total 700vh)
+                        // 0.0 - 0.1: Doors Close
+                        // 0.1 - 0.4: Ride
+                        // 0.4 - 0.55: Doors Open
+                        // 0.55 - 0.7: Morph to Center Circle
+                        // 0.7 - 0.8: Move to Left (Avatar)
+                        // 0.8 - 0.9: Bubble 1
+                        // 0.9 - 1.0: Bubble 2
 
-                        // 1. DOORS CLOSE (0 -> 0.15)
-                        const closeEnd = 0.15;
-                        
-                        // 2. RIDE (0.15 -> 0.55)
-                        const rideStart = 0.15;
-                        const rideEnd = 0.55;
-                        
-                        // 3. DOORS OPEN (0.55 -> 0.75)
-                        const openStart = 0.55;
-                        const openEnd = 0.75;
-
-                        // 4. MORPH (0.75 -> 1.0)
-                        const morphStart = 0.75;
+                        const closeEnd = 0.1;
+                        const rideStart = 0.1;
+                        const rideEnd = 0.4;
+                        const openStart = 0.4;
+                        const openEnd = 0.55;
+                        const morphStart = 0.55;
+                        const morphEnd = 0.7;
+                        const moveStart = 0.7;
+                        const moveEnd = 0.8;
                         
                         // --- DOORS LOGIC ---
                         if (doorLeft && doorRight) {
@@ -646,25 +645,24 @@
                             let xRight = 100;
                             
                             if (elevP < openStart) {
-                                // Closing Phase (0 -> 0.15)
+                                // Closing Phase
                                 let pClose = 0;
                                 if (elevP > 0) pClose = Math.min(1, elevP / closeEnd);
                                 
-                                xLeft = -100 + (pClose * 100); // -100 -> 0
-                                xRight = 100 - (pClose * 100); // 100 -> 0
+                                xLeft = -100 + (pClose * 100); 
+                                xRight = 100 - (pClose * 100); 
                                 
-                                // Interior Opacity Logic
                                 if (elevatorInterior) {
                                     if (pClose > 0.9) elevatorInterior.style.opacity = 1;
-                                    else if (elevP < 0.1) elevatorInterior.style.opacity = 0; 
+                                    else if (elevP < 0.05) elevatorInterior.style.opacity = 0; 
                                 }
 
                             } else {
-                                // Opening Phase (0.55 -> 0.75)
+                                // Opening Phase
                                 let pOpen = Math.min(1, (elevP - openStart) / (openEnd - openStart));
                                 
-                                xLeft = -(pOpen * 100); // 0 -> -100
-                                xRight = (pOpen * 100); // 0 -> 100
+                                xLeft = -(pOpen * 100); 
+                                xRight = (pOpen * 100); 
                                 
                                 if (elevatorInterior) elevatorInterior.style.opacity = 1;
                             }
@@ -673,14 +671,11 @@
                             doorRight.style.transform = `translateX(${xRight}%)`;
                         }
                         
-                        // --- FLOOR PANEL LOGIC ---
+                        // --- FLOOR PANEL ---
                         if (elevatorPanel && floorCount) {
                             let panelOpacity = 0;
-                            // Show during Ride
                             if (elevP > rideStart && elevP < rideEnd) panelOpacity = 1;
-                            // Fade in
                             else if (elevP > (rideStart - 0.05) && elevP <= rideStart) panelOpacity = (elevP - (rideStart - 0.05)) / 0.05;
-                            // Fade out
                             else if (elevP >= rideEnd && elevP < (rideEnd + 0.05)) panelOpacity = 1 - (elevP - rideEnd) / 0.05;
                             
                             elevatorPanel.style.opacity = panelOpacity;
@@ -692,47 +687,103 @@
                             }
                         }
 
-                        // --- SANTA BARBARA MORPH (v7.27 - Circle Avatar) ---
-                        if (elevatorInterior && elevP > morphStart) {
-                            const pMorph = (elevP - morphStart) / (1 - morphStart); // 0 -> 1
+                        // --- AVATAR MORPH & MOVE (v7.28) ---
+                        if (elevatorInterior) {
+                            if (elevP > morphStart) {
+                                // 1. MORPH TO CENTER CIRCLE (0.55 -> 0.7)
+                                const pMorph = Math.min(1, (elevP - morphStart) / (morphEnd - morphStart));
+                                
+                                const winW = window.innerWidth;
+                                const winH = window.innerHeight;
+                                
+                                // Target 1: Center Circle (280px)
+                                const size1 = 280;
+                                const margin1X = (winW - size1) / 2;
+                                const margin1Y = (winH - size1) / 2;
+                                
+                                // 2. MOVE TO LEFT AVATAR (0.7 -> 0.8)
+                                // Target 2: Left Avatar (48px = 3rem), Positioned near bottom-left chat bubble
+                                // In Tailwind: px-4 (16px) gap-3 (12px) -> Left edge ~16px. Bottom ~150px?
+                                // Actually we need to match the placeholder div in #chat-bubble-1
+                                // Let's hardcode specific reliable coordinates relative to viewport
+                                const size2 = 48; // 12 * 4px
+                                const targetLeft = 16; // px
+                                // We need to calculate bottom position dynamically or approximate
+                                // The chat layer is pb-32 (128px). The first bubble is at bottom.
+                                // Let's approximate bottom: 128px + 80px (bubble height) + gap...
+                                // Actually, let's just aim for "Bottom 20%, Left 16px"
+                                const targetTop = winH - 200; // Approx bottom area
+                                
+                                let currentSize, currentTop, currentLeft, radius;
+                                
+                                if (elevP <= moveStart) {
+                                    // Phase 1: Full Screen -> Center Circle
+                                    const t = pMorph; // 0 -> 1
+                                    radius = t * 50; // 0 -> 50%
+                                    
+                                    const s = winW * (1 - t) + size1 * t; // Width interpolation? No, use inset.
+                                    // Inset is easier: 0 -> margin1
+                                    const mx = t * margin1X;
+                                    const my = t * margin1Y;
+                                    
+                                    elevatorInterior.style.top = `${my}px`;
+                                    elevatorInterior.style.bottom = `${my}px`;
+                                    elevatorInterior.style.left = `${mx}px`;
+                                    elevatorInterior.style.right = `${mx}px`;
+                                    elevatorInterior.style.borderRadius = `${radius}%`;
+                                    
+                                } else {
+                                    // Phase 2: Center Circle -> Left Avatar
+                                    const pMove = Math.min(1, (elevP - moveStart) / (moveEnd - moveStart));
+                                    
+                                    // Start vals: margin1X, margin1Y, size1
+                                    // End vals: targetLeft, targetTop, size2
+                                    
+                                    // We need to switch from "inset" logic to "top/left/width/height" logic or stick to inset.
+                                    // Inset is: top, bottom, left, right.
+                                    // Center Circle Inset: top=margin1Y, bottom=margin1Y
+                                    // Left Avatar Inset: top=targetTop, bottom=(winH - targetTop - size2), left=targetLeft, right=(winW - targetLeft - size2)
+                                    
+                                    const endBottom = winH - targetTop - size2;
+                                    const endRight = winW - targetLeft - size2;
+                                    
+                                    const curTop = margin1Y + (targetTop - margin1Y) * pMove;
+                                    const curBottom = margin1Y + (endBottom - margin1Y) * pMove;
+                                    const curLeft = margin1X + (targetLeft - margin1X) * pMove;
+                                    const curRight = margin1X + (endRight - margin1X) * pMove;
+                                    
+                                    elevatorInterior.style.top = `${curTop}px`;
+                                    elevatorInterior.style.bottom = `${curBottom}px`;
+                                    elevatorInterior.style.left = `${curLeft}px`;
+                                    elevatorInterior.style.right = `${curRight}px`;
+                                    elevatorInterior.style.borderRadius = `50%`;
+                                }
+                                
+                            } else {
+                                // Reset
+                                elevatorInterior.style.top = '0px';
+                                elevatorInterior.style.bottom = '0px';
+                                elevatorInterior.style.left = '0px';
+                                elevatorInterior.style.right = '0px';
+                                elevatorInterior.style.borderRadius = '0px';
+                            }
+                        }
+                        
+                        // --- BUBBLES FADE IN ---
+                        if (chatBubble1 && chatBubble2) {
+                            // Bubble 1: 0.8 -> 0.85
+                            if (elevP > 0.8) {
+                                chatBubble1.classList.remove('opacity-0', 'translate-y-4');
+                            } else {
+                                chatBubble1.classList.add('opacity-0', 'translate-y-4');
+                            }
                             
-                            // 1. Border Radius: 0 -> 50%
-                            const radius = pMorph * 50; 
-                            elevatorInterior.style.borderRadius = `${radius}%`;
-                            
-                            // 2. Inset / Size Animation
-                            // We want to shrink from full screen to a 280px square in the center
-                            // Note: Using calc on inset is reliable.
-                            
-                            // Approx. final margin for centered 280px box on typical mobile width (390px) is ~55px.
-                            // On height (844px) is ~280px.
-                            
-                            const winW = window.innerWidth;
-                            const winH = window.innerHeight;
-                            const size = 280;
-                            
-                            const finalMarginX = (winW - size) / 2;
-                            const finalMarginY = (winH - size) / 2;
-                            
-                            const mx = pMorph * finalMarginX;
-                            const my = pMorph * finalMarginY;
-                            
-                            elevatorInterior.style.top = `${my}px`;
-                            elevatorInterior.style.bottom = `${my}px`;
-                            elevatorInterior.style.left = `${mx}px`;
-                            elevatorInterior.style.right = `${mx}px`;
-                            
-                            // Reset transform from previous logic
-                            elevatorInterior.style.transform = 'none';
-                            
-                        } else if (elevatorInterior && elevP <= morphStart) {
-                            // Reset to full screen
-                            elevatorInterior.style.borderRadius = '0px';
-                            elevatorInterior.style.top = '0px';
-                            elevatorInterior.style.bottom = '0px';
-                            elevatorInterior.style.left = '0px';
-                            elevatorInterior.style.right = '0px';
-                            elevatorInterior.style.transform = 'none';
+                            // Bubble 2: 0.9 -> 0.95
+                            if (elevP > 0.9) {
+                                chatBubble2.classList.remove('opacity-0', 'translate-y-4');
+                            } else {
+                                chatBubble2.classList.add('opacity-0', 'translate-y-4');
+                            }
                         }
                     }
                 }
