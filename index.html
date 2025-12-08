@@ -853,7 +853,8 @@
                         }
                         
                         // --- BUBBLES FADE IN ---
-                        if (chatBubble1 && chatBubble2) {
+                        // v7.57 FIX: Removed dependency on missing chatBubble2
+                        if (chatBubble1) {
                             // Bubble 1: After morph done (moveEnd = 1.0)
                             // We might need more space or just trigger it at the very end
                             // Let's show Bubble 1 as avatar moves into place?
@@ -862,13 +863,6 @@
                                 chatBubble1.classList.remove('opacity-0', 'translate-y-4');
                             } else {
                                 chatBubble1.classList.add('opacity-0', 'translate-y-4');
-                            }
-                            
-                            // Bubble 2: Also at end
-                            if (elevP > 0.98) {
-                                chatBubble2.classList.remove('opacity-0', 'translate-y-4');
-                            } else {
-                                chatBubble2.classList.add('opacity-0', 'translate-y-4');
                             }
                         }
                     }
