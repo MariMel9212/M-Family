@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.40 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.41 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -297,15 +297,16 @@
 
                         <!-- 1.5. ELEVATOR INTERIOR (Hidden initially) -->
                         <!-- This container holds the dark background and Kylie photo. -->
-                        <!-- CHANGED v7.37: Added overflow-hidden so border-radius clips the image! -->
-                        <div id="elevator-interior" class="absolute top-1/2 left-1/2 w-full h-full z-10 bg-slate-900 opacity-0 shadow-2xl origin-center will-change-transform overflow-hidden" style="transform: translate(-50%, -50%);">
+                        <div id="elevator-interior" class="absolute top-1/2 left-1/2 w-full h-full z-10 bg-slate-900 opacity-0 shadow-2xl origin-center will-change-transform" style="transform: translate(-50%, -50%);">
                              <!-- Fixed path: kylie_elevator_final.jpg (Restored correct photo) -->
-                             <img src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100" alt="Kylie Inside">
+                             <!-- Added ID for scaling -->
+                             <img id="elevator-photo" src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100 will-change-transform" alt="Kylie Inside">
                         </div>
                         
-                        <!-- 2. TRANSITION TEXT (v7.40 Fix - Top-5) -->
-                        <!-- Moved to top-5 (20px) as requested -->
-                        <div id="elevator-sticker" class="absolute top-5 left-1/2 transform -translate-x-1/2 z-20 w-[340px] text-left">
+                        <!-- 2. TRANSITION TEXT (v7.41 Fix - Raised another 30px) -->
+                        <!-- Previous was top-5 (20px). Requested 30px higher -> -10px. -->
+                        <!-- Using top-0 and negative margin to be safe -->
+                        <div id="elevator-sticker" class="absolute top-0 -mt-2 left-1/2 transform -translate-x-1/2 z-50 w-[340px] text-left pointer-events-none">
                             <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
                                 Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
                             </p>
@@ -393,6 +394,7 @@
             const elevatorPanel = document.getElementById('elevator-panel');
             const floorCount = document.getElementById('floor-count');
             const elevatorInterior = document.getElementById('elevator-interior'); 
+            const elevatorPhoto = document.getElementById('elevator-photo'); // New v7.41 
             
             // Chat Elements (v7.28)
             const chatRowKylie = document.getElementById('chat-row-kylie');
@@ -747,7 +749,7 @@
                             }
                         }
 
-                        // --- AVATAR ROUNDING (v7.40 - CLIP PATH MORPH TO CIRCLE) ---
+                        // --- AVATAR ROUNDING (v7.41 - FASTER & PERFECT CIRCLE & SCALE) ---
                         if (elevatorInterior) {
                             // 1. Force Static Position
                             elevatorInterior.style.top = '0px';
@@ -759,40 +761,47 @@
                             elevatorInterior.style.transform = 'none';
                             
                             // 2. Animate Clip Path (Full Screen -> Center Circle)
-                            const roundStart = 0.65;
-                            const roundEnd = 0.85;
+                            // Start EARLIER to ensure completion
+                            const roundStart = 0.55; // Immediately after doors open
+                            const roundEnd = 0.75;   // Finish quickly
                             
                             if (elevP > roundStart) {
                                 // 0 -> 1 progress
-                                const pRound = Math.min(1, (elevP - roundStart) / (roundEnd - roundStart));
+                                let pRound = (elevP - roundStart) / (roundEnd - roundStart);
+                                if (pRound > 1) pRound = 1; // Clamp hard to 1
                                 
                                 // Calculate dimensions
                                 const winW = window.innerWidth;
                                 const winH = window.innerHeight;
-                                // Use 80% of min dimension for the final circle size
-                                const circleDiameter = Math.min(winW, winH) * 0.80;
-                                
-                                // We interpolate from Full Screen Rect to Center Circle.
-                                // Full Screen Rect can be represented as: inset(0 0 0 0 round 0%)
-                                // Center Circle can be represented as: inset(dY dX dY dX round 50%)
+                                // Use 70% of min dimension for a tighter avatar look (requested "reduce photo")
+                                const circleDiameter = Math.min(winW, winH) * 0.70;
                                 
                                 // Target Insets for the circle
                                 const targetInsetY = (winH - circleDiameter) / 2;
                                 const targetInsetX = (winW - circleDiameter) / 2;
                                 
-                                // Interpolate
+                                // Interpolate Insets
                                 const curInsetY = pRound * targetInsetY;
                                 const curInsetX = pRound * targetInsetX;
                                 const curRadius = pRound * 50; // 0% -> 50%
                                 
-                                // Apply clip-path
-                                elevatorInterior.style.clipPath = `inset(${curInsetY}px ${curInsetX}px ${curInsetY}px ${curInsetX}px round ${curRadius}%)`;
-                                elevatorInterior.style.borderRadius = '0px'; // Override any border-radius
+                                // Apply clip-path (Standard + Webkit)
+                                const clipVal = `inset(${curInsetY}px ${curInsetX}px ${curInsetY}px ${curInsetX}px round ${curRadius}%)`;
+                                elevatorInterior.style.webkitClipPath = clipVal;
+                                elevatorInterior.style.clipPath = clipVal;
+                                
+                                // 3. Scale Photo Down (Zoom Out)
+                                if (elevatorPhoto) {
+                                    // Scale from 1.0 -> 0.85
+                                    const scale = 1.0 - (pRound * 0.15);
+                                    elevatorPhoto.style.transform = `scale(${scale})`;
+                                }
                                 
                             } else {
                                 // Reset to full screen
+                                elevatorInterior.style.webkitClipPath = 'inset(0px 0px 0px 0px round 0%)';
                                 elevatorInterior.style.clipPath = 'inset(0px 0px 0px 0px round 0%)';
-                                elevatorInterior.style.borderRadius = '0px';
+                                if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(1)';
                             }
                             
                             // Opacity handled by doors
