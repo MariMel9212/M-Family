@@ -137,7 +137,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.86 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.87 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -374,21 +374,25 @@
                 </div>
 
                 <!-- BLOCK 4: NEW YEAR / HOME -->
-                <div id="home-block" class="relative w-full min-h-[100vh] z-30 bg-white overflow-hidden">
+                <div id="home-block" class="relative w-full min-h-[100vh] z-30 bg-white overflow-visible">
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0 pointer-events-none" alt="Texture">
-                    <!-- Branch 1: Left side - rotated 5deg -->
-                    <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-12 -left-12 w-60 z-10 opacity-90 will-change-transform pointer-events-none" style="transform: translateX(-100%) rotate(5deg); transform-origin: right center;" alt="Branch">
                     
-                    <!-- Branch 2: Top Right - Mirrored -->
-                    <img id="branch-tr" src="./images/tree_branch.png" class="absolute -top-12 -right-12 w-60 z-10 opacity-90 will-change-transform pointer-events-none" style="transform: translateX(100%) scaleX(-1) rotate(5deg); transform-origin: left center;" alt="Branch">
-                    
-                    <!-- Commented out other branches for step-by-step adjustment -->
-                    <!--
-                    <img id="branch-tr" src="./images/tree_branch.png" class="absolute -top-12 -right-12 w-80 z-10 opacity-90 rotate-90 scale-x-[-1] will-change-transform pointer-events-none" style="transform: translate(100%, -100%);" alt="Branch">
-                    <img id="branch-bl" src="./images/tree_branch.png" class="absolute -bottom-12 -left-12 w-64 z-10 opacity-90 -rotate-180 will-change-transform pointer-events-none" style="transform: translate(-100%, 100%);" alt="Branch">
-                    -->
-                    
-                    <div class="relative z-10 p-6 flex flex-col items-center justify-center min-h-[50vh] pt-32">
+                    <!-- DECORATIVE BRANCHES CONTAINER (Z-40 to overlay previous block) -->
+                    <div id="branches-container" class="absolute inset-0 w-full h-full pointer-events-none z-40 overflow-visible">
+                        <!-- 1. Top Left (Main) -->
+                        <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-16 -left-12 w-60 opacity-90 will-change-transform transition-transform duration-700 ease-out" style="transform: translateX(-120%) rotate(5deg);" alt="Branch">
+                        
+                        <!-- 2. Top Right (Mirrored) -->
+                        <img id="branch-tr" src="./images/tree_branch.png" class="absolute -top-12 -right-16 w-64 opacity-90 will-change-transform transition-transform duration-1000 ease-out" style="transform: translateX(120%) scaleX(-1) rotate(-5deg);" alt="Branch">
+                        
+                        <!-- 3. Middle Left (Small) -->
+                        <img id="branch-ml" src="./images/tree_branch.png" class="absolute top-48 -left-8 w-40 opacity-80 will-change-transform transition-transform duration-1200 ease-out" style="transform: translateX(-150%) rotate(-15deg);" alt="Branch">
+                        
+                        <!-- 4. Bottom Right (Large) -->
+                        <img id="branch-br" src="./images/tree_branch.png" class="absolute bottom-12 -right-12 w-80 opacity-90 will-change-transform transition-transform duration-1500 ease-out" style="transform: translateX(120%) scaleX(-1) rotate(-10deg);" alt="Branch">
+                    </div>
+
+                    <div class="relative z-10 p-6 flex flex-col items-center justify-center min-h-[50vh] pt-48">
                         <h2 id="home-title" class="text-3xl font-extrabold text-slate-900 text-center mb-4 opacity-0 translate-y-10 transition-all duration-1000 ease-out" style="font-family: 'Shantell Sans', cursive;">
                             Наш первый праздник здесь
                         </h2>
@@ -458,7 +462,8 @@ const elevatorWrapper = document.getElementById('elevator-wrapper');
 const homeBlock = document.getElementById('home-block');
                             const branchTL = document.getElementById('branch-tl');
                             const branchTR = document.getElementById('branch-tr');
-                            // const branchBL = document.getElementById('branch-bl');
+                            const branchML = document.getElementById('branch-ml');
+                            const branchBR = document.getElementById('branch-br');
                             const homeTitle = document.getElementById('home-title');
                             
                             const transitionTextBlock = document.getElementById('transition-text-block');
@@ -880,19 +885,17 @@ if (mapBg) {
                     const endOffset = viewH * 0.5; 
                     const dist = rect.top; 
                     
-                    if (dist < viewH) {
+if (dist < viewH) {
+                        // Trigger animation when block enters viewport
+                        // We use CSS transitions for smoothness, so we just set the final state
+                        
+                        if (branchTL) branchTL.style.transform = `translateX(0) rotate(5deg)`;
+                        if (branchTR) branchTR.style.transform = `translateX(0) scaleX(-1) rotate(-5deg)`;
+                        if (branchML) branchML.style.transform = `translateX(0) rotate(-15deg)`;
+                        if (branchBR) branchBR.style.transform = `translateX(0) scaleX(-1) rotate(-10deg)`;
+                        
+                        // Title Fade In
                         const pHome = Math.max(0, Math.min(1, (viewH - dist) / (viewH * 0.6)));
-                        const easeP = 1 - Math.pow(1 - pHome, 3);
-                        
-if (branchTL) {
-                                            const x = -100 + (easeP * 100); 
-                                            branchTL.style.transform = `translateX(${x}%) rotate(5deg)`;
-                                        }
-                                        if (branchTR) {
-                                            const x = 100 - (easeP * 100); 
-                                            branchTR.style.transform = `translateX(${x}%) scaleX(-1) rotate(5deg)`;
-                                        }
-                        
                         if (homeTitle) {
                             if (pHome > 0.5) {
                                 homeTitle.classList.remove('opacity-0', 'translate-y-10');
@@ -900,6 +903,12 @@ if (branchTL) {
                                 homeTitle.classList.add('opacity-0', 'translate-y-10');
                             }
                         }
+                    } else {
+                        // Reset if scrolled back up (optional, keep animated if preferred)
+                        if (branchTL) branchTL.style.transform = `translateX(-120%) rotate(5deg)`;
+                        if (branchTR) branchTR.style.transform = `translateX(120%) scaleX(-1) rotate(-5deg)`;
+                        if (branchML) branchML.style.transform = `translateX(-150%) rotate(-15deg)`;
+                        if (branchBR) branchBR.style.transform = `translateX(120%) scaleX(-1) rotate(-10deg)`;
                     }
                 }
             };
