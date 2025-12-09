@@ -79,7 +79,7 @@
         </main>
 
         <!-- STORY VIEWER (OVERLAY) -->
-        <div id="story-viewer" class="fixed inset-0 z-[100] bg-white hidden overflow-y-auto no-scrollbar">
+        <div id="story-viewer" class="fixed inset-0 z-[100] bg-white hidden overflow-y-auto overflow-x-hidden no-scrollbar">
             <!-- STORY CONTENT HERE -->
         </div>
 
@@ -137,7 +137,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.80 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.81 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -252,12 +252,24 @@
                     </div>
                 </div>
 
+                <!-- TRANSITION TEXT: Between Map and Elevator -->
+                <div id="transition-text-block" class="relative w-full z-25 bg-transparent" style="margin-top: -80px; margin-bottom: -80px;">
+                    <div class="relative w-full px-6 py-16">
+                        <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0" alt="Texture">
+                        <div id="elevator-sticker" class="relative z-10 w-[90%] max-w-[400px] mx-auto text-left">
+                            <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
+                                Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- BLOCK 3: ELEVATOR -->
                 <!-- Increased height to 700vh to fit the extended sequence -->
                 <div id="elevator-wrapper" class="relative w-full h-[700vh] z-20">
                     
-                    <!-- STICKY CONTAINER: Overflow VISIBLE for Top Text, but internals CLIP -->
-                    <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center" style="overflow: visible;">
+                    <!-- STICKY CONTAINER -->
+                    <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center overflow-hidden">
                         
                         <!-- INTERNAL WRAPPER: CLIPS WIDE CONTENT (Doors, Background) -->
                         <div class="absolute inset-0 w-full h-full overflow-hidden">
@@ -358,21 +370,11 @@
                         
                         </div> <!-- END INTERNAL WRAPPER -->
 
-                        <!-- 2. TRANSITION TEXT (OUTSIDE CLIP, VISIBLE) -->
-                        <!-- Positioned absolutely at top, pulled UP by margin -->
-                        <div id="elevator-sticker" class="absolute top-0 -mt-24 left-1/2 transform -translate-x-1/2 z-[60] w-[90%] max-w-[400px] text-left pointer-events-none">
-                            <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
-                                Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
-                            </p>
-                        </div>
-
                     </div>
                 </div>
 
                 <!-- BLOCK 4: NEW YEAR / HOME -->
-                <!-- overflow-visible to allow branches to overlap upwards -->
-                <!-- z-30 to sit on top of elevator block -->
-                <div id="home-block" class="relative w-full min-h-[100vh] z-30 bg-white overflow-visible">
+                <div id="home-block" class="relative w-full min-h-[100vh] z-30 bg-white overflow-hidden">
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0 pointer-events-none" alt="Texture">
                     <!-- Branch 1: Top Left - Slightly overlapping previous block -->
                     <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-24 -left-16 w-96 z-10 opacity-90 rotate-12 will-change-transform pointer-events-none" style="transform: translate(-100%, -100%);" alt="Branch">
@@ -407,9 +409,8 @@
             const mapPinPolaroid = document.getElementById('map-pin-polaroid'); 
             const mapPinPolaroid2 = document.getElementById('map-pin-polaroid-2');
             
-            const elevatorWrapper = document.getElementById('elevator-wrapper');
-            const elevatorSticker = document.getElementById('elevator-sticker');
-            const doorLeft = document.getElementById('door-left');
+const elevatorWrapper = document.getElementById('elevator-wrapper');
+                            const doorLeft = document.getElementById('door-left');
             const doorRight = document.getElementById('door-right');
             const elevatorPanel = document.getElementById('elevator-panel');
             const floorCount = document.getElementById('floor-count');
@@ -451,11 +452,11 @@
                 }, 300); // Slight delay for bubble
             };
 
-            const homeBlock = document.getElementById('home-block');
-            const branchTop = document.getElementById('branch-top');
-            // const branchTR = document.getElementById('branch-tr');
-            // const branchBL = document.getElementById('branch-bl');
-            const homeTitle = document.getElementById('home-title');
+const homeBlock = document.getElementById('home-block');
+                            const branchTL = document.getElementById('branch-tl');
+                            // const branchTR = document.getElementById('branch-tr');
+                            // const branchBL = document.getElementById('branch-bl');
+                            const homeTitle = document.getElementById('home-title');
 
             const viewer = document.getElementById('story-viewer');
 
@@ -470,23 +471,7 @@
             }
             const stickerSpans = stickerText ? stickerText.querySelectorAll('span') : [];
 
-            const elevatorText = document.getElementById('elevator-text');
-            if (elevatorText) {
-                const processNode = (node) => {
-                    if (node.nodeType === 3) { // Text node
-                        const chars = node.nodeValue.split('');
-                        const spanString = chars.map(c => `<span class="opacity-0 transition-opacity duration-75">${c}</span>`).join('');
-                        const wrapper = document.createElement('span');
-                        wrapper.innerHTML = spanString;
-                        node.replaceWith(...wrapper.childNodes);
-                    } else if (node.nodeType === 1) { // Element node
-                        if (node.tagName === 'BR') return; // Skip BRs
-                        Array.from(node.childNodes).forEach(processNode); // Recurse
-                    }
-                };
-                Array.from(elevatorText.childNodes).forEach(processNode);
-            }
-            const elevatorSpans = elevatorText ? elevatorText.querySelectorAll('span.opacity-0') : [];
+// Transition text is now static between blocks, no animation needed
 
             const getVal = (progress, startAt, duration, startVal, endVal) => {
                 if (progress <= startAt) return startVal;
@@ -635,40 +620,13 @@
                     }
                 }
 
-                // --- BLOCK 3: ELEVATOR ANIMATION ---
-                if (elevatorWrapper) {
-                    const wrapperTop = elevatorWrapper.offsetTop;
-                    const wrapperHeight = elevatorWrapper.offsetHeight;
-                    const scrollable = wrapperHeight - viewportHeight;
-                    
-                    const distToElevator = scrollY + viewportHeight - wrapperTop;
-                    if (distToElevator > 0 && scrollY < wrapperTop) {
-                         const transitionP = Math.min(1, distToElevator / (viewportHeight * 0.6));
-                         
-                         if (elevatorSpans.length > 0) {
-                             const totalSpans = elevatorSpans.length;
-                             elevatorSpans.forEach((span, i) => {
-                                 const start = 0.2;
-                                 const end = 0.9;
-                                 const totalDur = end - start;
-                                 
-                                 let localP = 0;
-                                 if (transitionP > start) localP = Math.min(1, (transitionP - start) / totalDur);
-                                 
-                                 const charProgress = (localP * totalSpans) - i;
-                                 let opacity = 0;
-                                 if (charProgress >= 1) opacity = 1;
-                                 else if (charProgress > 0) opacity = charProgress;
-                                 span.style.opacity = opacity;
-                             });
-                         }
-                         
-                    } else if (scrollY >= wrapperTop) {
-                        const fadeP = Math.min(1, (scrollY - wrapperTop) / 200);
-                        if (elevatorSticker) elevatorSticker.style.opacity = 1 - fadeP;
-                    }
+// --- BLOCK 3: ELEVATOR ANIMATION ---
+                                if (elevatorWrapper) {
+                                    const wrapperTop = elevatorWrapper.offsetTop;
+                                    const wrapperHeight = elevatorWrapper.offsetHeight;
+                                    const scrollable = wrapperHeight - viewportHeight;
 
-                    if (scrollY >= wrapperTop) {
+                                    if (scrollY >= wrapperTop) {
                         const elevP = Math.min(1, (scrollY - wrapperTop) / scrollable);
                         
                         const closeEnd = 0.1;
@@ -875,14 +833,11 @@
                         const pHome = Math.max(0, Math.min(1, (viewH - dist) / (viewH * 0.6)));
                         const easeP = 1 - Math.pow(1 - pHome, 3);
                         
-                        if (branchTL) {
-                            const x = -100 + (easeP * 100); 
-                            const y = -100 + (easeP * 100); 
-                            branchTL.style.transform = `translate(${x}%, ${y}%)`;
-                        }
-                        if (branchTop) {
-                            // Simplified for now, just one branch logic
-                        }
+if (branchTL) {
+                                            const x = -100 + (easeP * 100); 
+                                            const y = -100 + (easeP * 100); 
+                                            branchTL.style.transform = `translate(${x}%, ${y}%) rotate(12deg)`;
+                                        }
                         
                         if (homeTitle) {
                             if (pHome > 0.5) {
