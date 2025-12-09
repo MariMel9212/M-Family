@@ -137,7 +137,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.88 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.89 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -379,20 +379,26 @@
                     
                     <!-- DECORATIVE BRANCHES CONTAINER (Z-40 to overlay previous block) -->
                     <div id="branches-container" class="absolute inset-0 w-full h-full pointer-events-none z-40 overflow-visible">
-                        <!-- 1. Top Left (Main - Old) -->
-                        <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-16 -left-12 w-60 opacity-90 will-change-transform transition-transform duration-700 ease-out" style="transform: translateX(-120%) rotate(5deg);" alt="Branch">
+                        <!-- 1. Top Left (Main) -->
+                        <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-16 -left-12 w-64 opacity-90 will-change-transform transition-transform duration-700 ease-out" style="transform: translateX(-120%) rotate(5deg);" alt="Branch">
                         
-                        <!-- 2. Top Right (Mirrored - New) -->
+                        <!-- 2. Top Center (Small - NEW) -->
+                        <img id="branch-tc" src="./images/tree_branch_2.png" class="absolute -top-20 left-1/2 -ml-24 w-48 opacity-85 will-change-transform transition-transform duration-900 ease-out" style="transform: translateY(-100%) rotate(180deg);" alt="Branch">
+
+                        <!-- 3. Top Right (Mirrored) -->
                         <img id="branch-tr" src="./images/tree_branch_2.png" class="absolute -top-12 -right-16 w-64 opacity-90 will-change-transform transition-transform duration-1000 ease-out" style="transform: translateX(120%) scaleX(-1) rotate(-5deg);" alt="Branch">
                         
-                        <!-- 3. Middle Left (Small - New) -->
-                        <img id="branch-ml" src="./images/tree_branch_2.png" class="absolute top-48 -left-8 w-48 opacity-80 will-change-transform transition-transform duration-1200 ease-out" style="transform: translateX(-150%) rotate(15deg);" alt="Branch">
+                        <!-- 4. Middle Left (Small - MOVED UP & LEFT) -->
+                        <img id="branch-ml" src="./images/tree_branch_2.png" class="absolute top-24 -left-16 w-48 opacity-80 will-change-transform transition-transform duration-1200 ease-out" style="transform: translateX(-150%) rotate(15deg);" alt="Branch">
                         
-                        <!-- 4. Bottom Right (Large - Old) -->
+                        <!-- 5. Middle Right (Classic - NEW) -->
+                        <img id="branch-mr" src="./images/tree_branch.png" class="absolute top-40 -right-16 w-52 opacity-80 will-change-transform transition-transform duration-1300 ease-out" style="transform: translateX(150%) scaleX(-1) rotate(-15deg);" alt="Branch">
+
+                        <!-- 6. Bottom Right (Large) -->
                         <img id="branch-br" src="./images/tree_branch.png" class="absolute bottom-12 -right-12 w-80 opacity-90 will-change-transform transition-transform duration-1500 ease-out" style="transform: translateX(120%) scaleX(-1) rotate(-10deg);" alt="Branch">
 
-                        <!-- 5. Bottom Left (New - Extra) -->
-                        <img id="branch-bl" src="./images/tree_branch_2.png" class="absolute bottom-24 -left-12 w-56 opacity-85 will-change-transform transition-transform duration-1300 ease-out" style="transform: translateX(-150%) rotate(-20deg);" alt="Branch">
+                        <!-- 7. Bottom Left (New) -->
+                        <img id="branch-bl" src="./images/tree_branch_2.png" class="absolute bottom-24 -left-12 w-56 opacity-85 will-change-transform transition-transform duration-1400 ease-out" style="transform: translateX(-150%) rotate(-20deg);" alt="Branch">
                     </div>
 
                     <div class="relative z-10 p-6 flex flex-col items-center justify-center min-h-[50vh] pt-48">
@@ -464,8 +470,10 @@ const elevatorWrapper = document.getElementById('elevator-wrapper');
 
 const homeBlock = document.getElementById('home-block');
                             const branchTL = document.getElementById('branch-tl');
+                            const branchTC = document.getElementById('branch-tc');
                             const branchTR = document.getElementById('branch-tr');
                             const branchML = document.getElementById('branch-ml');
+                            const branchMR = document.getElementById('branch-mr');
                             const branchBR = document.getElementById('branch-br');
                             const branchBL = document.getElementById('branch-bl');
                             const homeTitle = document.getElementById('home-title');
@@ -894,8 +902,10 @@ if (dist < viewH) {
                         // We use CSS transitions for smoothness, so we just set the final state
                         
                         if (branchTL) branchTL.style.transform = `translateX(0) rotate(5deg)`;
+                        if (branchTC) branchTC.style.transform = `translateY(0) rotate(180deg)`;
                         if (branchTR) branchTR.style.transform = `translateX(0) scaleX(-1) rotate(-5deg)`;
                         if (branchML) branchML.style.transform = `translateX(0) rotate(15deg)`;
+                        if (branchMR) branchMR.style.transform = `translateX(0) scaleX(-1) rotate(-15deg)`;
                         if (branchBR) branchBR.style.transform = `translateX(0) scaleX(-1) rotate(-10deg)`;
                         if (branchBL) branchBL.style.transform = `translateX(0) rotate(-20deg)`;
                         
@@ -911,8 +921,10 @@ if (dist < viewH) {
                     } else {
                         // Reset if scrolled back up (optional, keep animated if preferred)
                         if (branchTL) branchTL.style.transform = `translateX(-120%) rotate(5deg)`;
+                        if (branchTC) branchTC.style.transform = `translateY(-100%) rotate(180deg)`;
                         if (branchTR) branchTR.style.transform = `translateX(120%) scaleX(-1) rotate(-5deg)`;
                         if (branchML) branchML.style.transform = `translateX(-150%) rotate(15deg)`;
+                        if (branchMR) branchMR.style.transform = `translateX(150%) scaleX(-1) rotate(-15deg)`;
                         if (branchBR) branchBR.style.transform = `translateX(120%) scaleX(-1) rotate(-10deg)`;
                         if (branchBL) branchBL.style.transform = `translateX(-150%) rotate(-20deg)`;
                     }
