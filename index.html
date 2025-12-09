@@ -136,7 +136,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.75 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.76 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -292,44 +292,46 @@
                         </div>
 
                         <!-- CHAT CONTAINER -->
-                        <!-- A cleaner wrapper for chat elements to ensure structure -->
-                        <div id="chat-container" class="absolute bottom-0 left-0 w-full px-4 pb-[12vh] flex flex-col justify-end gap-4 z-50 pointer-events-none">
+                        <div id="chat-container" class="absolute bottom-0 left-0 w-full px-5 pb-[12vh] flex flex-col justify-end gap-3 z-50 pointer-events-none">
                             
-                            <!-- KYLIE ROW (Placeholder for positioning) -->
-                            <!-- We use padding-left to reserve space for the avatar that flies in -->
-                            <div class="relative w-full flex items-end">
-                                
-                                <!-- 5. KYLIE: TYPING INDICATOR -->
-                                <div id="chat-bubble-typing" class="absolute left-[54px] bottom-0 bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm transition-all duration-300 transform origin-bottom-left scale-0 opacity-0 z-50">
-                                     <div class="flex gap-1">
-                                        <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                                        <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                                        <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                                     </div>
-                                     <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
-                                         <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
-                                     </svg>
-                                </div>
+                            <!-- KYLIE ROW -->
+                            <div class="w-full flex items-end gap-3">
+                                <!-- KYLIE AVATAR TARGET (Invisible placeholder for flying animation) -->
+                                <div id="kylie-avatar-target" class="w-12 h-12 flex-shrink-0 rounded-full bg-transparent"></div>
 
-                                <!-- 5. KYLIE: CHAT BUBBLE 1 -->
-                                <!-- Positioned with margin-left to sit next to avatar -->
-                                <div id="chat-bubble-1" class="ml-[54px] max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) transform origin-bottom-left z-50">
-                                    <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
-                                    <p class="text-[15px] text-slate-900 leading-snug">
-                                        В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
-                                    </p>
-                                    <p class="text-[10px] text-slate-400 text-right mt-1">18:30</p>
-                                    <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
-                                        <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
-                                    </svg>
+                                <!-- BUBBLE WRAPPER (Includes Typing & Message) -->
+                                <div class="relative max-w-[70%]">
+                                    <!-- TYPING INDICATOR -->
+                                    <div id="chat-bubble-typing" class="absolute left-0 bottom-0 bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm transition-all duration-300 transform origin-bottom-left scale-0 opacity-0 z-50">
+                                         <div class="flex gap-1">
+                                            <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                            <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                            <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                         </div>
+                                         <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
+                                             <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                                         </svg>
+                                    </div>
+
+                                    <!-- MESSAGE BUBBLE -->
+                                    <div id="chat-bubble-1" class="bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 origin-bottom-left transition-all duration-500 z-50">
+                                        <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
+                                        <p class="text-[15px] text-slate-900 leading-snug">
+                                            В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
+                                        </p>
+                                        <p class="text-[10px] text-slate-400 text-right mt-1">18:30</p>
+                                        <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
+                                            <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                                        </svg>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- 6. HUSBAND ROW -->
+                            <!-- HUSBAND ROW -->
                             <div id="chat-row-2" class="w-full flex justify-end items-end gap-3">
                                 
-                                <!-- Bubble (Green) -->
-                                <div id="husband-bubble" class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[240px] opacity-0 transform scale-0 origin-bottom-right transition-all duration-500">
+                                <!-- MESSAGE BUBBLE -->
+                                <div id="husband-bubble" class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[70%] opacity-0 transform scale-0 origin-bottom-right transition-all duration-500">
                                     <p class="text-[15px] text-slate-900 leading-snug">
                                         Моя самая любимая москвичка! Горжусь тобой ❤️
                                     </p>
@@ -342,8 +344,8 @@
                                     </svg>
                                 </div>
 
-                                <!-- Avatar - Increased size to w-12 h-12 -->
-                                <div id="husband-avatar" class="w-12 h-12 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200 opacity-0 transform scale-0 transition-all duration-500 border border-slate-100">
+                                <!-- AVATAR -->
+                                <div id="husband-avatar" class="w-12 h-12 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200 opacity-0 transform scale-0 transition-all duration-500 border-2 border-white">
                                     <img src="./images/husband_avatar.jpg?v=2" class="w-full h-full object-cover" alt="Husband">
                                 </div>
                             </div>
@@ -400,6 +402,9 @@
             const floorCount = document.getElementById('floor-count');
             const elevatorInterior = document.getElementById('elevator-interior'); 
             const elevatorPhoto = document.getElementById('elevator-photo'); 
+            
+            // New Placeholder
+            const kylieAvatarTarget = document.getElementById('kylie-avatar-target');
             
             const chatBubbleTyping = document.getElementById('chat-bubble-typing');
             const chatBubble1 = document.getElementById('chat-bubble-1');
@@ -724,17 +729,31 @@
                             const midDiameter = Math.min(winW, winH) * 0.70; 
                             const midRadius = midDiameter / 2;
                             
-                            const avatarRadius = 24; // 12w = 48px / 2 = 24px radius
-                            const avatarX = 16 + 24; // left-4 (16px) + radius (24px) = 40px center X
-                            // Align bottom with chat bubble bottom
-                            // Bubble is in container, absolute. 
-                            // We need to match the visual position of the placeholder avatar in the flex row.
-                            // Container is bottom-0, pb-[12vh].
-                            // Avatar is at bottom of flex row.
-                            // Let's target: left=16px, bottom=12vh (approx) + padding inside row?
-                            // Easier: target roughly bottom-left corner area.
-                            const targetBottomPx = winH * 0.12 + 20; // 12vh + padding
-                            const avatarY = winH - targetBottomPx - 24; 
+                            // v7.76 FIX: DYNAMIC TARGET CALCULATION
+                            // Use the placeholder element to get exact target coordinates
+                            let targetX = 0;
+                            let targetY = 0;
+                            let targetScale = 0.1; // fallback
+                            
+                            if (kylieAvatarTarget) {
+                                const rect = kylieAvatarTarget.getBoundingClientRect();
+                                // We need coordinates relative to the VIEWPORT, which rect provides.
+                                // BUT elevatorInterior is fixed/sticky inside the wrapper.
+                                // elevatorInterior is absolute top-0 left-0 in the sticky container.
+                                // The sticky container is ... sticky top-0.
+                                // So rect.left and rect.top are correct relative to the sticky container (viewport).
+                                
+                                targetX = rect.left + (rect.width / 2);
+                                targetY = rect.top + (rect.height / 2);
+                                
+                                // Scale: Target is w-12 (48px). Mid circle is midDiameter.
+                                // targetScale = 48 / midDiameter
+                                targetScale = rect.width / midDiameter;
+                            } else {
+                                // Fallback if element not found
+                                targetX = 40;
+                                targetY = winH - 100;
+                            }
 
                             if (elevP <= morphStart) {
                                 elevatorInterior.style.webkitClipPath = 'circle(150% at 50% 50%)'; 
@@ -767,18 +786,13 @@
                                 elevatorInterior.style.clipPath = clipVal;
                                 if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(0.71)';
                                 
-                                const targetScale = avatarRadius / midRadius;
                                 const curScale = 1.0 - (pFly * (1.0 - targetScale));
                                 
-                                const dx = avatarX - centerX;
-                                const dy = avatarY - centerY;
+                                const dx = targetX - centerX;
+                                const dy = targetY - centerY;
                                 
                                 let curDx = pFly * dx;
                                 let curDy = pFly * dy;
-                                
-                                // SLIDE UP (Sync with Husband Appearance)
-                                // Not needed as much with static layout, but keeps dynamic feel if wanted.
-                                // Actually, with new static layout, we should aim for fixed spot.
                                 
                                 elevatorInterior.style.transform = `translate(${curDx}px, ${curDy}px) scale(${curScale})`;
                             }
@@ -800,11 +814,11 @@
                         // 2. KYLIE BUBBLE (0.89 -> )
                         if (chatBubble1) {
                             if (elevP > 0.89) {
-                                chatBubble1.classList.remove('opacity-0', 'translate-y-4', 'scale-90');
+                                chatBubble1.classList.remove('opacity-0', 'scale-90');
                                 chatBubble1.classList.add('scale-100');
                                 // No dynamic slide needed with Flex layout
                             } else {
-                                chatBubble1.classList.add('opacity-0', 'translate-y-4', 'scale-90');
+                                chatBubble1.classList.add('opacity-0', 'scale-90');
                                 chatBubble1.classList.remove('scale-100');
                             }
                         }
