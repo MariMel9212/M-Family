@@ -136,7 +136,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.74 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.75 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -338,6 +338,11 @@
                             </div>
                         </div>
 
+                        <!-- 7. REPLY BUTTON (Interactive) -->
+                        <button id="reply-btn" onclick="handleReply()" class="absolute bottom-[12vh] left-1/2 -translate-x-1/2 z-[110] bg-[#3390ec] text-white px-6 py-3 rounded-full shadow-lg font-bold text-lg flex items-center gap-2 transform transition-all duration-300 opacity-0 scale-90 translate-y-10 hover:scale-105 active:scale-95">
+                            <span>✍️</span> Ответить
+                        </button>
+
                     </div>
                 </div>
 
@@ -385,6 +390,33 @@
             const chatBubble1 = document.getElementById('chat-bubble-1');
             const husbandAvatar = document.getElementById('husband-avatar');
             const husbandBubble = document.getElementById('husband-bubble');
+            const replyBtn = document.getElementById('reply-btn');
+            
+            // Interaction State
+            let hasReplied = false;
+            
+            // Allow global access for onclick
+            window.handleReply = function() {
+                hasReplied = true;
+                if(replyBtn) {
+                    replyBtn.style.opacity = '0';
+                    replyBtn.style.transform = 'translate(-50%, 20px) scale(0.9)'; // Drop down
+                    setTimeout(() => replyBtn.style.display = 'none', 300);
+                }
+                
+                // Show Husband Sequence
+                if(husbandAvatar) {
+                    husbandAvatar.style.opacity = '1';
+                    husbandAvatar.style.transform = 'scale(1)';
+                }
+                
+                setTimeout(() => {
+                    if(husbandBubble) {
+                        husbandBubble.style.opacity = '1';
+                        husbandBubble.style.transform = 'scale(1)';
+                    }
+                }, 300); // Slight delay for bubble
+            };
 
             const homeBlock = document.getElementById('home-block');
             const branchTL = document.getElementById('branch-tl');
@@ -776,34 +808,18 @@
                             }
                         }
                         
-                        // 3. HUSBAND APPEARS (0.92 -> )
-                        if (husbandAvatar) {
-                            if (elevP > 0.92) {
-                                requestAnimationFrame(() => {
-                                    husbandAvatar.style.opacity = '1';
-                                    husbandAvatar.style.transform = 'scale(1)';
-                                });
-                            } else {
-                                requestAnimationFrame(() => {
-                                    husbandAvatar.style.opacity = '0';
-                                    husbandAvatar.style.transform = 'scale(0)';
-                                });
-                            }
-                        }
-
-                        // 4. HUSBAND MESSAGE (0.95 -> )
-                        if (husbandBubble) {
-                            if (elevP > 0.95) {
-                                requestAnimationFrame(() => {
-                                    husbandBubble.style.opacity = '1';
-                                    husbandBubble.style.transform = 'scale(1)';
-                                });
-                            } else {
-                                requestAnimationFrame(() => {
-                                    husbandBubble.style.opacity = '0';
-                                    husbandBubble.style.transform = 'scale(0)';
-                                });
-                            }
+                        // 3. HUSBAND APPEARS (MANUAL TRIGGER NOW)
+                        // Removed scroll-based trigger for husbandAvatar & husbandBubble
+                        
+                        // 4. REPLY BUTTON (0.92 -> )
+                        if (replyBtn && !hasReplied) {
+                             if (elevP > 0.92) {
+                                replyBtn.style.opacity = '1';
+                                replyBtn.style.transform = 'translate(-50%, 0) scale(1)';
+                             } else {
+                                replyBtn.style.opacity = '0';
+                                replyBtn.style.transform = 'translate(-50%, 20px) scale(0.9)';
+                             }
                         }
                     }
                 }
