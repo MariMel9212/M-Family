@@ -125,7 +125,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.72 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.73 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -930,17 +930,19 @@
                             }
                         }
                         
-                        // v7.70: Restore normal visibility logic
-                        // v7.71 FIX: Use simple opacity toggle instead of complex class list manipulation to ensure reliability
-                        // Some browsers might struggle with adding/removing multiple classes rapidly during scroll.
-                        // Also logging to console for debug if possible (but user can't see it).
+                        // v7.73: FINAL FIX - Use requestAnimationFrame for style application
+                        // Sometimes style changes in scroll handlers get batched or lost.
                         if (chatRow2) {
-                            if (elevP > 0.85) {
-                                chatRow2.style.opacity = '1';
-                                chatRow2.style.transform = 'translateY(0) scale(1)';
+                            if (elevP > 0.80) {
+                                requestAnimationFrame(() => {
+                                    chatRow2.style.opacity = '1';
+                                    chatRow2.style.transform = 'translateY(0) scale(1)';
+                                });
                             } else {
-                                chatRow2.style.opacity = '0';
-                                chatRow2.style.transform = 'translateY(1rem) scale(0.9)';
+                                requestAnimationFrame(() => {
+                                    chatRow2.style.opacity = '0';
+                                    chatRow2.style.transform = 'translateY(1rem) scale(0.9)';
+                                });
                             }
                         }
                     }
