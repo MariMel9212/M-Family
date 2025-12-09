@@ -420,7 +420,7 @@
                 hasReplied = true;
                 if(replyBtn) {
                     replyBtn.style.opacity = '0';
-                    replyBtn.style.transform = 'translate(-50%, 20px) scale(0.9)'; // Drop down
+                    replyBtn.style.transform = 'translateY(20px) scale(0.9)'; // Drop down
                     setTimeout(() => replyBtn.style.display = 'none', 300);
                 }
                 
@@ -830,10 +830,10 @@
                         if (replyBtn && !hasReplied) {
                              if (elevP > 0.92) {
                                 replyBtn.style.opacity = '1';
-                                replyBtn.style.transform = 'translate(-50%, 0) scale(1)';
+                                replyBtn.style.transform = 'translateY(0) scale(1)';
                              } else {
                                 replyBtn.style.opacity = '0';
-                                replyBtn.style.transform = 'translate(-50%, 20px) scale(0.9)';
+                                replyBtn.style.transform = 'translateY(20px) scale(0.9)';
                              }
                         }
                     }
