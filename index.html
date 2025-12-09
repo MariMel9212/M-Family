@@ -137,7 +137,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.81 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.82 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -253,11 +253,11 @@
                 </div>
 
                 <!-- TRANSITION TEXT: Between Map and Elevator -->
-                <div id="transition-text-block" class="relative w-full z-25 bg-transparent" style="margin-top: -80px; margin-bottom: -80px;">
-                    <div class="relative w-full px-6 py-16">
+                <div id="transition-text-block" class="relative w-full z-25 bg-transparent" style="margin-top: -60px; margin-bottom: -60px;">
+                    <div class="relative w-full px-6 py-24">
                         <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0" alt="Texture">
                         <div id="elevator-sticker" class="relative z-10 w-[90%] max-w-[400px] mx-auto text-left">
-                            <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
+                            <p id="elevator-text" class="text-slate-900 leading-relaxed font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
                                 Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
                             </p>
                         </div>
@@ -376,8 +376,8 @@
                 <!-- BLOCK 4: NEW YEAR / HOME -->
                 <div id="home-block" class="relative w-full min-h-[100vh] z-30 bg-white overflow-hidden">
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0 pointer-events-none" alt="Texture">
-                    <!-- Branch 1: Top Left - Slightly overlapping previous block -->
-                    <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-24 -left-16 w-96 z-10 opacity-90 rotate-12 will-change-transform pointer-events-none" style="transform: translate(-100%, -100%);" alt="Branch">
+                    <!-- Branch 1: Top Left - No rotation -->
+                    <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-16 -left-8 w-80 z-10 opacity-90 will-change-transform pointer-events-none" style="transform: translate(-100%, 0);" alt="Branch">
                     
                     <!-- Commented out other branches for step-by-step adjustment -->
                     <!--
@@ -835,8 +835,7 @@ const homeBlock = document.getElementById('home-block');
                         
 if (branchTL) {
                                             const x = -100 + (easeP * 100); 
-                                            const y = -100 + (easeP * 100); 
-                                            branchTL.style.transform = `translate(${x}%, ${y}%) rotate(12deg)`;
+                                            branchTL.style.transform = `translateX(${x}%)`;
                                         }
                         
                         if (homeTitle) {
