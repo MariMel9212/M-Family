@@ -136,7 +136,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.78 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.79 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -255,7 +255,7 @@
                 <!-- Increased height to 700vh to fit the extended sequence -->
                 <div id="elevator-wrapper" class="relative w-full h-[700vh] z-20">
                     
-                    <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center" style="overflow-y: visible; overflow-x: clip;">
+                    <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center" style="overflow-y: visible; overflow-x: hidden;">
                         
                         <!-- 1. BACKGROUND WALL -->
                         <div class="absolute inset-0 w-full h-full z-0 bg-white">
@@ -368,11 +368,12 @@
                 <!-- BLOCK 4: NEW YEAR / HOME -->
                 <!-- overflow-visible to allow branches to overlap upwards -->
                 <!-- z-30 to sit on top of elevator block -->
-                <div id="home-block" class="relative w-full min-h-[100vh] z-30 bg-white overflow-visible">
+                <div id="home-block" class="relative w-full min-h-[100vh] z-30 bg-white overflow-hidden">
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0 pointer-events-none" alt="Texture">
                     <!-- Adjusted branch positions to be more visible/overlapping -->
                     <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-12 -left-12 w-80 z-10 opacity-90 rotate-0 will-change-transform pointer-events-none" style="transform: translate(-100%, -100%);" alt="Branch">
-                    <img id="branch-tr" src="./images/tree_branch.png" class="absolute -top-12 -right-12 w-80 z-10 opacity-90 rotate-90 will-change-transform pointer-events-none" style="transform: translate(100%, -100%);" alt="Branch">
+                    <!-- Right branch flipped horizontally (scaleX -1) and rotated -->
+                    <img id="branch-tr" src="./images/tree_branch.png" class="absolute -top-12 -right-12 w-80 z-10 opacity-90 rotate-90 scale-x-[-1] will-change-transform pointer-events-none" style="transform: translate(100%, -100%);" alt="Branch">
                     <img id="branch-bl" src="./images/tree_branch.png" class="absolute -bottom-12 -left-12 w-64 z-10 opacity-90 -rotate-180 will-change-transform pointer-events-none" style="transform: translate(-100%, 100%);" alt="Branch">
                     
                     <div class="relative z-10 p-6 flex flex-col items-center justify-center min-h-[50vh] pt-32">
