@@ -264,7 +264,8 @@
 
                         <!-- 1.5. ELEVATOR INTERIOR -->
                         <div id="elevator-interior" class="absolute top-0 left-0 w-full h-full z-10 bg-slate-900 opacity-0 shadow-2xl origin-center will-change-transform">
-                             <img id="elevator-photo" src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100 will-change-transform" alt="Kylie Inside">
+                             <!-- Reset photo position to center and ensure it covers -->
+                             <img id="elevator-photo" src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover object-center opacity-100 will-change-transform" alt="Kylie Inside">
                         </div>
                         
                         <!-- 2. TRANSITION TEXT -->
@@ -290,58 +291,72 @@
                             </div>
                         </div>
 
-                        <!-- 5. KYLIE: TYPING INDICATOR (New) -->
-                        <div id="chat-bubble-typing" class="absolute bottom-[35vh] left-[105px] z-50 bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm transition-all duration-300 transform origin-bottom-left scale-0 opacity-0">
-                             <div class="flex gap-1">
-                                <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                                <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                                <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                             </div>
-                             <!-- Tail SVG -->
-                            <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
-                                <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
-                            </svg>
-                        </div>
-
-                        <!-- 5. KYLIE: CHAT BUBBLE 1 -->
-                        <div id="chat-bubble-1" class="absolute bottom-[35vh] left-[105px] z-50 max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) transform origin-bottom-left">
-                            <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
-                            <p class="text-[15px] text-slate-900 leading-snug">
-                                В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
-                            </p>
-                            <p class="text-[10px] text-slate-400 text-right mt-1">18:30</p>
-                            <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
-                                <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
-                            </svg>
-                        </div>
-
-                        <!-- 6. HUSBAND: CONTAINER (Avatar + Bubble separate) -->
-                        <div id="chat-row-2" class="absolute bottom-[18vh] right-4 z-[100] flex items-end gap-2 origin-bottom-right">
+                        <!-- CHAT CONTAINER -->
+                        <!-- A cleaner wrapper for chat elements to ensure structure -->
+                        <div id="chat-container" class="absolute bottom-0 left-0 w-full px-4 pb-[12vh] flex flex-col justify-end gap-4 z-50 pointer-events-none">
                             
-                            <!-- Bubble (Green) -->
-                            <div id="husband-bubble" class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[240px] opacity-0 transform scale-0 origin-bottom-right transition-all duration-500">
-                                <p class="text-[15px] text-slate-900 leading-snug">
-                                    Моя самая любимая москвичка! Горжусь тобой ❤️
-                                </p>
-                                <div class="flex items-center justify-end gap-1 mt-1">
-                                    <p class="text-[10px] text-[#539e55]">18:31</p>
-                                    <span class="text-[#539e55] text-[10px]">✓✓</span>
+                            <!-- KYLIE ROW (Placeholder for positioning) -->
+                            <!-- We use padding-left to reserve space for the avatar that flies in -->
+                            <div class="relative w-full flex items-end">
+                                
+                                <!-- 5. KYLIE: TYPING INDICATOR -->
+                                <div id="chat-bubble-typing" class="absolute left-[54px] bottom-0 bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm transition-all duration-300 transform origin-bottom-left scale-0 opacity-0 z-50">
+                                     <div class="flex gap-1">
+                                        <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                        <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                        <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                     </div>
+                                     <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
+                                         <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                                     </svg>
                                 </div>
-                                <svg class="absolute -bottom-[0px] -right-[9px] w-[20px] h-[20px] text-[#EEFFDE] fill-current z-[-1] transform scale-x-[-1]">
-                                    <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
-                                </svg>
+
+                                <!-- 5. KYLIE: CHAT BUBBLE 1 -->
+                                <!-- Positioned with margin-left to sit next to avatar -->
+                                <div id="chat-bubble-1" class="ml-[54px] max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) transform origin-bottom-left z-50">
+                                    <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
+                                    <p class="text-[15px] text-slate-900 leading-snug">
+                                        В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
+                                    </p>
+                                    <p class="text-[10px] text-slate-400 text-right mt-1">18:30</p>
+                                    <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
+                                        <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                                    </svg>
+                                </div>
                             </div>
 
-                            <!-- Avatar -->
-                            <div id="husband-avatar" class="w-10 h-10 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200 opacity-0 transform scale-0 transition-all duration-500">
-                                <img src="./images/husband_avatar.jpg?v=2" class="w-full h-full object-cover" alt="Husband">
+                            <!-- 6. HUSBAND ROW -->
+                            <div id="chat-row-2" class="w-full flex justify-end items-end gap-3">
+                                
+                                <!-- Bubble (Green) -->
+                                <div id="husband-bubble" class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[240px] opacity-0 transform scale-0 origin-bottom-right transition-all duration-500">
+                                    <p class="text-[15px] text-slate-900 leading-snug">
+                                        Моя самая любимая москвичка! Горжусь тобой ❤️
+                                    </p>
+                                    <div class="flex items-center justify-end gap-1 mt-1">
+                                        <p class="text-[10px] text-[#539e55]">18:31</p>
+                                        <span class="text-[#539e55] text-[10px]">✓✓</span>
+                                    </div>
+                                    <svg class="absolute -bottom-[0px] -right-[9px] w-[20px] h-[20px] text-[#EEFFDE] fill-current z-[-1] transform scale-x-[-1]">
+                                        <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                                    </svg>
+                                </div>
+
+                                <!-- Avatar - Increased size to w-12 h-12 -->
+                                <div id="husband-avatar" class="w-12 h-12 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200 opacity-0 transform scale-0 transition-all duration-500 border border-slate-100">
+                                    <img src="./images/husband_avatar.jpg?v=2" class="w-full h-full object-cover" alt="Husband">
+                                </div>
                             </div>
+
                         </div>
 
-                        <!-- 7. REPLY BUTTON (Interactive) -->
-                        <button id="reply-btn" onclick="handleReply()" class="absolute bottom-[12vh] left-1/2 -translate-x-1/2 z-[110] bg-[#3390ec] text-white px-6 py-3 rounded-full shadow-lg font-bold text-lg flex items-center gap-2 transform transition-all duration-300 opacity-0 scale-90 translate-y-10 hover:scale-105 active:scale-95">
-                            <span>✍️</span> Ответить
-                        </button>
+                        <!-- 7. REPLY BUTTON -->
+                        <!-- Adjusted z-index and pointer-events -->
+                        <div class="absolute bottom-[8vh] left-0 w-full flex justify-center z-[110]">
+                             <button id="reply-btn" onclick="handleReply()" class="bg-[#3390ec] text-white px-6 py-3 rounded-full shadow-lg font-bold text-lg flex items-center gap-2 transform transition-all duration-300 opacity-0 scale-90 translate-y-10 hover:scale-105 active:scale-95 pointer-events-auto">
+                                <span>✍️</span> Ответить
+                            </button>
+                        </div>
 
                     </div>
                 </div>
@@ -709,10 +724,17 @@
                             const midDiameter = Math.min(winW, winH) * 0.70; 
                             const midRadius = midDiameter / 2;
                             
-                            const avatarRadius = 28; 
-                            const avatarX = 40 + 28; 
-                            const targetBottomPx = winH * 0.35; 
-                            const avatarY = winH - targetBottomPx - 20; 
+                            const avatarRadius = 24; // 12w = 48px / 2 = 24px radius
+                            const avatarX = 16 + 24; // left-4 (16px) + radius (24px) = 40px center X
+                            // Align bottom with chat bubble bottom
+                            // Bubble is in container, absolute. 
+                            // We need to match the visual position of the placeholder avatar in the flex row.
+                            // Container is bottom-0, pb-[12vh].
+                            // Avatar is at bottom of flex row.
+                            // Let's target: left=16px, bottom=12vh (approx) + padding inside row?
+                            // Easier: target roughly bottom-left corner area.
+                            const targetBottomPx = winH * 0.12 + 20; // 12vh + padding
+                            const avatarY = winH - targetBottomPx - 24; 
 
                             if (elevP <= morphStart) {
                                 elevatorInterior.style.webkitClipPath = 'circle(150% at 50% 50%)'; 
@@ -755,15 +777,8 @@
                                 let curDy = pFly * dy;
                                 
                                 // SLIDE UP (Sync with Husband Appearance)
-                                const slideStart = 0.92; // Was 0.88, moved later
-                                const slideEnd = 0.98;
-                                const slideDist = winH * 0.10; 
-                                
-                                if (elevP > slideStart) {
-                                    let pSlide = (elevP - slideStart) / (slideEnd - slideStart);
-                                    if (pSlide > 1) pSlide = 1;
-                                    curDy -= (pSlide * slideDist);
-                                }
+                                // Not needed as much with static layout, but keeps dynamic feel if wanted.
+                                // Actually, with new static layout, we should aim for fixed spot.
                                 
                                 elevatorInterior.style.transform = `translate(${curDx}px, ${curDy}px) scale(${curScale})`;
                             }
@@ -787,24 +802,10 @@
                             if (elevP > 0.89) {
                                 chatBubble1.classList.remove('opacity-0', 'translate-y-4', 'scale-90');
                                 chatBubble1.classList.add('scale-100');
-                                
-                                // Slide Up
-                                const slideStart = 0.92;
-                                const slideEnd = 0.98;
-                                const slideDist = window.innerHeight * 0.10; 
-                                let bottomOffset = window.innerHeight * 0.35; 
-                                
-                                if (elevP > slideStart) {
-                                    let pSlide = (elevP - slideStart) / (slideEnd - slideStart);
-                                    if (pSlide > 1) pSlide = 1;
-                                    bottomOffset += (pSlide * slideDist);
-                                }
-                                chatBubble1.style.bottom = `${bottomOffset}px`;
-                                
+                                // No dynamic slide needed with Flex layout
                             } else {
                                 chatBubble1.classList.add('opacity-0', 'translate-y-4', 'scale-90');
                                 chatBubble1.classList.remove('scale-100');
-                                chatBubble1.style.bottom = '';
                             }
                         }
                         
