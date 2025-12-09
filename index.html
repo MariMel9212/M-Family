@@ -18,21 +18,22 @@
         /* BASE STYLES */
         html, body {
             width: 100%;
+            max-width: 100%;
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-            /* overflow-y is auto by default */
+            overflow-x: hidden; /* STRICTLY PREVENT HORIZONTAL SCROLL */
             background-color: #f8fafc;
             font-family: 'Manrope', sans-serif;
             color: #1e293b;
         }
         
-        /* Container - allow vertical scroll, clip horizontal */
+        /* Container */
         #app-container {
             width: 100%;
             max-width: 100vw;
-            overflow-x: hidden; /* Reverted to hidden for better support */
+            overflow-x: hidden;
+            position: relative;
         }
         
         /* Global texture */
@@ -255,112 +256,114 @@
                 <!-- Increased height to 700vh to fit the extended sequence -->
                 <div id="elevator-wrapper" class="relative w-full h-[700vh] z-20">
                     
-                    <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center" style="overflow-y: visible; overflow-x: visible;">
+                    <!-- STICKY CONTAINER: Overflow VISIBLE for Top Text, but internals CLIP -->
+                    <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center" style="overflow: visible;">
                         
-                        <!-- 1. BACKGROUND WALL -->
-                        <div class="absolute inset-0 w-full h-full z-0 bg-white">
-                             <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Texture">
-                        </div>
-
-                        <!-- 1.5. ELEVATOR INTERIOR -->
-                        <div id="elevator-interior" class="absolute top-0 left-0 w-full h-full z-10 bg-slate-900 opacity-0 shadow-2xl origin-center will-change-transform">
-                             <!-- Reset photo position to center and ensure it covers -->
-                             <img id="elevator-photo" src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover object-center opacity-100 will-change-transform" alt="Kylie Inside">
-                        </div>
-                        
-                        <!-- 2. TRANSITION TEXT -->
-                        <div id="elevator-sticker" class="absolute top-0 pt-24 left-1/2 transform -translate-x-1/2 z-50 w-[90%] max-w-[400px] text-left pointer-events-none">
-                            <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
-                                Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
-                            </p>
-                        </div>
-
-                        <!-- 3. ELEVATOR DOORS -->
-                        <div id="door-left" class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-400 z-30 transform -translate-x-full border-r border-zinc-500 shadow-2xl will-change-transform flex items-center justify-end">
-                            <div class="w-4 h-full bg-gradient-to-r from-transparent to-black/10"></div>
-                        </div>
-                        <div id="door-right" class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zinc-400 via-zinc-200 to-zinc-400 z-30 transform translate-x-full border-l border-zinc-500 shadow-2xl will-change-transform flex items-center justify-start">
-                            <div class="w-4 h-full bg-gradient-to-l from-transparent to-black/10"></div>
-                        </div>
-
-                        <!-- 4. FLOOR PANEL -->
-                        <div id="elevator-panel" class="absolute top-[20%] left-1/2 -translate-x-1/2 z-40 bg-zinc-900 border-4 border-zinc-600 rounded-lg p-4 px-8 shadow-2xl opacity-0 transform scale-90 will-change-transform">
-                            <div class="flex items-center gap-4">
-                                <div class="text-green-500 text-4xl animate-pulse">▲</div>
-                                <div id="floor-count" class="font-mono text-6xl text-red-500 tracking-widest font-bold">01</div>
-                            </div>
-                        </div>
-
-                        <!-- CHAT CONTAINER -->
-                        <!-- max-w-[90vw] to prevent horizontal overflow on small screens -->
-                        <div id="chat-container" class="absolute bottom-0 left-0 w-full px-5 pb-[12vh] flex flex-col justify-end gap-3 z-50 pointer-events-none max-w-[100vw] overflow-hidden">
+                        <!-- INTERNAL WRAPPER: CLIPS WIDE CONTENT (Doors, Background) -->
+                        <div class="absolute inset-0 w-full h-full overflow-hidden">
                             
-                            <!-- KYLIE ROW -->
-                            <div class="w-full flex items-end gap-3">
-                                <!-- KYLIE AVATAR TARGET (Static image for post-flight) -->
-                                <div id="kylie-avatar-target" class="w-12 h-12 flex-shrink-0 rounded-full overflow-hidden border-2 border-white opacity-0 transition-opacity duration-75">
-                                    <img src="./images/kylie_elevator_final.jpg?v=final" class="w-full h-full object-cover" alt="Kylie Avatar">
-                                </div>
+                            <!-- 1. BACKGROUND WALL -->
+                            <div class="absolute inset-0 w-full h-full z-0 bg-white">
+                                 <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Texture">
+                            </div>
 
-                                <!-- BUBBLE WRAPPER (Includes Typing & Message) -->
-                                <div class="relative max-w-[70%]">
-                                    <!-- TYPING INDICATOR -->
-                                    <div id="chat-bubble-typing" class="absolute left-0 bottom-0 bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm transition-all duration-300 transform origin-bottom-left scale-0 opacity-0 z-50">
-                                         <div class="flex gap-1">
-                                            <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                                            <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                                            <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                                         </div>
-                                         <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
-                                             <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
-                                         </svg>
+                            <!-- 1.5. ELEVATOR INTERIOR -->
+                            <div id="elevator-interior" class="absolute top-0 left-0 w-full h-full z-10 bg-slate-900 opacity-0 shadow-2xl origin-center will-change-transform">
+                                 <img id="elevator-photo" src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover object-center opacity-100 will-change-transform" alt="Kylie Inside">
+                            </div>
+
+                            <!-- 3. ELEVATOR DOORS -->
+                            <div id="door-left" class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-400 z-30 transform -translate-x-full border-r border-zinc-500 shadow-2xl will-change-transform flex items-center justify-end">
+                                <div class="w-4 h-full bg-gradient-to-r from-transparent to-black/10"></div>
+                            </div>
+                            <div id="door-right" class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zinc-400 via-zinc-200 to-zinc-400 z-30 transform translate-x-full border-l border-zinc-500 shadow-2xl will-change-transform flex items-center justify-start">
+                                <div class="w-4 h-full bg-gradient-to-l from-transparent to-black/10"></div>
+                            </div>
+
+                            <!-- 4. FLOOR PANEL -->
+                            <div id="elevator-panel" class="absolute top-[20%] left-1/2 -translate-x-1/2 z-40 bg-zinc-900 border-4 border-zinc-600 rounded-lg p-4 px-8 shadow-2xl opacity-0 transform scale-90 will-change-transform">
+                                <div class="flex items-center gap-4">
+                                    <div class="text-green-500 text-4xl animate-pulse">▲</div>
+                                    <div id="floor-count" class="font-mono text-6xl text-red-500 tracking-widest font-bold">01</div>
+                                </div>
+                            </div>
+
+                            <!-- CHAT CONTAINER -->
+                            <div id="chat-container" class="absolute bottom-0 left-0 w-full px-5 pb-[12vh] flex flex-col justify-end gap-3 z-50 pointer-events-none max-w-full overflow-hidden">
+                                
+                                <!-- KYLIE ROW -->
+                                <div class="w-full flex items-end gap-3">
+                                    <!-- KYLIE AVATAR TARGET -->
+                                    <div id="kylie-avatar-target" class="w-12 h-12 flex-shrink-0 rounded-full overflow-hidden border-2 border-white opacity-0 transition-opacity duration-75">
+                                        <img src="./images/kylie_elevator_final.jpg?v=final" class="w-full h-full object-cover" alt="Kylie Avatar">
                                     </div>
 
+                                    <!-- BUBBLE WRAPPER -->
+                                    <div class="relative max-w-[70%]">
+                                        <!-- TYPING INDICATOR -->
+                                        <div id="chat-bubble-typing" class="absolute left-0 bottom-0 bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm transition-all duration-300 transform origin-bottom-left scale-0 opacity-0 z-50">
+                                             <div class="flex gap-1">
+                                                <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                                <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                                <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                             </div>
+                                             <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
+                                                 <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                                             </svg>
+                                        </div>
+
+                                        <!-- MESSAGE BUBBLE -->
+                                        <div id="chat-bubble-1" class="bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 origin-bottom-left transition-all duration-500 z-50">
+                                            <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
+                                            <p class="text-[15px] text-slate-900 leading-snug">
+                                                В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
+                                            </p>
+                                            <p class="text-[10px] text-slate-400 text-right mt-1">18:30</p>
+                                            <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
+                                                <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- HUSBAND ROW -->
+                                <div id="chat-row-2" class="w-full flex justify-end items-end gap-3">
                                     <!-- MESSAGE BUBBLE -->
-                                    <div id="chat-bubble-1" class="bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 origin-bottom-left transition-all duration-500 z-50">
-                                        <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
+                                    <div id="husband-bubble" class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[70%] opacity-0 transform scale-0 origin-bottom-right transition-all duration-500">
                                         <p class="text-[15px] text-slate-900 leading-snug">
-                                            В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
+                                            Моя самая любимая москвичка! Горжусь тобой ❤️
                                         </p>
-                                        <p class="text-[10px] text-slate-400 text-right mt-1">18:30</p>
-                                        <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
+                                        <div class="flex items-center justify-end gap-1 mt-1">
+                                            <p class="text-[10px] text-[#539e55]">18:31</p>
+                                            <span class="text-[#539e55] text-[10px]">✓✓</span>
+                                        </div>
+                                        <svg class="absolute -bottom-[0px] -right-[9px] w-[20px] h-[20px] text-[#EEFFDE] fill-current z-[-1] transform scale-x-[-1]">
                                             <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
                                         </svg>
                                     </div>
-                                </div>
-                            </div>
 
-                            <!-- HUSBAND ROW -->
-                            <div id="chat-row-2" class="w-full flex justify-end items-end gap-3">
-                                
-                                <!-- MESSAGE BUBBLE -->
-                                <div id="husband-bubble" class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[70%] opacity-0 transform scale-0 origin-bottom-right transition-all duration-500">
-                                    <p class="text-[15px] text-slate-900 leading-snug">
-                                        Моя самая любимая москвичка! Горжусь тобой ❤️
-                                    </p>
-                                    <div class="flex items-center justify-end gap-1 mt-1">
-                                        <p class="text-[10px] text-[#539e55]">18:31</p>
-                                        <span class="text-[#539e55] text-[10px]">✓✓</span>
+                                    <!-- AVATAR -->
+                                    <div id="husband-avatar" class="w-12 h-12 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200 opacity-0 transform scale-0 transition-all duration-500 border-2 border-white">
+                                        <img src="./images/husband_avatar.jpg?v=2" class="w-full h-full object-cover" alt="Husband">
                                     </div>
-                                    <svg class="absolute -bottom-[0px] -right-[9px] w-[20px] h-[20px] text-[#EEFFDE] fill-current z-[-1] transform scale-x-[-1]">
-                                        <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
-                                    </svg>
-                                </div>
-
-                                <!-- AVATAR -->
-                                <div id="husband-avatar" class="w-12 h-12 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200 opacity-0 transform scale-0 transition-all duration-500 border-2 border-white">
-                                    <img src="./images/husband_avatar.jpg?v=2" class="w-full h-full object-cover" alt="Husband">
                                 </div>
                             </div>
 
-                        </div>
+                            <!-- 7. REPLY BUTTON -->
+                            <div class="absolute bottom-[8vh] left-0 w-full flex justify-center z-[110]">
+                                 <button id="reply-btn" onclick="handleReply()" class="bg-[#3390ec] text-white px-6 py-3 rounded-full shadow-lg font-bold text-lg flex items-center gap-2 transform transition-all duration-300 opacity-0 scale-90 translate-y-10 hover:scale-105 active:scale-95 pointer-events-auto">
+                                    <span>✍️</span> Ответить
+                                </button>
+                            </div>
+                        
+                        </div> <!-- END INTERNAL WRAPPER -->
 
-                        <!-- 7. REPLY BUTTON -->
-                        <!-- Adjusted z-index and pointer-events -->
-                        <div class="absolute bottom-[8vh] left-0 w-full flex justify-center z-[110]">
-                             <button id="reply-btn" onclick="handleReply()" class="bg-[#3390ec] text-white px-6 py-3 rounded-full shadow-lg font-bold text-lg flex items-center gap-2 transform transition-all duration-300 opacity-0 scale-90 translate-y-10 hover:scale-105 active:scale-95 pointer-events-auto">
-                                <span>✍️</span> Ответить
-                            </button>
+                        <!-- 2. TRANSITION TEXT (OUTSIDE CLIP, VISIBLE) -->
+                        <!-- Positioned absolutely at top, pulled UP by margin -->
+                        <div id="elevator-sticker" class="absolute top-0 -mt-24 left-1/2 transform -translate-x-1/2 z-[60] w-[90%] max-w-[400px] text-left pointer-events-none">
+                            <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
+                                Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
+                            </p>
                         </div>
 
                     </div>
