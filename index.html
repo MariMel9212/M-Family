@@ -54,6 +54,17 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .will-change-transform { will-change: transform, opacity, filter; }
+
+        /* TYPING ANIMATION */
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-4px); opacity: 1; }
+        }
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
     </style>
 </head>
 <body>
@@ -125,7 +136,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.73 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.74 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -162,8 +173,6 @@
                 <div id="hero-wrapper" class="relative w-full h-[300vh] z-30"> <!-- High Z to overlap Map -->
                     
                     <!-- STICKY CONTAINER: Stays visible while we scroll the wrapper -->
-                    <!-- Changed back to 'sticky' so it scrolls away when wrapper ends -->
-                    <!-- overflow-visible to allow overlap of bottom boxes -->
                     <div id="hero-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center bg-white overflow-visible z-10 pointer-events-none">
                         
                         <!-- SAFE MASK: Clips horizontal elements (We, Right Box) -->
@@ -172,47 +181,34 @@
                             <!-- 1. BACKGROUND TEXTURE -->
                             <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover z-0 opacity-50" alt="Background">
                             
-                            <!-- 5. BG BOXES (Layer 1, z-5) - INSIDE MASK -->
-                            <!-- Raised to bottom-6 (~25px) -->
+                            <!-- 5. BG BOXES (Layer 1, z-5) -->
                             <img id="hero-boxes-bg" src="./images/boxes_bg.png" class="absolute left-1/2 bottom-6 w-full z-5 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 150%);" alt="Boxes BG">
 
-                            <!-- 4. WE (Layer 2, z-15) - INSIDE MASK -->
-                            <!-- SWAPPED: Moved to RIGHT side -->
-                            <!-- Raised to bottom-16 (~65px), Right margin right-2 -->
+                            <!-- 4. WE (Layer 2, z-15) -->
                             <img id="hero-we" src="./images/we.png" class="absolute right-2 bottom-16 w-[75%] z-15 object-contain will-change-transform translate-x-full" style="transform: translateX(150%);" alt="We">
 
-                            <!-- 3. RIGHT BOX (Layer 3, z-20) - INSIDE MASK -->
-                            <!-- SWAPPED: Moved to LEFT side, strictly left-0 -->
-                            <!-- Added negative margin just in case of PNG padding -->
+                            <!-- 3. RIGHT BOX (Layer 3, z-20) -->
                             <img id="hero-box-right" src="./images/box_right.png" class="absolute left-0 -ml-2 bottom-10 w-[40%] z-20 object-contain will-change-transform -translate-x-full" style="transform: translateX(-150%);" alt="Box Right">
 
-                            <!-- 6. KYLIE (Layer 4, z-25) - INSIDE MASK -->
-                            <!-- Starts hidden (translateY 100%) -->
-                            <!-- Reverted to v6.27: left-[58%], w-[55%], bottom-2 -->
+                            <!-- 6. KYLIE (Layer 4, z-25) -->
                             <img id="hero-kylie" src="./images/kylie.png" class="absolute left-[58%] bottom-2 w-[55%] z-25 object-contain will-change-transform translate-y-full" style="transform: translate(-50%, 100%);" alt="Kylie">
 
-                            <!-- 7. TEXT STICKER (Layer 5, z-40) - INSIDE MASK -->
-                            <!-- Top Left, Letter Reveal Animation -->
-                            <!-- Moved to left-[5%], text-left -->
-                            <!-- Widened to 320px to fit words better -->
+                            <!-- 7. TEXT STICKER (Layer 5, z-40) -->
                             <div id="hero-sticker" class="absolute top-[13%] left-[5%] w-[320px] z-40 text-left will-change-transform translate-x-[-20px]">
-                                <!-- Shantell Sans Font -->
                                 <p id="sticker-text" class="text-slate-900 font-extrabold text-2xl leading-snug" style="font-family: 'Shantell Sans', cursive;">
                                     Ноябрь<br>Мы, вещи и одна маленькая собака с большими амбициями врываемся в столицу.
                                 </p>
                             </div>
 
-                            <!-- TITLE (Single block for Smoke Animation) - INSIDE MASK -->
+                            <!-- TITLE -->
                             <h1 id="hero-title" class="relative z-40 text-center text-slate-900 leading-[90%] tracking-tight will-change-transform origin-center top-1/2 -translate-y-1/2" 
                                 style="font-family: 'Shantell Sans', cursive; font-weight: 600; font-size: clamp(50px, 15vw, 75px);">
                                 Большой<br>переезд
                             </h1>
                         </div>
 
-                        <!-- 2. BOTTOM BOXES (Layer 4, z-30) - OUTSIDE MASK -->
-                        <!-- WRAPPER: Fixes width to 100vw and clips X overflow only, allowing Y spill -->
+                        <!-- 2. BOTTOM BOXES (Layer 4, z-30) -->
                         <div id="hero-boxes-wrapper" class="absolute bottom-0 left-0 w-full h-auto pointer-events-none z-30" style="overflow-x: clip; overflow-y: visible;">
-                            <!-- IMAGE: 130% width, centered inside wrapper -->
                             <div id="hero-boxes-bottom" class="relative left-1/2 w-[130%] flex justify-center will-change-transform translate-y-full" style="transform: translate(-50%, 100%);">
                                 <img src="./images/boxes_bottom.png" class="w-full h-auto object-contain block" alt="Boxes Bottom">
                             </div>
@@ -221,56 +217,30 @@
                     </div>
                 </div>
 
-                <!-- BLOCK 2: MAP (Naturally follows the 300vh wrapper) -->
-                <!-- z-10 to be UNDER Hero overlap -->
+                <!-- BLOCK 2: MAP -->
                 <div id="map-block" class="relative w-full min-h-[100vh] bg-white flex flex-col items-center overflow-hidden z-10">
-                     <!-- 1. Background Texture -->
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0" alt="Texture">
-                    
-                    <!-- 2. Map Overlay (Printed Effect) -->
-                    <!-- Opacity reduced to 5% (Very faint) -->
-                    <!-- Added ID for Zoom Animation -->
-                    <!-- Start at scale-90, animate to 110 -->
                     <img id="map-bg" src="./images/map_full.png" class="absolute inset-0 w-full h-full object-cover opacity-5 mix-blend-multiply z-10 transition-transform duration-[10s] ease-out scale-90" alt="Map Background">
                     
-                    <!-- SVG ROUTE REMOVED v6.50 -->
-
-                    <!-- 3. Content (Polaroid + Pin) -->
-                    <!-- Positioned towards bottom-left -->
                     <div class="relative z-20 w-full h-full flex flex-col items-start justify-end min-h-[100vh] p-6 pb-32 pl-10">
-                        
-                        <!-- SMALL PIN REMOVED v6.51 -->
-
-                        <!-- POLAROID CONTAINER -->
-                        <!-- Initially hidden, scaled down -->
+                        <!-- POLAROID CONTAINER (Bottom Left) -->
                         <div id="map-polaroid" class="relative bg-white p-3 pb-8 shadow-2xl rotate-[-3deg] max-w-[280px] w-full transform transition-all duration-1000 ease-out opacity-0 scale-50 translate-y-20">
-                            
-                            <!-- PIN (Red Pin) - Now "White Pin" logic -->
-                            <!-- Reduced size to w-24 (v6.51) -->
-                            <!-- Animated separately via JS (starts opacity 0, scaled up) -->
                             <div id="map-pin-polaroid" class="absolute -top-10 right-1/2 translate-x-1/2 w-24 z-30 drop-shadow-md" style="opacity: 0; transform: scale(2) translateY(-50px);">
                                 <img src="./images/pin_red.png" class="w-full h-auto" alt="Pin">
                             </div>
-                            
-                            <!-- PHOTO (Kylie in Car) -->
                             <div class="aspect-square w-full overflow-hidden bg-slate-100 mb-3 flex items-center justify-center">
                                 <img src="./images/kylie_car.jpg" class="w-full h-full object-cover" alt="Kylie in Car">
                             </div>
-                            
-                            <!-- CAPTION -->
                             <h2 class="text-xl font-bold text-slate-800 font-hand text-center text-slate-600 leading-tight">
                                 Тысяча километров позади...
                             </h2>
                         </div>
                         
-                        <!-- POLAROID 2 (Right Side) - Added v6.52 -->
+                        <!-- POLAROID 2 (Top Right) -->
                         <div id="map-polaroid-2" class="absolute top-[15%] right-[5%] z-25 bg-white p-3 pb-8 shadow-2xl rotate-[6deg] max-w-[240px] w-full transform transition-all duration-1000 ease-out opacity-0 scale-50 translate-y-20">
-                             <!-- Pin for 2nd photo (Big Red Pin, Mirrored) -->
-                             <!-- Raised to -top-9 (v6.66) -->
                             <div id="map-pin-polaroid-2" class="absolute -top-9 left-1/2 -translate-x-1/2 w-24 z-30 drop-shadow-md" style="opacity: 0; transform: scaleX(-1) scale(2) translateY(-50px);">
                                 <img src="./images/pin_red.png" class="w-full h-auto" alt="Pin">
                             </div>
-                            
                             <div class="aspect-square w-full overflow-hidden bg-slate-100 mb-3">
                                 <img src="./images/kylie2.jpg" class="w-full h-full object-cover" alt="Kylie 2">
                             </div>
@@ -278,55 +248,41 @@
                                 ...Впереди — новая жизнь!
                             </h2>
                         </div>
-                        
                     </div>
                 </div>
 
-                <!-- BLOCK 3: ELEVATOR (v7.02) -->
-                <!-- High wrapper for scrollytelling -->
-                <!-- Increased height to 500vh to fit the new "Santa Barbara" morph phase -->
-                <div id="elevator-wrapper" class="relative w-full h-[500vh] z-20">
+                <!-- BLOCK 3: ELEVATOR -->
+                <!-- Increased height to 700vh to fit the extended sequence -->
+                <div id="elevator-wrapper" class="relative w-full h-[700vh] z-20">
                     
-                    <!-- STICKY CONTAINER -->
-                    <!-- CHANGED v7.47: overflow-y-visible overflow-x-clip to prevent layout shifts but allow text pop-up -->
                     <div id="elevator-sticky" class="sticky top-0 left-0 w-full h-[100dvh] flex flex-col items-center justify-center" style="overflow-y: visible; overflow-x: clip;">
                         
-                        <!-- 1. BACKGROUND WALL (Texture) - Always Visible -->
+                        <!-- 1. BACKGROUND WALL -->
                         <div class="absolute inset-0 w-full h-full z-0 bg-white">
                              <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Texture">
                         </div>
 
-                        <!-- 1.5. ELEVATOR INTERIOR (Hidden initially) -->
-                        <!-- This container holds the dark background and Kylie photo. -->
-                        <div id="elevator-interior" class="absolute top-1/2 left-1/2 w-full h-full z-10 bg-slate-900 opacity-0 shadow-2xl origin-center will-change-transform" style="transform: translate(-50%, -50%);">
-                             <!-- Fixed path: kylie_elevator_final.jpg (Restored correct photo) -->
-                             <!-- Added ID for scaling -->
+                        <!-- 1.5. ELEVATOR INTERIOR -->
+                        <div id="elevator-interior" class="absolute top-0 left-0 w-full h-full z-10 bg-slate-900 opacity-0 shadow-2xl origin-center will-change-transform">
                              <img id="elevator-photo" src="./images/kylie_elevator_final.jpg?v=final" class="absolute inset-0 w-full h-full object-cover opacity-100 will-change-transform" alt="Kylie Inside">
                         </div>
                         
-                        <!-- 2. TRANSITION TEXT (v7.45 Fix - Raised even higher) -->
-                        <!-- Moved to -mt-24 (approx -96px from top). This should be well into the previous block area. -->
+                        <!-- 2. TRANSITION TEXT -->
                         <div id="elevator-sticker" class="absolute top-0 -mt-24 left-1/2 transform -translate-x-1/2 z-50 w-[340px] text-left pointer-events-none">
                             <p id="elevator-text" class="text-slate-900 leading-snug font-black text-2xl md:text-3xl drop-shadow-sm" style="font-family: 'Shantell Sans', cursive; font-weight: 900;">
                                 Раньше мы приезжали в Москву только по делам.<br><br>Но в этот раз мы ехали в свой новый <span class="text-red-600 uppercase">ДОМ</span>.
                             </p>
                         </div>
 
-                        <!-- 3. ELEVATOR DOORS (z-30) -->
-                        <!-- Improved "Steel" look: Zinc-400/200 gradient, inset shadow -->
-                        <!-- LEFT DOOR -->
+                        <!-- 3. ELEVATOR DOORS -->
                         <div id="door-left" class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-zinc-400 via-zinc-200 to-zinc-400 z-30 transform -translate-x-full border-r border-zinc-500 shadow-2xl will-change-transform flex items-center justify-end">
-                            <!-- Inner seam shadow -->
                             <div class="w-4 h-full bg-gradient-to-r from-transparent to-black/10"></div>
                         </div>
-                        
-                        <!-- RIGHT DOOR -->
                         <div id="door-right" class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-zinc-400 via-zinc-200 to-zinc-400 z-30 transform translate-x-full border-l border-zinc-500 shadow-2xl will-change-transform flex items-center justify-start">
-                            <!-- Inner seam shadow -->
                             <div class="w-4 h-full bg-gradient-to-l from-transparent to-black/10"></div>
                         </div>
 
-                        <!-- 4. FLOOR PANEL (z-40) -->
+                        <!-- 4. FLOOR PANEL -->
                         <div id="elevator-panel" class="absolute top-[20%] left-1/2 -translate-x-1/2 z-40 bg-zinc-900 border-4 border-zinc-600 rounded-lg p-4 px-8 shadow-2xl opacity-0 transform scale-90 will-change-transform">
                             <div class="flex items-center gap-4">
                                 <div class="text-green-500 text-4xl animate-pulse">▲</div>
@@ -334,49 +290,50 @@
                             </div>
                         </div>
 
-                        <!-- 5. CHAT BUBBLE 1 (Kylie) - Telegram Style (Left) -->
-                        <!-- v7.65: Use VH for responsive positioning. Start HIGHER at bottom-[35vh] -->
-                        <div id="chat-bubble-1" class="absolute bottom-[35vh] left-[105px] z-50 max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) transform origin-bottom-left">
-                            <!-- Name -->
-                            <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
-                            <!-- Text -->
-                            <p class="text-[15px] text-slate-900 leading-snug">
-                                В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
-                            </p>
-                            <!-- Time -->
-                            <p class="text-[10px] text-slate-400 text-right mt-1">18:30</p>
-                            
-                            <!-- Tail SVG -->
+                        <!-- 5. KYLIE: TYPING INDICATOR (New) -->
+                        <div id="chat-bubble-typing" class="absolute bottom-[35vh] left-[105px] z-50 bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm transition-all duration-300 transform origin-bottom-left scale-0 opacity-0">
+                             <div class="flex gap-1">
+                                <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                                <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
+                             </div>
+                             <!-- Tail SVG -->
                             <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
                                 <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
                             </svg>
                         </div>
 
-                        <!-- 6. CHAT BUBBLE 2 (Husband) - Telegram Style (Right) -->
-                        <!-- v7.71: Use inline styles for initial state to match JS logic and avoid class conflicts -->
-                        <div id="chat-row-2" class="absolute bottom-[18vh] right-4 z-[100] flex items-end gap-2 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) origin-bottom-right" style="opacity: 0; transform: translateY(1rem) scale(0.9);">
+                        <!-- 5. KYLIE: CHAT BUBBLE 1 -->
+                        <div id="chat-bubble-1" class="absolute bottom-[35vh] left-[105px] z-50 max-w-[260px] bg-white p-3 px-4 rounded-2xl rounded-bl-none shadow-sm filter drop-shadow-sm opacity-0 scale-90 translate-y-4 transition-all duration-500 cubic-bezier(0.175, 0.885, 0.32, 1.275) transform origin-bottom-left">
+                            <p class="text-xs font-bold text-[#5790df] mb-1">Кайли 🐶</p>
+                            <p class="text-[15px] text-slate-900 leading-snug">
+                                В прошлом доме мне всегда приходилось подниматься по ступенькам. Но в новом доме я теперь каждый день катаюсь в лифте!
+                            </p>
+                            <p class="text-[10px] text-slate-400 text-right mt-1">18:30</p>
+                            <svg class="absolute -bottom-[0px] -left-[9px] w-[20px] h-[20px] text-white fill-current z-[-1]" viewBox="0 0 20 20">
+                                <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
+                            </svg>
+                        </div>
+
+                        <!-- 6. HUSBAND: CONTAINER (Avatar + Bubble separate) -->
+                        <div id="chat-row-2" class="absolute bottom-[18vh] right-4 z-[100] flex items-end gap-2 origin-bottom-right">
                             
                             <!-- Bubble (Green) -->
-                            <div class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[240px]">
+                            <div id="husband-bubble" class="relative bg-[#EEFFDE] p-3 px-4 rounded-2xl rounded-br-none shadow-sm filter drop-shadow-sm max-w-[240px] opacity-0 transform scale-0 origin-bottom-right transition-all duration-500">
                                 <p class="text-[15px] text-slate-900 leading-snug">
                                     Моя самая любимая москвичка! Горжусь тобой ❤️
                                 </p>
-                                <!-- Time & Checks -->
                                 <div class="flex items-center justify-end gap-1 mt-1">
                                     <p class="text-[10px] text-[#539e55]">18:31</p>
-                                    <!-- Double Check -->
                                     <span class="text-[#539e55] text-[10px]">✓✓</span>
                                 </div>
-
-                                <!-- Tail SVG -->
                                 <svg class="absolute -bottom-[0px] -right-[9px] w-[20px] h-[20px] text-[#EEFFDE] fill-current z-[-1] transform scale-x-[-1]">
                                     <path d="M20 0v20H0c5 0 10-5 12-10s8-10 8-10z"/>
                                 </svg>
                             </div>
 
-                            <!-- Avatar (Round) -->
-                            <!-- Fixed Path with Cache Buster -->
-                            <div class="w-10 h-10 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200">
+                            <!-- Avatar -->
+                            <div id="husband-avatar" class="w-10 h-10 rounded-full overflow-hidden shadow-sm flex-shrink-0 bg-slate-200 opacity-0 transform scale-0 transition-all duration-500">
                                 <img src="./images/husband_avatar.jpg?v=2" class="w-full h-full object-cover" alt="Husband">
                             </div>
                         </div>
@@ -386,30 +343,13 @@
 
                 <!-- BLOCK 4: NEW YEAR / HOME -->
                 <div id="home-block" class="relative w-full min-h-[100vh] z-20 bg-white overflow-hidden">
-                    <!-- Background Texture -->
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0" alt="Texture">
-                    
-                    <!-- DECORATIVE BRANCHES -->
-                    <!-- Added IDs for animation -->
-                    <!-- Top Left: Rotated "twice" (flipped 180 relative to before) and doubled size (w-96) -->
                     <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-20 -left-24 w-96 z-10 opacity-90 rotate-0 will-change-transform" style="transform: translate(-100%, -100%);" alt="Branch">
-                    
-                    <!-- Top Right: Rotated "twice" (flipped) and doubled size -->
                     <img id="branch-tr" src="./images/tree_branch.png" class="absolute -top-20 -right-24 w-96 z-10 opacity-90 rotate-90 will-change-transform" style="transform: translate(100%, -100%);" alt="Branch">
-                    
-                    <!-- Bottom Left -->
                     <img id="branch-bl" src="./images/tree_branch.png" class="absolute bottom-20 -left-10 w-56 z-10 opacity-90 -rotate-180 will-change-transform" style="transform: translate(-100%, 100%);" alt="Branch">
                     
                     <div class="relative z-10 p-6 flex flex-col items-center justify-center min-h-[50vh] pt-32">
-                        <!-- Content will go here -->
                         <h2 id="home-title" class="text-3xl font-extrabold text-slate-900 text-center mb-4 opacity-0 translate-y-10 transition-all duration-1000 ease-out" style="font-family: 'Shantell Sans', cursive;">
-                            Наш первый праздник здесь
-                        </h2>
-                    </div>
-                    
-                    <div class="relative z-10 p-6 flex flex-col items-center justify-center min-h-[50vh] pt-32">
-                        <!-- Content will go here -->
-                        <h2 class="text-3xl font-extrabold text-slate-900 text-center mb-4" style="font-family: 'Shantell Sans', cursive;">
                             Наш первый праздник здесь
                         </h2>
                     </div>
@@ -419,21 +359,19 @@
             // --- ANIMATION LOGIC ---
             const wrapper = document.getElementById('hero-wrapper');
             const title = document.getElementById('hero-title');
-            const boxesBottom = document.getElementById('hero-boxes-bottom'); // Inner div
+            const boxesBottom = document.getElementById('hero-boxes-bottom'); 
             const boxesBg = document.getElementById('hero-boxes-bg');
             const boxRight = document.getElementById('hero-box-right');
             const weLayer = document.getElementById('hero-we');
             const kylieLayer = document.getElementById('hero-kylie');
             const stickerLayer = document.getElementById('hero-sticker');
             
-            // Map Elements (Added in v6.47)
             const mapBg = document.getElementById('map-bg');
             const mapPolaroid = document.getElementById('map-polaroid');
-            const mapPolaroid2 = document.getElementById('map-polaroid-2'); // New v6.52
+            const mapPolaroid2 = document.getElementById('map-polaroid-2');
             const mapPinPolaroid = document.getElementById('map-pin-polaroid'); 
-            const mapPinPolaroid2 = document.getElementById('map-pin-polaroid-2'); // New v6.57
+            const mapPinPolaroid2 = document.getElementById('map-pin-polaroid-2');
             
-            // Elevator Elements (v7.0)
             const elevatorWrapper = document.getElementById('elevator-wrapper');
             const elevatorSticker = document.getElementById('elevator-sticker');
             const doorLeft = document.getElementById('door-left');
@@ -441,13 +379,13 @@
             const elevatorPanel = document.getElementById('elevator-panel');
             const floorCount = document.getElementById('floor-count');
             const elevatorInterior = document.getElementById('elevator-interior'); 
-            const elevatorPhoto = document.getElementById('elevator-photo'); // New v7.41 
+            const elevatorPhoto = document.getElementById('elevator-photo'); 
             
-            // Chat Elements (v7.53)
+            const chatBubbleTyping = document.getElementById('chat-bubble-typing');
             const chatBubble1 = document.getElementById('chat-bubble-1');
-            const chatRow2 = document.getElementById('chat-row-2'); // v7.60
+            const husbandAvatar = document.getElementById('husband-avatar');
+            const husbandBubble = document.getElementById('husband-bubble');
 
-            // Home Block Elements (v7.25)
             const homeBlock = document.getElementById('home-block');
             const branchTL = document.getElementById('branch-tl');
             const branchTR = document.getElementById('branch-tr');
@@ -459,33 +397,16 @@
             // PREPARE TEXT SPLITTING
             const stickerText = document.getElementById('sticker-text');
             if (stickerText) {
-                // Use innerText to capture newlines from <br>
                 const text = stickerText.innerText;
                 stickerText.innerHTML = text.split('').map(char => {
-                    // If char is a newline (from <br>), return <br> tag
-                    // Note: innerText usually converts <br> to \n
                     if (char === '\n') return '<br>'; 
                     return `<span class="opacity-0 transition-opacity duration-75">${char}</span>`;
                 }).join('');
             }
             const stickerSpans = stickerText ? stickerText.querySelectorAll('span') : [];
 
-            // NEW v7.38: Split Elevator Text too
             const elevatorText = document.getElementById('elevator-text');
             if (elevatorText) {
-                // We need to preserve the specific span logic for "ДОМ" (red/uppercase)
-                // This is tricky with simple innerText split.
-                // Alternative: Wrap the whole block in opacity-0, but user asked for "по буквам".
-                // Simple hack: Split everything, but for the 'DOM' span, we might lose styling if we just overwrite innerHTML.
-                // Let's manually reconstruct:
-                // "Раньше ... по делам.<br><br>Но в ... новый " + <span ...>ДОМ</span> + "."
-                
-                // Let's just split the text nodes, keeping the HTML structure? 
-                // Too complex for regex in one go.
-                // Simplified approach: Split the main text, keep the span intact?
-                // Or just animate opacity of the container? User explicitly asked for "letter by letter".
-                // I will try to preserve the HTML structure by replacing text content with spans.
-                
                 const processNode = (node) => {
                     if (node.nodeType === 3) { // Text node
                         const chars = node.nodeValue.split('');
@@ -498,14 +419,10 @@
                         Array.from(node.childNodes).forEach(processNode); // Recurse
                     }
                 };
-                
-                // Clone to avoid live DOM issues during iteration? No, Array.from helps.
                 Array.from(elevatorText.childNodes).forEach(processNode);
             }
-            // Select all spans inside elevator-text that have the opacity class
             const elevatorSpans = elevatorText ? elevatorText.querySelectorAll('span.opacity-0') : [];
 
-            // Helper for interpolation
             const getVal = (progress, startAt, duration, startVal, endVal) => {
                 if (progress <= startAt) return startVal;
                 if (progress >= startAt + duration) return endVal;
@@ -528,64 +445,47 @@
                     progress = Math.max(0, Math.min(1, scrollY / heroScrollable));
                 }
 
-                // 1. TITLE ANIMATION: Smoke / Blur Up (0 -> 0.5)
                 if (title) {
                     const y = -progress * 200; 
-                const scale = 1 + progress * 0.5; 
-                const blur = progress * 20; 
-                const opacity = Math.max(0, 1 - progress * 2.0); 
+                    const scale = 1 + progress * 0.5; 
+                    const blur = progress * 20; 
+                    const opacity = Math.max(0, 1 - progress * 2.0); 
 
-                title.style.transform = `translateY(${y}px) scale(${scale})`;
-                title.style.filter = `blur(${blur}px)`;
-                title.style.opacity = opacity;
+                    title.style.transform = `translateY(${y}px) scale(${scale})`;
+                    title.style.filter = `blur(${blur}px)`;
+                    title.style.opacity = opacity;
                 }
 
-                // 2. BOTTOM BOXES: Slide Up (0.2 -> 0.6)
-                // Final position: 30% (Even Lower)
                 if (boxesBottom) {
                     const boxesY = getVal(progress, 0.2, 0.4, 100, 30); 
-                    // MUST preserve X centering (-50%)
                     boxesBottom.style.transform = `translate(-50%, ${boxesY}%)`;
                 }
 
-                // 3. BG BOXES: Slide Up (0.3 -> 0.7) (PARALLEL WITH OTHERS)
-                // From 150% (hidden) to 0% (visible at bottom)
                 if (boxesBg) {
                     const bgY = getVal(progress, 0.3, 0.4, 150, 0);
-                    // We must preserve -50% X translation for centering
                     boxesBg.style.transform = `translate(-50%, ${bgY}%)`;
                 }
 
-                // 4. BOX (Now Left) & STICKER: Slide In
                 if (boxRight) {
-                    // From Left (-150%) to 0
                     const boxX = getVal(progress, 0.4, 0.3, -150, 0);
                     boxRight.style.transform = `translateX(${boxX}%)`;
                     
-                    // Sync sticker container slide with box (subtle slide)
                     if (stickerLayer) {
-                         // Slide from -50px to 0px (Left to Right)
                          const stickerX = getVal(progress, 0.4, 0.3, -50, 0);
                          stickerLayer.style.transform = `translateX(${stickerX}px)`;
                     }
                 }
                 
-                // 5. WE: Slide In From RIGHT (0.5 -> 0.8)
                 if (weLayer) {
-                    // From Right (150%) to 0 (Right edge) - Increased start to hide fully
                     const weX = getVal(progress, 0.5, 0.3, 150, 0); 
-                    // Preserve scaleX(-1) mirroring
                     weLayer.style.transform = `translateX(${weX}%) scaleX(-1)`;
                 }
 
-                // 6. KYLIE: Slide Up (0.5 -> 0.8) - Shifted earlier
                 if (kylieLayer) {
                     const kylieY = getVal(progress, 0.5, 0.3, 100, 0);
-                    // Reverted to v6.27 (Centered X, Mirrored)
                     kylieLayer.style.transform = `translate(-50%, ${kylieY}%) scaleX(-1)`;
                 }
                 
-                // STICKER TEXT: Smooth Letter Reveal (0.8 -> 1.0)
                 if (stickerSpans.length > 0) {
                      const start = 0.8;
                      const end = 0.98;
@@ -603,15 +503,13 @@
                      });
                 }
 
-                // --- BLOCK 2: MAP ANIMATION (Scroll Driven) ---
+                // --- BLOCK 2: MAP ANIMATION ---
                 const mapOffset = heroHeight; 
                 const distIntoMap = scrollY + viewportHeight - mapOffset;
                 
                 if (distIntoMap > 0) {
-                    // Normalize progress over 1.2 viewport heights for better pacing
                     const mapProgress = Math.min(1, distIntoMap / (viewportHeight * 1.2));
                     
-                    // 1. POLAROID 2 POP (Top Right) - FIRST (0.2 -> 0.5)
                     if (mapPolaroid2) {
                         const start = 0.2;
                         const dur = 0.3;
@@ -626,7 +524,6 @@
                         mapPolaroid2.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
                     }
 
-                    // 2. POLAROID 2 PIN DROP (0.4 -> 0.6)
                     if (mapPinPolaroid2) {
                         const start = 0.4;
                         const dur = 0.2;
@@ -640,7 +537,6 @@
                         mapPinPolaroid2.style.transform = `translateX(-50%) scaleX(-1) scale(${ppScale}) translateY(${ppY}px)`;
                     }
 
-                    // 3. POLAROID 1 POP (Bottom Left) - SECOND (0.5 -> 0.8)
                     if (mapPolaroid) {
                         const start = 0.5;
                         const dur = 0.3;
@@ -655,7 +551,6 @@
                         mapPolaroid.style.transform = `scale(${polScale}) rotate(${polRot}deg) translateY(${polY}px)`;
                     }
 
-                    // 4. POLAROID 1 PIN DROP (0.7 -> 0.9)
                     if (mapPinPolaroid) {
                         const start = 0.7;
                         const dur = 0.2;
@@ -669,32 +564,25 @@
                         mapPinPolaroid.style.transform = `translateX(50%) scale(${ppScale}) translateY(${ppY}px)`;
                     }
 
-                    // 3. MAP ZOOM (Continuous)
                     if (mapBg) {
                         const zoomScale = 0.9 + (mapProgress * 0.2); 
                         mapBg.style.transform = `scale(${zoomScale})`;
                     }
                 }
 
-                // --- BLOCK 3: ELEVATOR ANIMATION (v7.0) ---
+                // --- BLOCK 3: ELEVATOR ANIMATION ---
                 if (elevatorWrapper) {
-                    // Calculate progress within the tall wrapper
                     const wrapperTop = elevatorWrapper.offsetTop;
                     const wrapperHeight = elevatorWrapper.offsetHeight;
                     const scrollable = wrapperHeight - viewportHeight;
                     
-                    // Transition Sticker Logic (Before elevator really starts)
                     const distToElevator = scrollY + viewportHeight - wrapperTop;
                     if (distToElevator > 0 && scrollY < wrapperTop) {
-                         // 0 -> 1 as we approach the sticky point
                          const transitionP = Math.min(1, distToElevator / (viewportHeight * 0.6));
                          
-                         // ANIMATE SPANS (v7.38)
                          if (elevatorSpans.length > 0) {
                              const totalSpans = elevatorSpans.length;
                              elevatorSpans.forEach((span, i) => {
-                                 // Staggered reveal
-                                 // Start revealing from p=0.2 to p=0.8
                                  const start = 0.2;
                                  const end = 0.9;
                                  const totalDur = end - start;
@@ -710,53 +598,32 @@
                              });
                          }
                          
-                         // Fade out container quickly when scrolling past?
-                         // Actually, keep it visible until it scrolls up.
-                         // But we had logic to fade it out.
-                         
                     } else if (scrollY >= wrapperTop) {
-                        // Fade out quickly as doors close
-                        // 0 -> 200px scroll
                         const fadeP = Math.min(1, (scrollY - wrapperTop) / 200);
                         if (elevatorSticker) elevatorSticker.style.opacity = 1 - fadeP;
                     }
 
-                    // Elevator Mechanics (Inside Sticky)
                     if (scrollY >= wrapperTop) {
                         const elevP = Math.min(1, (scrollY - wrapperTop) / scrollable);
                         
-                        // Revised Timeline for Chat Morph (Total 700vh)
-                        // 0.0 - 0.1: Doors Close
-                        // 0.1 - 0.4: Ride
-                        // 0.4 - 0.55: Doors Open
-                        // 0.55 - 0.7: Morph to Center Circle
-                        // 0.7 - 0.8: Move to Left (Avatar)
-                        // 0.8 - 0.9: Bubble 1
-                        // 0.9 - 1.0: Bubble 2
-
                         const closeEnd = 0.1;
                         const rideStart = 0.1;
                         const rideEnd = 0.4;
                         const openStart = 0.4;
                         const openEnd = 0.55;
                         
-                        // STEP 1: Morph to Circle (Stay Centered)
                         const morphStart = 0.55;
                         const morphEnd = 0.75; 
                         
-                        // STEP 2: Fly to Avatar (0.75 -> 0.85)
                         const flyStart = 0.75;
                         const flyEnd = 0.85;
 
-                        // STEP 3: Chat Appears (0.85 -> 1.0)
-                        
                         // --- DOORS LOGIC ---
                         if (doorLeft && doorRight) {
                             let xLeft = -100;
                             let xRight = 100;
                             
                             if (elevP < openStart) {
-                                // Closing Phase
                                 let pClose = 0;
                                 if (elevP > 0) pClose = Math.min(1, elevP / closeEnd);
                                 
@@ -769,12 +636,9 @@
                                 }
 
                             } else {
-                                // Opening Phase
                                 let pOpen = Math.min(1, (elevP - openStart) / (openEnd - openStart));
-                                
                                 xLeft = -(pOpen * 100); 
                                 xRight = (pOpen * 100); 
-                                
                                 if (elevatorInterior) elevatorInterior.style.opacity = 1;
                             }
                             
@@ -798,51 +662,36 @@
                             }
                         }
 
-                        // --- AVATAR ROUNDING (v7.42 - CLIP PATH CIRCLE) ---
+                        // --- AVATAR ROUNDING ---
                         if (elevatorInterior) {
-                            // v7.56 FIX: Force standard positioning (Top-Left 0,0) to avoid centering confusion
                             elevatorInterior.style.top = '0px';
                             elevatorInterior.style.left = '0px';
                             elevatorInterior.style.width = '100%';
                             elevatorInterior.style.height = '100%';
-                            // Remove any transform-origin centering assumptions by handling it explicitly
                             
-                            // 2. Animate Avatar (Morph -> Fly)
                             const winW = window.innerWidth;
                             const winH = window.innerHeight;
-
-                            // CONSTANTS
                             const centerX = winW / 2;
                             const centerY = winH / 2;
                             
-                            // Phase 1 Target (Mid Circle)
-                            const midDiameter = Math.min(winW, winH) * 0.70; // 70% width
+                            const midDiameter = Math.min(winW, winH) * 0.70; 
                             const midRadius = midDiameter / 2;
                             
-                            // Phase 2 Target (Avatar)
                             const avatarRadius = 28; 
                             const avatarX = 40 + 28; 
-                            // v7.65 FIX: Target Y based on VH to match bottom-[35vh]
-                            // bottom-35vh means bottom edge is at 0.65 * winH
-                            // Avatar center should be slightly above that bottom line to align with bubble bottom
-                            // Let's aim for winH * 0.65 - 20px
-                            const targetBottomPx = winH * 0.35; // 35vh in pixels
-                            const avatarY = winH - targetBottomPx - 20; // Align roughly with bubble bottom
+                            const targetBottomPx = winH * 0.35; 
+                            const avatarY = winH - targetBottomPx - 20; 
 
                             if (elevP <= morphStart) {
-                                // BEFORE MORPH: Full Screen
                                 elevatorInterior.style.webkitClipPath = 'circle(150% at 50% 50%)'; 
                                 elevatorInterior.style.clipPath = 'circle(150% at 50% 50%)';
-                                elevatorInterior.style.transform = 'none'; // Reset to 0,0
-                                if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(1)'; // Reset photo
+                                elevatorInterior.style.transform = 'none'; 
+                                if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(1)'; 
                                 
                             } else if (elevP > morphStart && elevP <= morphEnd) {
-                                // PHASE 1: MORPH TO CENTER CIRCLE (Clip Path Only)
-                                elevatorInterior.style.transform = 'none'; // Stay full screen 0,0
+                                elevatorInterior.style.transform = 'none'; 
                                 
                                 let pRound = (elevP - morphStart) / (morphEnd - morphStart);
-                                
-                                // Interpolate Radius: Start (Full) -> Mid
                                 const startRadius = Math.sqrt(winW*winW + winH*winH) / 2;
                                 const curRadius = startRadius - (pRound * (startRadius - midRadius));
                                 
@@ -850,43 +699,33 @@
                                 elevatorInterior.style.webkitClipPath = clipVal;
                                 elevatorInterior.style.clipPath = clipVal;
                                 
-                                // Photo Scale: 1.0 -> 0.71
                                 if (elevatorPhoto) {
                                     const scale = 1.0 - (pRound * 0.29); 
                                     elevatorPhoto.style.transform = `scale(${scale})`;
                                 }
 
                             } else if (elevP > flyStart) {
-                                // PHASE 2: FLY (Transform Container)
                                 let pFly = (elevP - flyStart) / (flyEnd - flyStart);
                                 if (pFly > 1) pFly = 1;
                                 
-                                // 1. Freeze Clip Path & Photo Scale at Phase 1 End
                                 const clipVal = `circle(${midRadius}px at 50% 50%)`;
                                 elevatorInterior.style.webkitClipPath = clipVal;
                                 elevatorInterior.style.clipPath = clipVal;
                                 if (elevatorPhoto) elevatorPhoto.style.transform = 'scale(0.71)';
                                 
-                                // 2. Animate Container Transform
-                                // We are moving from Center (winW/2, winH/2) to Avatar (avatarX, avatarY)
-                                // AND Scaling from 1.0 to (avatarRadius / midRadius)
-                                
                                 const targetScale = avatarRadius / midRadius;
                                 const curScale = 1.0 - (pFly * (1.0 - targetScale));
                                 
-                                // Translation:
                                 const dx = avatarX - centerX;
                                 const dy = avatarY - centerY;
                                 
                                 let curDx = pFly * dx;
                                 let curDy = pFly * dy;
                                 
-                                // PHASE 3: SLIDE UP (Conversation Flow) - v7.63
-                                // When husband message appears, slide Kylie up to make room.
-                                // v7.72: Sync slide with Husband Appearance (0.88)
-                                const slideStart = 0.88;
+                                // SLIDE UP (Sync with Husband Appearance)
+                                const slideStart = 0.92; // Was 0.88, moved later
                                 const slideEnd = 0.98;
-                                const slideDist = winH * 0.10; // Slide up 10vh (dynamic)
+                                const slideDist = winH * 0.10; 
                                 
                                 if (elevP > slideStart) {
                                     let pSlide = (elevP - slideStart) / (slideEnd - slideStart);
@@ -894,27 +733,34 @@
                                     curDy -= (pSlide * slideDist);
                                 }
                                 
-                                // Apply: Translate(dx,dy) + Scale(s) (Origin is center 0,0 relative to element)
-                                // v7.66 FIX: REMOVED erroneous translate(-50%, -50%) which was pushing it off-screen
                                 elevatorInterior.style.transform = `translate(${curDx}px, ${curDy}px) scale(${curScale})`;
                             }
-                            
-                            // Opacity handled by doors
                         }
                         
-                        // --- BUBBLES FADE IN ---
-                        // v7.59 FIX: Show bubble earlier (0.85) immediately after fly ends
+                        // --- CHAT ANIMATION SEQUENCE ---
+                        
+                        // 1. TYPING (0.85 -> 0.89)
+                        if (chatBubbleTyping) {
+                            if (elevP > 0.85 && elevP < 0.89) {
+                                chatBubbleTyping.style.opacity = 1;
+                                chatBubbleTyping.style.transform = 'scale(1)';
+                            } else {
+                                chatBubbleTyping.style.opacity = 0;
+                                chatBubbleTyping.style.transform = 'scale(0)';
+                            }
+                        }
+
+                        // 2. KYLIE BUBBLE (0.89 -> )
                         if (chatBubble1) {
-                            if (elevP > 0.85) {
+                            if (elevP > 0.89) {
                                 chatBubble1.classList.remove('opacity-0', 'translate-y-4', 'scale-90');
-                                chatBubble1.classList.add('scale-100'); // Pop!
+                                chatBubble1.classList.add('scale-100');
                                 
-                                // v7.63: Slide Up Animation (Sync with Avatar)
-                                const slideStart = 0.88;
+                                // Slide Up
+                                const slideStart = 0.92;
                                 const slideEnd = 0.98;
-                                const slideDist = winH * 0.10; // 10vh
-                                // Base bottom offset in pixels from 35vh
-                                let bottomOffset = winH * 0.35; 
+                                const slideDist = window.innerHeight * 0.10; 
+                                let bottomOffset = window.innerHeight * 0.35; 
                                 
                                 if (elevP > slideStart) {
                                     let pSlide = (elevP - slideStart) / (slideEnd - slideStart);
@@ -926,68 +772,69 @@
                             } else {
                                 chatBubble1.classList.add('opacity-0', 'translate-y-4', 'scale-90');
                                 chatBubble1.classList.remove('scale-100');
-                                chatBubble1.style.bottom = ''; // Reset (CSS defaults to 35vh)
+                                chatBubble1.style.bottom = '';
                             }
                         }
                         
-                        // v7.73: FINAL FIX - Use requestAnimationFrame for style application
-                        // Sometimes style changes in scroll handlers get batched or lost.
-                        if (chatRow2) {
-                            if (elevP > 0.80) {
+                        // 3. HUSBAND APPEARS (0.92 -> )
+                        if (husbandAvatar) {
+                            if (elevP > 0.92) {
                                 requestAnimationFrame(() => {
-                                    chatRow2.style.opacity = '1';
-                                    chatRow2.style.transform = 'translateY(0) scale(1)';
+                                    husbandAvatar.style.opacity = '1';
+                                    husbandAvatar.style.transform = 'scale(1)';
                                 });
                             } else {
                                 requestAnimationFrame(() => {
-                                    chatRow2.style.opacity = '0';
-                                    chatRow2.style.transform = 'translateY(1rem) scale(0.9)';
+                                    husbandAvatar.style.opacity = '0';
+                                    husbandAvatar.style.transform = 'scale(0)';
+                                });
+                            }
+                        }
+
+                        // 4. HUSBAND MESSAGE (0.95 -> )
+                        if (husbandBubble) {
+                            if (elevP > 0.95) {
+                                requestAnimationFrame(() => {
+                                    husbandBubble.style.opacity = '1';
+                                    husbandBubble.style.transform = 'scale(1)';
+                                });
+                            } else {
+                                requestAnimationFrame(() => {
+                                    husbandBubble.style.opacity = '0';
+                                    husbandBubble.style.transform = 'scale(0)';
                                 });
                             }
                         }
                     }
                 }
 
-                // --- BLOCK 4: HOME ANIMATION (v7.25) ---
                 if (homeBlock) {
                     const rect = homeBlock.getBoundingClientRect();
                     const viewH = window.innerHeight;
-                    
-                    // Start animating when top of block enters viewport
-                    // Full animation by the time it's 50% visible?
-                    const startOffset = viewH; // When top just touches bottom of screen
-                    const endOffset = viewH * 0.5; // When top is halfway up
-                    
-                    const dist = rect.top; // Distance from top of viewport
+                    const startOffset = viewH;
+                    const endOffset = viewH * 0.5; 
+                    const dist = rect.top; 
                     
                     if (dist < viewH) {
-                        // 0 -> 1 progress as it slides up
-                        // We want it to be fully composed when it's taking up most of the screen
-                        // Let's say from dist=viewH (0) to dist=0 (1)
                         const pHome = Math.max(0, Math.min(1, (viewH - dist) / (viewH * 0.6)));
-                        
-                        // Branches Slide In (cubic-bezier ease out feel via simple math)
-                        // Using 'pHome' directly gives linear. 
-                        // Let's use easeOut: 1 - pow(1 - p, 3)
                         const easeP = 1 - Math.pow(1 - pHome, 3);
                         
                         if (branchTL) {
-                            const x = -100 + (easeP * 100); // -100 -> 0
-                            const y = -100 + (easeP * 100); // -100 -> 0
+                            const x = -100 + (easeP * 100); 
+                            const y = -100 + (easeP * 100); 
                             branchTL.style.transform = `translate(${x}%, ${y}%)`;
                         }
                         if (branchTR) {
-                            const x = 100 - (easeP * 100); // 100 -> 0
-                            const y = -100 + (easeP * 100); // -100 -> 0
+                            const x = 100 - (easeP * 100); 
+                            const y = -100 + (easeP * 100); 
                             branchTR.style.transform = `translate(${x}%, ${y}%)`;
                         }
                         if (branchBL) {
-                            const x = -100 + (easeP * 100); // -100 -> 0
-                            const y = 100 - (easeP * 100); // 100 -> 0
+                            const x = -100 + (easeP * 100); 
+                            const y = 100 - (easeP * 100); 
                             branchBL.style.transform = `translate(${x}%, ${y}%)`;
                         }
                         
-                        // Title Fade In
                         if (homeTitle) {
                             if (pHome > 0.5) {
                                 homeTitle.classList.remove('opacity-0', 'translate-y-10');
@@ -999,30 +846,18 @@
                 }
             };
 
-            // Remove old window listener just in case
             if (window._heroScrollHandler) window.removeEventListener('scroll', window._heroScrollHandler);
-            
-            // Add listener to VIEWER
             viewer.addEventListener('scroll', onScroll, { passive: true });
-            
-            // Initial call to set state
             onScroll();
         }
 
         function closeStory() {
             const viewer = document.getElementById('story-viewer');
-            // Ideally remove listener, but since we clear innerHTML and hide it...
-            // Better cleanliness:
-            // We can't easily remove anonymous/local function unless stored.
-            // But since DOM is cleared/hidden, it's mostly fine. 
-            // For perfection, we should store 'onScroll' reference if we want to remove it from viewer.
-            
             storyViewer.classList.add('hidden');
             storyViewer.innerHTML = '';
             nav.style.display = 'flex';
         }
 
-        // INITIAL RENDER
         switchTab('moments');
 
     </script>
