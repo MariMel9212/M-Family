@@ -439,26 +439,26 @@
                         <img id="branch-br-2" src="./images/tree_branch_2.png" class="absolute bottom-[-10px] -right-20 w-60 opacity-90 will-change-transform transition-transform duration-1550 ease-out" style="transform: translateX(150%) scaleX(-1) rotate(25deg);" alt="Branch">
                     
                         <!-- PHOTOS STACK (Interactive) -->
-                        <div id="photos-stack-container" class="absolute top-[42%] left-1/2 -translate-x-1/2 w-[65vw] max-w-[300px] aspect-[3/4] z-[60] cursor-pointer">
+                        <div id="photos-stack-container" class="absolute top-[42%] left-1/2 -translate-x-1/2 w-[65vw] max-w-[300px] aspect-[3/4] z-[60] cursor-pointer" onclick="window.nextPhoto(event)">
                             <!-- Photo Stack Items (Reverse Order for Z-Index) -->
                             
                             <!-- 4. Bottom -->
-                            <div id="stack-photo-4" class="absolute inset-0 bg-white p-2 pb-8 shadow-xl transform transition-all duration-500 ease-out rotate-[-3deg] translate-y-2 scale-95 origin-center">
+                            <div id="stack-photo-4" class="absolute inset-0 bg-white p-2 pb-8 shadow-xl transform transition-all duration-500 ease-out rotate-[-3deg] translate-y-2 scale-95 origin-center pointer-events-none">
                                 <img src="./images/ny3.jpg" class="w-full h-full object-cover bg-slate-100" alt="NY 3">
                             </div>
 
                             <!-- 3. Middle -->
-                            <div id="stack-photo-3" class="absolute inset-0 bg-white p-2 pb-8 shadow-xl transform transition-all duration-500 ease-out rotate-[2deg] translate-y-1 scale-98 origin-center">
+                            <div id="stack-photo-3" class="absolute inset-0 bg-white p-2 pb-8 shadow-xl transform transition-all duration-500 ease-out rotate-[2deg] translate-y-1 scale-98 origin-center pointer-events-none">
                                 <img src="./images/ny2.jpg" class="w-full h-full object-cover bg-slate-100" alt="NY 2">
                             </div>
 
                             <!-- 2. Top -->
-                            <div id="stack-photo-2" class="absolute inset-0 bg-white p-2 pb-8 shadow-xl transform transition-all duration-500 ease-out rotate-[-1deg] origin-center">
+                            <div id="stack-photo-2" class="absolute inset-0 bg-white p-2 pb-8 shadow-xl transform transition-all duration-500 ease-out rotate-[-1deg] origin-center pointer-events-none">
                                 <img src="./images/ny1.jpg" class="w-full h-full object-cover bg-slate-100" alt="NY 1">
                             </div>
 
                             <!-- 1. Cover (Active) -->
-                            <div id="stack-photo-1" class="absolute inset-0 bg-white p-2 pb-8 shadow-2xl transform transition-all duration-500 ease-out rotate-[0deg] scale-100 z-10 origin-center" onclick="nextPhoto()">
+                            <div id="stack-photo-1" class="absolute inset-0 bg-white p-2 pb-8 shadow-2xl transform transition-all duration-500 ease-out rotate-[0deg] scale-100 z-10 origin-center pointer-events-none">
                                 <img src="./images/ny0.jpg" class="w-full h-full object-cover bg-slate-100" alt="NY 0">
                                 <div class="absolute bottom-2 right-2 text-xs text-slate-400 font-bold flex items-center gap-1">
                                     Нажми <span>👇</span>
@@ -508,7 +508,7 @@
 
                     <div class="relative z-10 p-6 flex flex-col items-center justify-start min-h-[40vh] pt-24 md:pt-32">
                         <!-- TITLE (Higher Z-Index to stay above branches) -->
-                        <h2 id="home-title" class="relative z-[70] text-4xl font-extrabold text-slate-900 text-center mb-2 opacity-0 translate-y-10 transition-all duration-1000 ease-out drop-shadow-md" style="font-family: 'Shantell Sans', cursive; line-height: 1.1;">
+                        <h2 id="home-title" class="relative z-[70] text-4xl font-extrabold text-slate-900 text-center mb-2 opacity-0 translate-y-10 transition-all duration-1000 ease-out drop-shadow-md translate-y-[20px]" style="font-family: 'Shantell Sans', cursive; line-height: 1.1;">
                             Наш первый<br>праздник здесь
                         </h2>
                     </div>
@@ -596,7 +596,9 @@ const homeBlock = document.getElementById('home-block');
                             // let currentPhotoIndex = 0; // Moved to global to allow reset
                             const photoStackIds = ['stack-photo-1', 'stack-photo-2', 'stack-photo-3', 'stack-photo-4'];
                             
-                            window.nextPhoto = function() {
+                            window.nextPhoto = function(e) {
+                                if(e) e.stopPropagation();
+                                
                                 const currentId = photoStackIds[currentPhotoIndex];
                                 const currentEl = document.getElementById(currentId);
                                 
@@ -606,7 +608,6 @@ const homeBlock = document.getElementById('home-block');
                                     const randomX = Math.random() * 200 - 100;
                                     currentEl.style.transform = `translate(${randomX}%, 150%) rotate(${randomRot}deg) scale(0.8)`;
                                     currentEl.style.opacity = '0';
-                                    currentEl.style.pointerEvents = 'none'; // Disable clicks
                                 }
                                 
                                 currentPhotoIndex++;
@@ -623,7 +624,6 @@ const homeBlock = document.getElementById('home-block');
                                                 setTimeout(() => {
                                                     el.style.transition = 'all 0.5s ease-out';
                                                     el.style.opacity = '1';
-                                                    el.style.pointerEvents = 'auto';
                                                     // Restore original rotations roughly
                                                     const rots = [0, -1, 2, -3];
                                                     const scales = [1, 1, 0.98, 0.95];
@@ -639,7 +639,6 @@ const homeBlock = document.getElementById('home-block');
                                     const nextId = photoStackIds[currentPhotoIndex];
                                     const nextEl = document.getElementById(nextId);
                                     if(nextEl) {
-                                        nextEl.onclick = window.nextPhoto;
                                         nextEl.style.zIndex = '10';
                                         nextEl.style.transform = 'rotate(0deg) scale(1)'; // Bring to front
                                     }
