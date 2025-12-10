@@ -152,7 +152,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.95 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.96 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -433,6 +433,29 @@
                         <!-- 9. Bottom Right (Extra) -->
                         <img id="branch-br-2" src="./images/tree_branch_2.png" class="absolute bottom-[-10px] -right-20 w-60 opacity-90 will-change-transform transition-transform duration-1550 ease-out" style="transform: translateX(150%) scaleX(-1) rotate(25deg);" alt="Branch">
                     
+                        <!-- PHOTOS (SCATTERED) -->
+                        <div id="photos-container" class="absolute inset-0 w-full h-full pointer-events-none z-35">
+                            <!-- Photo 1 (Top Leftish) -->
+                            <div id="photo-1" class="absolute top-[15%] left-[10%] w-[35%] max-w-[180px] aspect-[3/4] bg-white p-2 pb-6 shadow-xl rotate-[-6deg] transform transition-all duration-1000 ease-out opacity-0 translate-y-10 scale-90">
+                                <img src="./images/Новогодняя0.jpeg" class="w-full h-full object-cover bg-slate-100" alt="New Year 0">
+                            </div>
+
+                            <!-- Photo 2 (Top Rightish) -->
+                            <div id="photo-2" class="absolute top-[20%] right-[8%] w-[30%] max-w-[160px] aspect-[3/4] bg-white p-2 pb-6 shadow-xl rotate-[8deg] transform transition-all duration-1000 ease-out opacity-0 translate-y-10 scale-90 delay-100">
+                                <img src="./images/Новогодняя3.jpeg" class="w-full h-full object-cover bg-slate-100" alt="New Year 3">
+                            </div>
+
+                            <!-- Photo 3 (Bottom Leftish) -->
+                            <div id="photo-3" class="absolute bottom-[20%] left-[12%] w-[32%] max-w-[170px] aspect-[3/4] bg-white p-2 pb-6 shadow-xl rotate-[4deg] transform transition-all duration-1000 ease-out opacity-0 translate-y-10 scale-90 delay-200">
+                                <img src="./images/Новогодняя2.jpeg" class="w-full h-full object-cover bg-slate-100" alt="New Year 2">
+                            </div>
+
+                            <!-- Photo 4 (Bottom Rightish) -->
+                            <div id="photo-4" class="absolute bottom-[15%] right-[12%] w-[35%] max-w-[180px] aspect-[3/4] bg-white p-2 pb-6 shadow-xl rotate-[-5deg] transform transition-all duration-1000 ease-out opacity-0 translate-y-10 scale-90 delay-300">
+                                <img src="./images/Новогодняя1.jpg" class="w-full h-full object-cover bg-slate-100" alt="New Year 1">
+                            </div>
+                        </div>
+
                         <!-- GARLAND SVG OVERLAY -->
                         <svg id="garland" class="absolute top-0 left-0 w-full h-[300px] z-50 pointer-events-none opacity-0 transition-opacity duration-1000 ease-out" viewBox="0 0 400 150" preserveAspectRatio="none">
                             <!-- Cord -->
@@ -557,6 +580,11 @@ const homeBlock = document.getElementById('home-block');
                             const garland = document.getElementById('garland');
                             const garlandBottom = document.getElementById('garland-bottom'); // NEW
                             const homeTitle = document.getElementById('home-title');
+                            
+                            const photo1 = document.getElementById('photo-1');
+                            const photo2 = document.getElementById('photo-2');
+                            const photo3 = document.getElementById('photo-3');
+                            const photo4 = document.getElementById('photo-4');
                             
                             const transitionTextBlock = document.getElementById('transition-text-block');
 
@@ -998,6 +1026,13 @@ if (dist < viewH) {
                         if (garland) garland.style.opacity = '1';
                         if (garlandBottom) garlandBottom.style.opacity = '1'; // NEW
                         
+                        // Photos Animation
+                        [photo1, photo2, photo3, photo4].forEach(p => {
+                            if(p) {
+                                p.classList.remove('opacity-0', 'translate-y-10', 'scale-90');
+                            }
+                        });
+                        
                         // Title Fade In
                         const pHome = Math.max(0, Math.min(1, (viewH - dist) / (viewH * 0.6)));
                         if (homeTitle) {
@@ -1025,6 +1060,12 @@ if (dist < viewH) {
                         
                         if (garland) garland.style.opacity = '0';
                         if (garlandBottom) garlandBottom.style.opacity = '0'; // NEW
+                        
+                        [photo1, photo2, photo3, photo4].forEach(p => {
+                            if(p) {
+                                p.classList.add('opacity-0', 'translate-y-10', 'scale-90');
+                            }
+                        });
                     }
                 }
             };
