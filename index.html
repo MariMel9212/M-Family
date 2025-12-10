@@ -157,7 +157,7 @@
             
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.97 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.98 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -439,7 +439,7 @@
                         <img id="branch-br-2" src="./images/tree_branch_2.png" class="absolute bottom-[-10px] -right-20 w-60 opacity-90 will-change-transform transition-transform duration-1550 ease-out" style="transform: translateX(150%) scaleX(-1) rotate(25deg);" alt="Branch">
                     
                         <!-- PHOTOS STACK (Interactive) -->
-                        <div id="photos-stack-container" class="absolute top-[50%] left-1/2 -translate-x-1/2 w-[65vw] max-w-[300px] aspect-[3/4] z-[60] cursor-pointer">
+                        <div id="photos-stack-container" class="absolute top-[42%] left-1/2 -translate-x-1/2 w-[65vw] max-w-[300px] aspect-[3/4] z-[60] cursor-pointer">
                             <!-- Photo Stack Items (Reverse Order for Z-Index) -->
                             
                             <!-- 4. Bottom -->
@@ -506,8 +506,9 @@
                         </svg>
                     </div>
 
-                    <div class="relative z-10 p-6 flex flex-col items-center justify-start min-h-[40vh] pt-32">
-                        <h2 id="home-title" class="text-4xl font-extrabold text-slate-900 text-center mb-4 opacity-0 translate-y-10 transition-all duration-1000 ease-out" style="font-family: 'Shantell Sans', cursive; line-height: 1.2;">
+                    <div class="relative z-10 p-6 flex flex-col items-center justify-start min-h-[40vh] pt-24 md:pt-32">
+                        <!-- TITLE (Higher Z-Index to stay above branches) -->
+                        <h2 id="home-title" class="relative z-[70] text-4xl font-extrabold text-slate-900 text-center mb-2 opacity-0 translate-y-10 transition-all duration-1000 ease-out drop-shadow-md" style="font-family: 'Shantell Sans', cursive; line-height: 1.1;">
                             Наш первый<br>праздник здесь
                         </h2>
                     </div>
