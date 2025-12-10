@@ -152,7 +152,7 @@
         function renderMoments() {
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.90 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-red-600 mb-2">M-Family v7.92 (TEST) ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -395,10 +395,10 @@
                     <!-- DECORATIVE BRANCHES CONTAINER (Z-40 to overlay previous block) -->
                     <div id="branches-container" class="absolute inset-0 w-full h-full pointer-events-none z-40 overflow-visible">
                         <!-- 1. Top Left (Main) -->
-                        <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-16 -left-12 w-64 opacity-90 will-change-transform transition-transform duration-700 ease-out" style="transform: translateX(-120%) rotate(5deg);" alt="Branch">
+                        <img id="branch-tl" src="./images/tree_branch.png" class="absolute -top-24 -left-12 w-64 opacity-90 will-change-transform transition-transform duration-700 ease-out" style="transform: translateX(-120%) rotate(5deg);" alt="Branch">
                         
                         <!-- 2. Top Center (Small - FIX: Raised higher) -->
-                        <img id="branch-tc" src="./images/tree_branch_2.png" class="absolute -top-32 left-1/2 -ml-24 w-56 opacity-90 will-change-transform transition-transform duration-900 ease-out" style="transform: translateY(-100%) rotate(180deg);" alt="Branch">
+                        <img id="branch-tc" src="./images/tree_branch_2.png?v=fixed2" class="absolute left-1/2 -ml-24 w-56 opacity-90 will-change-transform transition-transform duration-900 ease-out" style="top: -220px; transform: translateY(-100%) rotate(180deg);" alt="Branch">
 
                         <!-- 3. Top Right (Mirrored) -->
                         <img id="branch-tr" src="./images/tree_branch_2.png" class="absolute -top-12 -right-16 w-64 opacity-90 will-change-transform transition-transform duration-1000 ease-out" style="transform: translateX(120%) scaleX(-1) rotate(-5deg);" alt="Branch">
@@ -428,15 +428,15 @@
                             
                             <!-- Lights -->
                             <g class="lights">
-                                <circle cx="40" cy="35" r="5" class="light light-red" />
-                                <circle cx="80" cy="55" r="5" class="light light-yellow" />
-                                <circle cx="120" cy="65" r="5" class="light light-green" />
-                                <circle cx="160" cy="60" r="5" class="light light-blue" />
+                                <circle cx="40" cy="27" r="5" class="light light-red" />
+                                <circle cx="80" cy="45" r="5" class="light light-yellow" />
+                                <circle cx="120" cy="53" r="5" class="light light-green" />
+                                <circle cx="160" cy="51" r="5" class="light light-blue" />
                                 <circle cx="200" cy="40" r="5" class="light light-red" />
-                                <circle cx="240" cy="25" r="5" class="light light-yellow" />
-                                <circle cx="280" cy="20" r="5" class="light light-green" />
-                                <circle cx="320" cy="25" r="5" class="light light-blue" />
-                                <circle cx="360" cy="10" r="5" class="light light-red" />
+                                <circle cx="240" cy="26" r="5" class="light light-yellow" />
+                                <circle cx="280" cy="14" r="5" class="light light-green" />
+                                <circle cx="320" cy="6" r="5" class="light light-blue" />
+                                <circle cx="360" cy="2" r="5" class="light light-red" />
                             </g>
                         </svg>
                     </div>
