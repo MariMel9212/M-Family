@@ -137,6 +137,8 @@
             { title: "Преступления", count: "8 фото", color: "bg-orange-50", emoji: "🐾" },
         ];
 
+        let currentPhotoIndex = 0; // GLOBAL STATE
+
         // ELEMENTS
         const content = document.getElementById('app-content');
         const storyViewer = document.getElementById('story-viewer');
@@ -150,6 +152,9 @@
         }
 
         function renderMoments() {
+            // Reset Stack State
+            currentPhotoIndex = 0;
+            
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
                     <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v7.97 ❤️</h1>
@@ -587,7 +592,7 @@ const homeBlock = document.getElementById('home-block');
                             const homeTitle = document.getElementById('home-title');
                             
                             // Photo Stack Logic
-                            let currentPhotoIndex = 0;
+                            // let currentPhotoIndex = 0; // Moved to global to allow reset
                             const photoStackIds = ['stack-photo-1', 'stack-photo-2', 'stack-photo-3', 'stack-photo-4'];
                             
                             window.nextPhoto = function() {
