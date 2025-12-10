@@ -397,8 +397,8 @@
                         <!-- 1. Top Left (Main) -->
                         <img id="branch-tl" src="./images/tree_branch.png" class="absolute top-0 -left-12 w-64 opacity-90 will-change-transform transition-transform duration-700 ease-out" style="transform: translateX(-120%) rotate(5deg);" alt="Branch">
                         
-                        <!-- 2. Top Center (Small - FIX: Raised higher) -->
-                        <img id="branch-tc" src="./images/tree_branch_2.png?v=fixed2" class="absolute left-1/2 -ml-24 w-56 opacity-90 will-change-transform transition-transform duration-900 ease-out" style="top: -220px; transform: translateY(-100%) rotate(180deg);" alt="Branch">
+                        <!-- 2. Top Center (Small - REMOVED to avoid overlap) -->
+                        <!-- <img id="branch-tc" src="./images/tree_branch_2.png?v=fixed2" class="absolute left-1/2 -ml-24 w-56 opacity-90 will-change-transform transition-transform duration-900 ease-out" style="top: -220px; transform: translateY(-100%) rotate(180deg);" alt="Branch"> -->
 
                         <!-- 3. Top Right (Mirrored) -->
                         <img id="branch-tr" src="./images/tree_branch_2.png" class="absolute top-0 -right-16 w-64 opacity-90 will-change-transform transition-transform duration-1000 ease-out" style="transform: translateX(120%) scaleX(-1) rotate(-5deg);" alt="Branch">
@@ -510,7 +510,7 @@ const elevatorWrapper = document.getElementById('elevator-wrapper');
 
 const homeBlock = document.getElementById('home-block');
                             const branchTL = document.getElementById('branch-tl');
-                            const branchTC = document.getElementById('branch-tc');
+                            // const branchTC = document.getElementById('branch-tc');
                             const branchTR = document.getElementById('branch-tr');
                             const branchML = document.getElementById('branch-ml');
                             const branchML2 = document.getElementById('branch-ml-2');
@@ -945,7 +945,7 @@ if (dist < viewH) {
                         // We use CSS transitions for smoothness, so we just set the final state
                         
                         if (branchTL) branchTL.style.transform = `translateX(0) rotate(5deg)`;
-                        if (branchTC) branchTC.style.transform = `translateY(0) rotate(180deg)`;
+                        // if (branchTC) branchTC.style.transform = `translateY(0) rotate(180deg)`;
                         if (branchTR) branchTR.style.transform = `translateX(0) scaleX(-1) rotate(-5deg)`;
                         if (branchML) branchML.style.transform = `translateX(0) rotate(15deg)`;
                         if (branchML2) branchML2.style.transform = `translateX(0) rotate(-10deg)`;
@@ -968,7 +968,7 @@ if (dist < viewH) {
                     } else {
                         // Reset if scrolled back up (optional, keep animated if preferred)
                         if (branchTL) branchTL.style.transform = `translateX(-120%) rotate(5deg)`;
-                        if (branchTC) branchTC.style.transform = `translateY(-100%) rotate(180deg)`;
+                        // if (branchTC) branchTC.style.transform = `translateY(-100%) rotate(180deg)`;
                         if (branchTR) branchTR.style.transform = `translateX(120%) scaleX(-1) rotate(-5deg)`;
                         if (branchML) branchML.style.transform = `translateX(-150%) rotate(15deg)`;
                         if (branchML2) branchML2.style.transform = `translateX(-150%) rotate(-10deg)`;
