@@ -157,7 +157,7 @@
             
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.01 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.02 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -185,6 +185,10 @@
         function openStory() {
             storyViewer.classList.remove('hidden');
             nav.style.display = 'none';
+            
+            // Reset Stack State on Open
+            currentPhotoIndex = 0;
+            window.isStackResetting = false;
             
             storyViewer.innerHTML = `
                 <!-- BACK BTN -->
@@ -440,7 +444,7 @@
                         <img id="branch-br-2" src="./images/tree_branch_2.png" class="absolute bottom-[-10px] -right-20 w-60 opacity-90 will-change-transform transition-transform duration-1550 ease-out" style="transform: translateX(150%) scaleX(-1) rotate(25deg);" alt="Branch">
                     
                         <!-- PHOTOS STACK (Interactive) -->
-                        <div id="photos-stack-container" class="absolute top-[42%] -translate-y-[20px] left-1/2 -translate-x-1/2 w-[65vw] max-w-[300px] aspect-[3/4] z-[60] cursor-pointer" onclick="window.nextPhoto(event)">
+                        <div id="photos-stack-container" class="absolute top-[42%] -translate-y-[20px] left-1/2 -translate-x-1/2 w-[65vw] max-w-[300px] aspect-[3/4] z-[60] cursor-pointer pointer-events-auto" onclick="window.nextPhoto(event)">
                             <!-- Photo Stack Items (Reverse Order for Z-Index) -->
                             
                             <!-- 4. Bottom -->
@@ -596,9 +600,13 @@ const homeBlock = document.getElementById('home-block');
                             // Photo Stack Logic
                             // let currentPhotoIndex = 0; // Moved to global to allow reset
                             const photoStackIds = ['stack-photo-1', 'stack-photo-2', 'stack-photo-3', 'stack-photo-4'];
-                            
+                            window.isStackResetting = false;
+
                             window.nextPhoto = function(e) {
                                 if(e) e.stopPropagation();
+                                
+                                // Prevent interaction during reset
+                                if (window.isStackResetting) return;
                                 
                                 console.log('Clicked photo stack, index:', currentPhotoIndex); // Debug
                                 
@@ -617,7 +625,9 @@ const homeBlock = document.getElementById('home-block');
                                 
                                 currentPhotoIndex++;
                                 if (currentPhotoIndex >= photoStackIds.length) {
-                                    // Reset stack after all are gone (optional, or just leave empty)
+                                    // Reset stack after all are gone
+                                    window.isStackResetting = true;
+                                    
                                     setTimeout(() => {
                                         photoStackIds.forEach((id, idx) => {
                                             const el = document.getElementById(id);
@@ -638,6 +648,7 @@ const homeBlock = document.getElementById('home-block');
                                             }
                                         });
                                         currentPhotoIndex = 0;
+                                        window.isStackResetting = false;
                                     }, 1000);
                                 } else {
                                     // Make next one clickable/active visual if needed
