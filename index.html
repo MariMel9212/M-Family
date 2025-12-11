@@ -157,7 +157,7 @@
             
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.09 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.10 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -526,17 +526,17 @@
                     <!-- Content Container -->
                     <div class="relative z-10 w-full h-full min-h-[100vh] overflow-hidden pointer-events-none">
                         
-                        <!-- Snow 1 (Left Bottom) -->
-                        <img id="final-snow-1" src="./images/snow1.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 translate-y-full transition-all duration-1000 ease-out z-20" alt="Snow 1">
+                        <!-- Snow 3 (Back Layer - Right) -->
+                        <img id="final-snow-3" src="./images/snow3.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 translate-x-full transition-all duration-1000 ease-out z-10" alt="Snow 3">
                         
-                        <!-- Snow 3 (Right In -> Center) -->
-                        <img id="final-snow-3" src="./images/snow3.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 translate-x-full transition-all duration-1000 ease-out z-5" alt="Snow 3">
-                        
-                        <!-- Snow 2 (Optional Filler - Top Left -> Lower & Wider) -->
-                        <img id="final-snow-2" src="./images/snow2.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 -translate-x-full transition-all duration-1000 ease-out z-15" alt="Snow 2">
+                        <!-- Snow 2 (Back Layer - Left) -->
+                        <img id="final-snow-2" src="./images/snow2.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 -translate-x-full transition-all duration-1000 ease-out z-10" alt="Snow 2">
 
-                        <!-- Happy (Center Bottom) -->
-                        <img id="final-happy" src="./images/happy.png" class="absolute -bottom-[160px] left-1/2 -translate-x-1/2 w-[100%] max-w-[600px] opacity-0 translate-y-full transition-all duration-1000 ease-out z-10 drop-shadow-2xl" alt="Happy">
+                        <!-- Happy (Middle Layer) -->
+                        <img id="final-happy" src="./images/happy.png" class="absolute -bottom-[190px] left-1/2 -translate-x-1/2 w-[100%] max-w-[600px] opacity-0 translate-y-full transition-all duration-1000 ease-out z-20 drop-shadow-2xl" alt="Happy">
+                        
+                        <!-- Snow 1 (Front Layer - Left) -->
+                        <img id="final-snow-1" src="./images/snow1.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 translate-y-full transition-all duration-1000 ease-out z-30" alt="Snow 1">
                         
                         <!-- Ring (Decor - Floating somewhere) -->
                         <img id="final-ring" src="./images/ring.png" class="absolute top-[20%] right-[10%] w-[20%] opacity-0 scale-0 rotate-180 transition-all duration-1000 ease-out z-40" alt="Ring">
