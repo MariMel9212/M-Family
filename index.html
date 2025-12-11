@@ -157,7 +157,7 @@
             
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.03 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.04 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -523,9 +523,42 @@
                 <div id="final-block" class="relative w-full min-h-[100vh] z-30 bg-white overflow-hidden">
                     <img src="./images/texture.jpg" class="absolute inset-0 w-full h-full object-cover opacity-50 z-0 pointer-events-none" alt="Texture">
                     
-                    <!-- Content Placeholder -->
-                    <div class="relative z-10 w-full h-full flex flex-col items-center justify-center min-h-[100vh] p-6">
-                        <h2 class="text-2xl font-bold text-slate-400 opacity-50">Продолжение следует...</h2>
+                    <!-- Content Container -->
+                    <div class="relative z-10 w-full h-full min-h-[100vh] overflow-hidden pointer-events-none">
+                        
+                        <!-- Snow 1 (Left Bottom) -->
+                        <img id="final-snow-1" src="./images/snow1.png" class="absolute bottom-[-10%] left-[-20%] w-[80%] opacity-0 translate-y-full transition-all duration-1000 ease-out z-10" alt="Snow 1">
+                        
+                        <!-- Snow 3 (Right) -->
+                        <img id="final-snow-3" src="./images/snow3.png" class="absolute bottom-[20%] right-[-20%] w-[70%] opacity-0 translate-x-full transition-all duration-1000 ease-out z-20" alt="Snow 3">
+                        
+                        <!-- Snow 2 (Optional Filler - Top Left) -->
+                        <img id="final-snow-2" src="./images/snow2.png" class="absolute top-[10%] left-[-10%] w-[40%] opacity-0 -translate-x-full transition-all duration-1000 ease-out z-10" alt="Snow 2">
+
+                        <!-- Happy (Center Bottom) -->
+                        <img id="final-happy" src="./images/happy.png" class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90%] max-w-[500px] opacity-0 translate-y-full transition-all duration-1000 ease-out z-30 drop-shadow-2xl" alt="Happy">
+                        
+                        <!-- Ring (Decor - Floating somewhere) -->
+                        <img id="final-ring" src="./images/ring.png" class="absolute top-[20%] right-[10%] w-[20%] opacity-0 scale-0 rotate-180 transition-all duration-1000 ease-out z-40" alt="Ring">
+
+                        <!-- Final Garland (Top) -->
+                        <svg id="final-garland" class="absolute top-0 left-0 w-full h-[200px] z-50 pointer-events-none opacity-0 -translate-y-full transition-all duration-1000 ease-out" viewBox="0 0 400 150" preserveAspectRatio="none">
+                            <path d="M0,0 Q100,80 200,40 T400,0" fill="none" stroke="#555" stroke-width="2" />
+                            <g class="lights">
+                                <circle cx="40" cy="27" r="5" class="light light-red" />
+                                <circle cx="80" cy="45" r="5" class="light light-yellow" />
+                                <circle cx="120" cy="53" r="5" class="light light-green" />
+                                <circle cx="160" cy="51" r="5" class="light light-blue" />
+                                <circle cx="200" cy="40" r="5" class="light light-red" />
+                                <circle cx="240" cy="26" r="5" class="light light-yellow" />
+                                <circle cx="280" cy="14" r="5" class="light light-green" />
+                                <circle cx="320" cy="6" r="5" class="light light-blue" />
+                                <circle cx="360" cy="2" r="5" class="light light-red" />
+                            </g>
+                        </svg>
+
+                        <!-- Title/Text (Optional) -->
+                        <!-- <h2 class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl font-bold text-slate-800 font-hand opacity-0">...</h2> -->
                     </div>
                 </div>
             `;
@@ -606,6 +639,14 @@ const homeBlock = document.getElementById('home-block');
                             const garland = document.getElementById('garland');
                             const garlandBottom = document.getElementById('garland-bottom'); 
                             const homeTitle = document.getElementById('home-title');
+                            
+                            const finalBlock = document.getElementById('final-block');
+                            const finalSnow1 = document.getElementById('final-snow-1');
+                            const finalSnow2 = document.getElementById('final-snow-2');
+                            const finalSnow3 = document.getElementById('final-snow-3');
+                            const finalHappy = document.getElementById('final-happy');
+                            const finalRing = document.getElementById('final-ring');
+                            const finalGarland = document.getElementById('final-garland');
                             
                             // Photo Stack Logic
                             // let currentPhotoIndex = 0; // Moved to global to allow reset
@@ -1138,6 +1179,101 @@ if (dist < viewH) {
                         
                         if (garland) garland.style.opacity = '0';
                         if (garlandBottom) garlandBottom.style.opacity = '0'; 
+                    }
+                }
+                
+                // --- BLOCK 5: FINAL BLOCK ANIMATION ---
+                if (finalBlock) {
+                    const rect = finalBlock.getBoundingClientRect();
+                    const viewH = window.innerHeight;
+                    
+                    // Trigger when block is 30% visible from bottom
+                    if (rect.top < viewH * 0.7) {
+                        
+                        // 1. Snow 1 (Bottom Up) - Immediate
+                        if (finalSnow1) {
+                            finalSnow1.style.transform = 'translateY(0)';
+                            finalSnow1.style.opacity = '1';
+                        }
+                        
+                        // 2. Snow 3 (Right In) - Delay 300ms (handled by CSS transition delay if we add class, but here we do JS delay logic or just rely on scroll P)
+                        // Simple approach: trigger all with CSS delays setup in style? 
+                        // Actually I set standard duration-1000 in HTML. Let's use setTimeout-like staggered effect based on scroll position OR just set transform and let CSS handle if I added delay classes.
+                        // I didn't add delay classes to HTML except one. Let's do it via JS timeouts since we are in a scroll handler (careful with spamming).
+                        // Better: Use transition-delay in inline style or class. 
+                        
+                        // Let's just set the styles here.
+                        
+                        // Snow 3: Slight delay (Micro-pause)
+                        if (finalSnow3) {
+                            setTimeout(() => {
+                                finalSnow3.style.transform = 'translateX(0)';
+                                finalSnow3.style.opacity = '1';
+                            }, 300);
+                        }
+                        
+                        // Snow 2: (Extra)
+                        if (finalSnow2) {
+                            setTimeout(() => {
+                                finalSnow2.style.transform = 'translateX(0)';
+                                finalSnow2.style.opacity = '0.8';
+                            }, 500);
+                        }
+
+                        // Happy: Appears after
+                        if (finalHappy) {
+                            setTimeout(() => {
+                                finalHappy.style.transform = 'translate(-50%, 0)'; // Center X is handled by left-1/2 -translate-x-1/2. We only want to remove the Y translation.
+                                // Actually, transform was "translate(-50%, 100%)" initially (via translate-y-full + class).
+                                // To reset Y but keep X centering: translate(-50%, 0)
+                                finalHappy.style.transform = 'translate(-50%, 0)'; 
+                                finalHappy.style.opacity = '1';
+                            }, 800);
+                        }
+                        
+                        // Ring: Pop in
+                        if (finalRing) {
+                             setTimeout(() => {
+                                finalRing.style.transform = 'scale(1) rotate(15deg)';
+                                finalRing.style.opacity = '1';
+                            }, 1200);
+                        }
+
+                        // Garland: Drop down
+                        if (finalGarland) {
+                            setTimeout(() => {
+                                finalGarland.style.transform = 'translateY(0)';
+                                finalGarland.style.opacity = '1';
+                            }, 1000);
+                        }
+
+                    } else {
+                        // Reset if scrolled away (optional)
+                        if (finalSnow1) {
+                            finalSnow1.style.transform = 'translateY(100%)';
+                            finalSnow1.style.opacity = '0';
+                        }
+                        if (finalSnow3) {
+                             // Reset style directly, timeout might conflict but acceptable for simple scroll
+                            finalSnow3.style.transform = 'translateX(100%)';
+                            finalSnow3.style.opacity = '0';
+                        }
+                        if (finalSnow2) {
+                            finalSnow2.style.transform = 'translateX(-100%)';
+                            finalSnow2.style.opacity = '0';
+                        }
+                        if (finalHappy) {
+                            finalHappy.style.transform = 'translate(-50%, 100%)';
+                            finalHappy.style.opacity = '0';
+                        }
+                         if (finalRing) {
+                            finalRing.style.transform = 'scale(0) rotate(180deg)';
+                            finalRing.style.opacity = '0';
+                        }
+                        if (finalGarland) {
+                            finalGarland.style.transform = 'translateY(-100%)';
+                            finalGarland.style.opacity = '0';
+                        }
                     }
                 }
             };
