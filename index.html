@@ -56,6 +56,16 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .will-change-transform { will-change: transform, opacity, filter; }
 
+        /* WIGGLE ANIMATION FOR SHAKE HINT */
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+        .animate-wiggle {
+            animation: wiggle 0.5s ease-in-out infinite;
+            display: inline-block;
+        }
+
         /* TYPING ANIMATION */
         @keyframes typing {
             0%, 100% { transform: translateY(0); opacity: 0.5; }
@@ -157,7 +167,7 @@
             
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.11 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.12 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -541,8 +551,15 @@
                         <!-- Snow 1 (Front Layer - Left) -->
                         <img id="final-snow-1" src="./images/snow1.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 translate-y-full transition-all duration-1000 ease-out z-30" alt="Snow 1">
                         
-                        <!-- Ring (Decor - Floating somewhere) -->
-                        <img id="final-ring" src="./images/ring.png" class="absolute top-[20%] right-[10%] w-[20%] opacity-0 scale-0 rotate-180 transition-all duration-1000 ease-out z-40" alt="Ring">
+                        <!-- SHAKE HINT -->
+                        <div id="shake-hint" onclick="dropRing()" class="absolute top-[20%] left-1/2 -translate-x-1/2 z-[60] bg-white/90 backdrop-blur px-6 py-3 rounded-full shadow-xl opacity-0 scale-0 transition-all duration-500 cursor-pointer flex items-center gap-2 border-2 border-white/50">
+                            <span class="text-2xl animate-wiggle">📳</span>
+                            <span class="font-bold text-slate-800 text-sm">Потряси телефон!</span>
+                        </div>
+
+                        <!-- Ring (Falling Object - Top Z-Index) -->
+                        <!-- Initial: Top of screen, Hidden. Final: Near Happy's paw, visible. -->
+                        <img id="final-ring" src="./images/ring.png" class="absolute -top-[200px] left-[55%] w-[15%] max-w-[100px] opacity-0 transition-all duration-700 ease-in z-50 drop-shadow-2xl" alt="Ring">
 
                         <!-- Final Garland (Top) -->
                         <svg id="final-garland" class="absolute top-0 left-0 w-full h-[200px] z-50 pointer-events-none opacity-0 -translate-y-full transition-all duration-1000 ease-out" viewBox="0 0 400 150" preserveAspectRatio="none">
@@ -650,7 +667,54 @@ const homeBlock = document.getElementById('home-block');
                             const finalSnow3Back = document.getElementById('final-snow-3-back');
                             const finalHappy = document.getElementById('final-happy');
                             const finalRing = document.getElementById('final-ring');
+                            const shakeHint = document.getElementById('shake-hint');
                             const finalGarland = document.getElementById('final-garland');
+                            
+                            let ringDropped = false;
+
+                            // Ring Logic
+                            window.dropRing = function() {
+                                if(ringDropped || !finalRing) return;
+                                ringDropped = true;
+                                
+                                // Hide Hint
+                                if(shakeHint) {
+                                    shakeHint.style.opacity = '0';
+                                    shakeHint.style.transform = 'translate(-50%, 0) scale(0)';
+                                }
+
+                                // Drop Ring
+                                // We calculate position dynamically or just use CSS classes
+                                // Target: Near Happy's bottom. Happy is -bottom-220px. 
+                                // Snow1 is bottom-0.
+                                // Let's put Ring at bottom-[5%] of the container.
+                                finalRing.style.opacity = '1';
+                                finalRing.style.top = 'auto'; // Release top
+                                finalRing.style.bottom = '15%'; // Landing spot
+                                finalRing.style.transform = 'rotate(-15deg)'; // Tilt on landing
+                            };
+
+                            // Shake Detection
+                            function startShakeDetection() {
+                                if (typeof window.DeviceMotionEvent !== 'undefined') {
+                                    const threshold = 15;
+                                    let lastX, lastY, lastZ;
+                                    
+                                    window.addEventListener('devicemotion', function(e) {
+                                        if (ringDropped) return;
+                                        
+                                        const acc = e.accelerationIncludingGravity;
+                                        if (!acc) return;
+
+                                        // Simple shake detection
+                                        // Note: Logic varies by device, keeping it simple
+                                        if ((Math.abs(acc.x) > threshold) || (Math.abs(acc.y) > threshold)) {
+                                            dropRing();
+                                        }
+                                    });
+                                }
+                            }
+                            startShakeDetection();
                             
                             // Photo Stack Logic
                             // let currentPhotoIndex = 0; // Moved to global to allow reset
@@ -1227,7 +1291,7 @@ if (dist < viewH) {
                         // Happy: Appears after
                         if (finalHappy) {
                             setTimeout(() => {
-                                finalHappy.style.transform = 'translate(-50%, 0)'; // Center X is handled by left-1/2 -translate-x-1/2. We only want to remove the Y translation.
+                                finalHappy.style.transform = 'translate(-50%, 0)'; 
                                 // Actually, transform was "translate(-50%, 100%)" initially (via translate-y-full + class).
                                 // To reset Y but keep X centering: translate(-50%, 0)
                                 finalHappy.style.transform = 'translate(-50%, 0)'; 
@@ -1235,12 +1299,12 @@ if (dist < viewH) {
                             }, 800);
                         }
                         
-                        // Ring: Pop in
-                        if (finalRing) {
+                        // HINT: Appears last
+                        if (shakeHint && !ringDropped) {
                              setTimeout(() => {
-                                finalRing.style.transform = 'scale(1) rotate(15deg)';
-                                finalRing.style.opacity = '1';
-                            }, 1200);
+                                shakeHint.style.opacity = '1';
+                                shakeHint.style.transform = 'translate(-50%, 0) scale(1)';
+                            }, 1500);
                         }
 
                         // Garland: Drop down
@@ -1274,10 +1338,9 @@ if (dist < viewH) {
                             finalHappy.style.transform = 'translate(-50%, 100%)';
                             finalHappy.style.opacity = '0';
                         }
-                         if (finalRing) {
-                            finalRing.style.transform = 'scale(0) rotate(180deg)';
-                            finalRing.style.opacity = '0';
-                        }
+                        // Reset ring if needed, or keep it dropped once found
+                        // Let's NOT reset the ring to avoid frustration
+                        
                         if (finalGarland) {
                             finalGarland.style.transform = 'translateY(-100%)';
                             finalGarland.style.opacity = '0';
