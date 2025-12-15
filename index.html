@@ -167,7 +167,7 @@
             
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.18 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.19 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -551,13 +551,17 @@
                         <!-- Snow 1 (Front Layer - Left) -->
                         <img id="final-snow-1" src="./images/snow1.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 translate-y-full transition-all duration-1000 ease-out z-30" alt="Snow 1">
                         
-                        <!-- SPEECH BUBBLE -->
-                        <div id="final-speech-bubble" class="absolute bottom-[40%] left-1/2 -translate-x-1/2 w-[85%] max-w-[320px] bg-white p-4 rounded-2xl shadow-xl z-50 opacity-0 transition-all duration-700 ease-out transform scale-75 origin-bottom border border-slate-100">
-                            <p class="text-sm font-bold text-slate-800 text-center leading-tight font-hand text-lg">
-                                Весь год я вела себя очень послушно и Дед Мороз принёс мне колечко 💍
-                            </p>
-                            <!-- Tail -->
-                            <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white transform rotate-45 border-r border-b border-slate-100"></div>
+                        <!-- THOUGHT BUBBLE (Dreamy) -->
+                        <div id="final-speech-bubble" class="absolute bottom-[40%] left-1/2 -translate-x-1/2 w-[85%] max-w-[320px] z-50 opacity-0 transition-all duration-700 ease-out transform scale-75 origin-bottom">
+                            <!-- Cloud Body -->
+                            <div class="relative bg-gradient-to-b from-blue-50 to-white p-6 rounded-[2rem] shadow-xl border border-blue-100 flex items-center justify-center">
+                                <p class="text-lg font-bold text-slate-600 text-center leading-tight font-hand drop-shadow-sm">
+                                    Весь год я вела себя очень послушно, и Дед Мороз принёс мне колечко 💍
+                                </p>
+                            </div>
+                            <!-- Thought Dots (Tail) -->
+                            <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-6 h-6 bg-white rounded-full shadow-md border border-blue-50"></div>
+                            <div class="absolute -bottom-8 left-[45%] -translate-x-1/2 w-3 h-3 bg-white rounded-full shadow-md border border-blue-50"></div>
                         </div>
 
                         <!-- MAGIC BUTTON (Trigger) -->
@@ -698,9 +702,9 @@ const homeBlock = document.getElementById('home-block');
                                     // 2. Fall Down & Left (Small)
                                     setTimeout(() => {
                                         // Target: Left side (approx 25% of screen), Bottom (into snow)
-                                        // translate(-160%) moves it left. 100% moves it down.
+                                        // scale(1.0) -> Double the previous size
                                         finalRing.style.transition = 'all 1.0s cubic-bezier(0.25, 1, 0.5, 1)';
-                                        finalRing.style.transform = 'translate(-160%, 100%) scale(0.5) rotate(-30deg)';
+                                        finalRing.style.transform = 'translate(-160%, 100%) scale(1.0) rotate(-30deg)';
                                         
                                         // 3. Show Speech Bubble
                                         setTimeout(() => {
