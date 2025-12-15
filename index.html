@@ -663,31 +663,30 @@ const homeBlock = document.getElementById('home-block');
                             const finalSnow2 = document.getElementById('final-snow-2');
                             const finalSnow3 = document.getElementById('final-snow-3');
                             const finalSnow3Back = document.getElementById('final-snow-3-back');
-                            const finalHappyWrapper = document.getElementById('final-happy-wrapper');
+                            const finalHappy = document.getElementById('final-happy');
                             const finalRing = document.getElementById('final-ring');
-                            const noseHint = document.getElementById('nose-hint');
+                            const finalGiftBtn = document.getElementById('final-gift-btn');
                             const finalGarland = document.getElementById('final-garland');
                             
-                            let isBooped = false;
+                            let giftOpened = false;
 
-                            // Nose Boop Logic
-                            window.boopNose = function() {
-                                if(isBooped || !finalRing) return;
-                                isBooped = true;
+                            // Gift Logic
+                            window.openGift = function() {
+                                if(giftOpened || !finalGiftBtn) return;
+                                giftOpened = true;
                                 
-                                // Hide Hint
-                                if(noseHint) noseHint.style.display = 'none';
+                                // Hide Button
+                                finalGiftBtn.style.transform = 'translate(-50%, 50px) scale(0)';
+                                finalGiftBtn.style.opacity = '0';
+                                setTimeout(() => { finalGiftBtn.style.display = 'none'; }, 500);
 
-                                // Animate Ring: Pop out from nose, scale up, rotate
-                                // Since Ring is fixed/absolute in container, and Dog is also absolute, 
-                                // we need to position Ring relative to the screen center for the "Big Reveal"
-                                // or just fly up.
-                                
-                                finalRing.style.opacity = '1';
-                                finalRing.style.width = '60%'; // Make it BIG
-                                finalRing.style.maxWidth = '300px';
-                                finalRing.style.top = '40%'; // Center screen vertically
-                                finalRing.style.transform = 'translate(-50%, -50%) scale(1) rotate(720deg)'; // Spin and center
+                                // Reveal Ring (Fly Up Center)
+                                if(finalRing) {
+                                    // Start from bottom center (where button was) and fly UP to center screen
+                                    finalRing.style.opacity = '1';
+                                    // TranslateY: Move up to center
+                                    finalRing.style.transform = 'translate(-50%, -45vh) scale(2.5) rotate(15deg)'; 
+                                }
                             };
                             
                             // Photo Stack Logic
@@ -1263,15 +1262,19 @@ if (dist < viewH) {
                         }
 
                         // Happy: Appears after
-                        if (finalHappyWrapper) {
+                        if (finalHappy) {
                             setTimeout(() => {
-                                finalHappyWrapper.style.transform = 'translate(-50%, 0)'; 
-                                
-                                // Show Nose Hint after dog appears
-                                if(noseHint && !isBooped) {
-                                    setTimeout(() => noseHint.style.opacity = '1', 1000);
-                                }
+                                finalHappy.style.transform = 'translate(-50%, 0)'; 
+                                finalHappy.style.opacity = '1';
                             }, 800);
+                        }
+
+                        // Gift Button: Appears last
+                        if (finalGiftBtn && !giftOpened) {
+                            setTimeout(() => {
+                                finalGiftBtn.style.transform = 'translate(-50%, 0)';
+                                finalGiftBtn.style.opacity = '1';
+                            }, 1200);
                         }
 
                         // Garland: Drop down
@@ -1301,8 +1304,12 @@ if (dist < viewH) {
                             finalSnow2.style.transform = 'translateX(-100%)';
                             finalSnow2.style.opacity = '0';
                         }
-                        if (finalHappyWrapper) {
-                            finalHappyWrapper.style.transform = 'translate(-50%, 100%)';
+                        if (finalHappy) {
+                            finalHappy.style.transform = 'translate(-50%, 100%)';
+                        }
+                        if (finalGiftBtn && !giftOpened) {
+                             finalGiftBtn.style.transform = 'translate(-50%, 50px)';
+                             finalGiftBtn.style.opacity = '0';
                         }
                         // Reset ring if needed, or keep it dropped once found
                         // Let's NOT reset the ring to avoid frustration
