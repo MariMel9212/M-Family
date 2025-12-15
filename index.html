@@ -167,7 +167,7 @@
             
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.15 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.16 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -552,8 +552,8 @@
                         <img id="final-snow-1" src="./images/snow1.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 translate-y-full transition-all duration-1000 ease-out z-30" alt="Snow 1">
                         
                         <!-- MAGIC BUTTON (Trigger) -->
-                        <button id="final-gift-btn" onclick="openGift()" class="absolute bottom-[10%] left-1/2 -translate-x-1/2 z-[60] bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-4 rounded-full shadow-lg font-bold text-lg opacity-0 translate-y-10 transition-all duration-700 ease-out hover:scale-105 active:scale-95 animate-pulse">
-                            🎁 Твой подарок
+                        <button id="final-gift-btn" onclick="openGift()" class="absolute bottom-[10%] right-[10%] z-[60] w-16 h-16 flex items-center justify-center bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full shadow-lg font-bold text-3xl opacity-0 translate-y-10 transition-all duration-700 ease-out hover:scale-110 active:scale-90 animate-pulse pointer-events-auto">
+                            🎁
                         </button>
 
                         <!-- Ring (Fly out effect) -->
@@ -676,7 +676,7 @@ const homeBlock = document.getElementById('home-block');
                                 giftOpened = true;
                                 
                                 // Hide Button
-                                finalGiftBtn.style.transform = 'translate(-50%, 50px) scale(0)';
+                                finalGiftBtn.style.transform = 'translate(0, 50px) scale(0)';
                                 finalGiftBtn.style.opacity = '0';
                                 setTimeout(() => { finalGiftBtn.style.display = 'none'; }, 500);
 
@@ -1272,7 +1272,7 @@ if (dist < viewH) {
                         // Gift Button: Appears last
                         if (finalGiftBtn && !giftOpened) {
                             setTimeout(() => {
-                                finalGiftBtn.style.transform = 'translate(-50%, 0)';
+                                finalGiftBtn.style.transform = 'translate(0, 0)';
                                 finalGiftBtn.style.opacity = '1';
                             }, 1200);
                         }
@@ -1308,7 +1308,7 @@ if (dist < viewH) {
                             finalHappy.style.transform = 'translate(-50%, 100%)';
                         }
                         if (finalGiftBtn && !giftOpened) {
-                             finalGiftBtn.style.transform = 'translate(-50%, 50px)';
+                             finalGiftBtn.style.transform = 'translate(0, 50px)';
                              finalGiftBtn.style.opacity = '0';
                         }
                         // Reset ring if needed, or keep it dropped once found
