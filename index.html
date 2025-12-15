@@ -167,7 +167,7 @@
             
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.17 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.18 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -551,6 +551,15 @@
                         <!-- Snow 1 (Front Layer - Left) -->
                         <img id="final-snow-1" src="./images/snow1.png" class="absolute bottom-0 left-[-25%] w-[150%] max-w-none opacity-0 translate-y-full transition-all duration-1000 ease-out z-30" alt="Snow 1">
                         
+                        <!-- SPEECH BUBBLE -->
+                        <div id="final-speech-bubble" class="absolute bottom-[40%] left-1/2 -translate-x-1/2 w-[85%] max-w-[320px] bg-white p-4 rounded-2xl shadow-xl z-50 opacity-0 transition-all duration-700 ease-out transform scale-75 origin-bottom border border-slate-100">
+                            <p class="text-sm font-bold text-slate-800 text-center leading-tight font-hand text-lg">
+                                Весь год я вела себя очень послушно и Дед Мороз принёс мне колечко 💍
+                            </p>
+                            <!-- Tail -->
+                            <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white transform rotate-45 border-r border-b border-slate-100"></div>
+                        </div>
+
                         <!-- MAGIC BUTTON (Trigger) -->
                         <button id="final-gift-btn" onclick="openGift()" class="absolute bottom-[10%] right-[10%] z-[60] w-16 h-16 flex items-center justify-center bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-full shadow-lg font-bold text-3xl opacity-0 translate-y-10 transition-all duration-700 ease-out hover:scale-110 active:scale-90 animate-pulse pointer-events-auto">
                             🎁
@@ -688,10 +697,19 @@ const homeBlock = document.getElementById('home-block');
                                     
                                     // 2. Fall Down & Left (Small)
                                     setTimeout(() => {
-                                        // Target: Left side, near bottom, smaller size
-                                        // translate(-250%) moves it well to the left relative to center
-                                        finalRing.style.transition = 'all 1.2s cubic-bezier(0.25, 1, 0.5, 1)';
-                                        finalRing.style.transform = 'translate(-250%, 10%) scale(0.6) rotate(-45deg)';
+                                        // Target: Left side (approx 25% of screen), Bottom (into snow)
+                                        // translate(-160%) moves it left. 100% moves it down.
+                                        finalRing.style.transition = 'all 1.0s cubic-bezier(0.25, 1, 0.5, 1)';
+                                        finalRing.style.transform = 'translate(-160%, 100%) scale(0.5) rotate(-30deg)';
+                                        
+                                        // 3. Show Speech Bubble
+                                        setTimeout(() => {
+                                            const bubble = document.getElementById('final-speech-bubble');
+                                            if(bubble) {
+                                                bubble.style.opacity = '1';
+                                                bubble.style.transform = 'translate(-50%, 0) scale(1)';
+                                            }
+                                        }, 1000);
                                     }, 1600); // Wait for fly up
                                 }
                             };
