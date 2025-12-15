@@ -167,7 +167,7 @@
             
             content.innerHTML = `
                 <div class="p-6 pt-32"> <!-- Increased top padding for iPhone Safe Area -->
-                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.16 ❤️</h1>
+                    <h1 class="text-3xl font-extrabold text-slate-900 mb-2">M-Family v8.17 ❤️</h1>
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-8">Семейный архив</p>
                     
                     <div class="grid grid-cols-2 gap-4 mb-24">
@@ -680,12 +680,19 @@ const homeBlock = document.getElementById('home-block');
                                 finalGiftBtn.style.opacity = '0';
                                 setTimeout(() => { finalGiftBtn.style.display = 'none'; }, 500);
 
-                                // Reveal Ring (Fly Up Center)
+                                // Reveal Ring (Fly Up Center -> Then Fall Left)
                                 if(finalRing) {
-                                    // Start from bottom center (where button was) and fly UP to center screen
+                                    // 1. Fly UP (Big)
                                     finalRing.style.opacity = '1';
-                                    // TranslateY: Move up to center
                                     finalRing.style.transform = 'translate(-50%, -45vh) scale(2.5) rotate(15deg)'; 
+                                    
+                                    // 2. Fall Down & Left (Small)
+                                    setTimeout(() => {
+                                        // Target: Left side, near bottom, smaller size
+                                        // translate(-250%) moves it well to the left relative to center
+                                        finalRing.style.transition = 'all 1.2s cubic-bezier(0.25, 1, 0.5, 1)';
+                                        finalRing.style.transform = 'translate(-250%, 10%) scale(0.6) rotate(-45deg)';
+                                    }, 1600); // Wait for fly up
                                 }
                             };
                             
